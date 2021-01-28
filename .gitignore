@@ -1,3 +1,6 @@
 node_modules
 data
 priconne.db
+/public/build/
+
+.DS_Store
