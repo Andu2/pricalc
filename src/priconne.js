@@ -1,4 +1,8 @@
-const STAT_NAMES = ["hp", "atk", "magic_str", "def", "magic_def", "physical_critical", "magic_critical", 
+import unlocked from "./global-unlocked.js";
+import priconneDb from "./priconnedb.js";
+import translate from "./translations.js";
+
+export const STAT_NAMES = ["hp", "atk", "magic_str", "def", "magic_def", "physical_critical", "magic_critical", 
 	"wave_hp_recovery", "wave_energy_recovery", "dodge", "physical_penetrate", "magic_penetrate",
 	"life_steal", "hp_recovery_rate", "energy_recovery_rate", "energy_reduce_rate", "accuracy"];
 
@@ -12,7 +16,7 @@ const STAT_NAMES = ["hp", "atk", "magic_str", "def", "magic_def", "physical_crit
 // 	etc...
 // }
 // 1 = top left, 2 = top right, 3 = middle left, etc
-function createUnit(attrs) {
+export function createUnit(attrs) {
 	var requiredAttrs = ["name", "rarity", "level", "bond", "rank", "items", "skills"];
 	requiredAttrs.forEach(function(attr) {
 		if (attrs[attr] === undefined) {
@@ -228,7 +232,7 @@ function lookupBondStats(unitId, bond) {
 	return stats;
 }
 
-function calculatePower(unit) {
+export function calculatePower(unit) {
 	var power = 0;
 
 	power += 0.1 * (unit.hp + unit.wave_hp_recovery);
@@ -425,4 +429,4 @@ function test() {
 	resultTable += TESTS + " rounds per matchup";
 	document.write(resultTable);
 }
-test();
+//test();

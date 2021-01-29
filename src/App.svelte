@@ -1,15 +1,40 @@
 <script>
-	export let name;
+	import Menu from "./Menu.svelte";
+	import Home from "./Home.svelte";
+	import Dex from "./Dex.svelte";
+	import StatTable from "./StatTable.svelte";
+	import About from "./About.svelte";
+
+	var tabs = [{
+		label: "Home",
+		component: Home
+	}, {
+		label: "Dex",
+		component: Dex
+	}, {
+		label: "Stat Table",
+		component: StatTable
+	}, {
+		label: "About",
+		component: About
+	}];
+
+	var selectedTab = 0;
+	var selectedComponent = Home;
+
+	function switchTab(event) {
+		selectedTab = event.target.getAttribute("data-tabid") * 1;
+		selectedComponent = tabs[selectedTab].component;
+	}
 </script>
 
+<Menu tabs={tabs} selectedTab={selectedTab} on:click={switchTab} />
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	<svelte:component this={selectedComponent}/>
 </main>
 
 <style>
 	main {
-		text-align: center;
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;

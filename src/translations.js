@@ -151,3 +151,5 @@ translate.names = {
 	"ミサキ（サマー）": "Misaki (Summer)",
 	"ヒヨリ（ニューイヤー）": "Hiyori (New Year)"
 }
+
+export default translate;

@@ -1,3 +1,5 @@
+// Data source has more than Global version currently has - specify what Global version actually has
+
 var unlocked = {
 	units: [
 		"Karyl", "Kokkoro", "Pecorine", "Yui", // starters
@@ -6,3 +8,6 @@ var unlocked = {
 		"Aoi", "Hiyori", "Kurumi", "Lima", "Misaki", "Misogi", "Rei", "Suzume", "Yori", "Yukari" // initial 1*
 	]
 }
+
+unlocked.units.sort();
+export default unlocked;
