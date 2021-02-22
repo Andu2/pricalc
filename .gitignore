@@ -1,6 +1,10 @@
 node_modules
 src/data
-priconne.db
+master.db
 /public/build/
-
 .DS_Store
+.vercel
+/src/node_modules/@sapper/
+yarn-error.log
+/__sapper__/
+

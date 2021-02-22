@@ -11,6 +11,7 @@ var dumpTables = [
 	"unit_rarity",
 	"unit_skill_data",
 	"skill_data",
+	"skill_action",
 	"chara_story_status",
 	"story_detail"
 ];
@@ -19,7 +20,7 @@ var dumpTables = [
 var sqliteJson = require("sqlite-to-json");
 var sqlite3 = require("sqlite3");
 var exporter = new sqliteJson({
-	client: new sqlite3.Database("priconne.db")
+	client: new sqlite3.Database("./src/data/master.db")
 });
 
 dumpTables.forEach(function(table) {

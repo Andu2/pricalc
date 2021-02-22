@@ -1,107 +1,140 @@
-import unlocked from "./global-unlocked.js";
 import priconneDb from "./priconnedb.js";
-import translate from "./translations.js";
 
 export const STAT_NAMES = ["hp", "atk", "magic_str", "def", "magic_def", "physical_critical", "magic_critical", 
-	"wave_hp_recovery", "wave_energy_recovery", "dodge", "physical_penetrate", "magic_penetrate",
+	"wave_hp_recovery", "wave_energy_recovery", "dodge", //"physical_penetrate", "magic_penetrate",
 	"life_steal", "hp_recovery_rate", "energy_recovery_rate", "energy_reduce_rate", "accuracy"];
+
+export const SKILL_NAMES = ["union_burst", "main_skill_1", "main_skill_2", "ex_skill_1"];
+
+// Stats are referenced by number throughout the database
+export var NUMBER_TO_STAT = {
+	1: "hp",
+	2: "atk",
+	3: "def",
+	4: "magic_str",
+	5: "magic_def",
+	6: "physical_critical",
+	7: "magic_critical",
+	8: "dodge",
+	9: "life_steal", // TODO: confirm ("HP absorption" in the wiki???)
+	10: "hp", // 1 and 10 both hp???
+	11: "wave_energy_recovery",
+	14: "don't know" // TODO. Christina has it.
+}
 
 // skills: {
 // 	union_burst: 1, 
 // 	etc...
 // }
-// items: {
-// 	equip_slot_1: true,
-// 	refine_slot_1: 0,
+// equipment: {
+// 	slot1: {
+// 		equipped: true,
+// 		refine: 5,
+// 		id: -1
+// 	},
 // 	etc...
 // }
 // 1 = top left, 2 = top right, 3 = middle left, etc
-export function createUnit(attrs) {
-	var requiredAttrs = ["name", "rarity", "level", "bond", "rank", "items", "skills"];
+export function createActor(attrs) {
+	var requiredAttrs = ["id", "rarity", "level", "rank", "equipment", "skills"];
 	requiredAttrs.forEach(function(attr) {
 		if (attrs[attr] === undefined) {
 			throw Error("Cannot create unit: Missing required attribute: " + attr);
 		}
 	});
 
-	var unitData = lookupUnitData(attrs.name);
-	var unitRarityStats = lookupUnitRarityStats(unitData.unit_id, attrs.rarity);
-
-	var unit = {
-		unitData: unitData,
-		unitRarityStats: unitRarityStats,
-		name: attrs.name,
+	var actor = {
+		id: attrs.id,
 		rarity: attrs.rarity,
 		level: attrs.level,
 		bond: attrs.bond,
 		rank: attrs.rank,
-		items: attrs.items,
-		union_burst_level: attrs.skills.union_burst || 0,
-		main_skill_1_level: attrs.skills.main_skill_1 || 0,
-		main_skill_2_level: attrs.skills.main_skill_2 || 0,
-		ex_skill_1_level: attrs.skills.ex_skill_1 || 0,
-		atk_type: unitData.atk_type,
-		unique_equipment_unlocked: false,
-		motion_type: unitData.motion_type,
-		se_type: unitData.se_type,
-		move_speed: unitData.move_speed,
-		search_area_width: unitData.search_area_width,
-		normal_atk_cast_time: unitData.normal_atk_cast_time
+		equipment: attrs.equipment,
+		skills: attrs.skills
 	}
 
-	// Stats based on: rarity, level, bond, rank, items
+	var unitData = lookupUnitData(attrs.id);
+	if (unitData === null) {
+		return actor;
+	}
+	var unitRarityStats = lookupUnitRarityStats(unitData.unit_id, attrs.rarity);
+
+	actor.unitData = unitData;
+	actor.unitRarityStats = unitRarityStats;
+
+	// Stats based on: rarity, level, bond, rank, equipment
 	STAT_NAMES.forEach(function(stat) {
-		unit[stat] = unitRarityStats[stat] + unitRarityStats[stat + "_growth"] * (attrs.level + attrs.rank);
+		actor[stat] = unitRarityStats[stat] + unitRarityStats[stat + "_growth"] * (attrs.level + attrs.rank);
 	});
 
 	if (attrs.rank > 1) {
 		var unitRankStats = lookupUnitRankStats(unitData.unit_id, attrs.rank);
-		unit.unitRankStats = unitRankStats;
+		actor.unitRankStats = unitRankStats;
 		STAT_NAMES.forEach(function(stat) {
-			unit[stat] += unitRankStats[stat];
+			actor[stat] += unitRankStats[stat];
 		});
 	}
 
 	var equipmentSet = lookupEquipmentSet(unitData.unit_id, attrs.rank);
 	for (var i = 1; i <= 6; i++) {
-		if (attrs.items["equip_slot_" + i]) {
+		var slot = attrs.equipment["slot" + i];
+		if (slot.equipped) {
 			var equipmentData = lookupEquipmentData(equipmentSet["equip_slot_" + i]);
-			STAT_NAMES.forEach(function(stat) {
-				unit[stat] += equipmentData[stat];
-			});
-			if (attrs.items["refine_slot_" + i]) {
-				var refineData = lookupRefineData(equipmentSet["equip_slot_" + i]);
-				var maxRefine = getMaxRefine(refineData.promotion_level);
-				if (attrs.items["refine_slot_" + i] > maxRefine) {
-					console.log("Cannot refine equipment id '" + equipmentSet["equip_slot_" + i] + "' to " + attrs.items["refine_slot_" + i] + "; max refine is " + maxRefine);
-					attrs.items["refine_slot_" + i] = maxRefine;
-				}
+			if (equipmentData) {
 				STAT_NAMES.forEach(function(stat) {
-					unit[stat] += refineData[stat] * attrs.items["refine_slot_" + i];
+					actor[stat] += equipmentData[stat];
 				});
+				if (slot.refine) {
+					var refineData = lookupRefineData(equipmentSet["equip_slot_" + i]);
+					var maxRefine = getMaxRefine(refineData);
+					if (slot.refine > maxRefine) {
+						console.log("Cannot refine equipment id '" + equipmentSet["equip_slot_" + i] + "' to " + slot.refine + "; max refine is " + maxRefine);
+						slot.refine = maxRefine;
+					}
+					STAT_NAMES.forEach(function(stat) {
+						actor[stat] += refineData[stat] * slot.refine;
+					});
+				}
 			}
 		}
 	}
 	var bondStats = lookupBondStats(unitData.unit_id, attrs.bond);
 	STAT_NAMES.forEach(function(stat) {
-		unit[stat] += bondStats[stat];
+		actor[stat] += bondStats[stat];
 	});
+
+	var unitSkills = lookupUnitSkills(attrs.id);
+
+	if (attrs.includeExSkillStats) {
+		// Action detail corresponds to stat numbers from bond boost?
+		if (attrs.rank >= 7 && attrs.skills.ex_skill_1) {
+			var exSkill = lookupSkillData(unitSkills.ex_skill_1);
+			console.log(exSkill)
+			var exSkillActions = lookupActions(exSkill);
+			exSkillActions.forEach(function(action) {
+				console.log(action)
+				if (action.action_type === 90) {
+					var stat = NUMBER_TO_STAT[action.action_detail_1];
+					var amount = action.action_value_2 + action.action_value_3 * attrs.skills.ex_skill_1;
+					actor[stat] += amount;
+				}
+			});
+		}
+	}
 	
-	return unit;
+	return actor;
 }
 
-// There are some names that appear more than once...
-function lookupUnitData(name) {
+function lookupUnitData(unitId) {
 	var unitData = null;
 	for (var i = 0; i < priconneDb.unit_data.length; i++) {
-		var translatedName = translate.names[priconneDb.unit_data[i].unit_name];
-		if (translatedName === name) {
+		if (priconneDb.unit_data[i].unit_id === unitId) {
 			unitData = priconneDb.unit_data[i];
 			break;
 		}
 	}
 	if (unitData === null) {
-		throw Error("Unable to find unit '" + name + "'");
+		// throw Error("Unable to find unit '" + unitId + "'");
 	}
 	return unitData;
 }
@@ -134,7 +167,7 @@ function lookupUnitRankStats(unitId, rank) {
 	return unitRankStats;
 }
 
-function lookupEquipmentSet(unitId, rank) {
+export function lookupEquipmentSet(unitId, rank) {
 	var equipmentSet = null;
 	for (var i = 0; i < priconneDb.unit_promotion.length; i++) {
 		if (priconneDb.unit_promotion[i].unit_id === unitId && priconneDb.unit_promotion[i].promotion_level === rank) {
@@ -143,12 +176,12 @@ function lookupEquipmentSet(unitId, rank) {
 		}
 	}
 	if (equipmentSet === null) {
-		throw Error("Unable to find equipment set for unit id '" + unitId + "' rank " + rank);
+		//throw Error("Unable to find equipment set for unit id '" + unitId + "' rank " + rank);
 	}
 	return equipmentSet;
 }
 
-function lookupEquipmentData(equipmentId) {
+export function lookupEquipmentData(equipmentId) {
 	var equipmentData = null;
 	for (var i = 0; i < priconneDb.equipment_data.length; i++) {
 		if (priconneDb.equipment_data[i].equipment_id === equipmentId) {
@@ -157,12 +190,12 @@ function lookupEquipmentData(equipmentId) {
 		}
 	}
 	if (equipmentData === null) {
-		throw Error("Unable to find equipment data for equipment id '" + equipmentId + "'");
+		//throw Error("Unable to find equipment data for equipment id '" + equipmentId + "'");
 	}
 	return equipmentData;
 }
 
-function lookupRefineData(equipmentId) {
+export function lookupRefineData(equipmentId) {
 	var refineData = null;
 	for (var i = 0; i < priconneDb.equipment_enhance_rate.length; i++) {
 		if (priconneDb.equipment_enhance_rate[i].equipment_id === equipmentId) {
@@ -171,19 +204,20 @@ function lookupRefineData(equipmentId) {
 		}
 	}
 	if (refineData === null) {
-		throw Error("Unable to find refine data for equipment id '" + equipmentId + "'");
+		//throw Error("Unable to find refine data for equipment id '" + equipmentId + "'");
 	}
 	return refineData;
 }
 
-function getMaxRefine(equipmentPromotionLevel) {
-	if (equipmentPromotionLevel >= 4) {
+export function getMaxRefine(refineData) {
+	if (!refineData) return 0;
+	if (refineData.promotion_level >= 4) {
 		return 5;
 	}
-	else if (equipmentPromotionLevel === 3) {
+	else if (refineData.promotion_level === 3) {
 		return 3;
 	}
-	else if (equipmentPromotionLevel === 2) {
+	else if (refineData.promotion_level === 2) {
 		return 1;
 	}
 	else return 0;
@@ -204,24 +238,11 @@ function lookupBondStats(unitId, bond) {
 	STAT_NAMES.forEach(function(stat) {
 		stats[stat] = 0;
 	});
-	var statusTypeToStat = {
-		1: "hp",
-		2: "atk",
-		3: "def",
-		4: "magic_str",
-		5: "magic_def",
-		6: "physical_critical",
-		7: "magic_critical",
-		8: "dodge",
-		9: "life_steal", // TODO: confirm ("HP absorption" in the wiki???)
-		10: "hp", // 1 and 10 both hp???
-		11: "wave_energy_recovery",
-		14: "don't know" // TODO. Christina has it.
-	}
+	
 	priconneDb.chara_story_status.forEach(function(charaStory) {
 		if (unlockedStoryIds[charaStory.story_id]) {
 			for (var i = 1; i <= 5; i++) {
-				var stat = statusTypeToStat[charaStory["status_type_" + i]];
+				var stat = NUMBER_TO_STAT[charaStory["status_type_" + i]];
 				if (stat !== undefined) {
 					stats[stat] += charaStory["status_rate_" + i];
 				}
@@ -230,6 +251,38 @@ function lookupBondStats(unitId, bond) {
 	});
 
 	return stats;
+}
+
+function lookupUnitSkills(unitId) {
+	for (var i = 0; i < priconneDb.unit_skill_data.length; i++) {
+		if (priconneDb.unit_skill_data[i].unit_id === unitId) {
+			return priconneDb.unit_skill_data[i];
+		}
+	}
+}
+
+function lookupSkillData(skillId) {
+	if (skillId) {
+		for (var i = 0; i < priconneDb.skill_data.length; i++) {
+			if (priconneDb.skill_data[i].skill_id === skillId) {
+				return priconneDb.skill_data[i];
+			}
+		}
+	}
+}
+
+function lookupActions(skillData) {
+	var skillActions = [];
+	if (skillData) {
+		priconneDb.skill_action.forEach(function(skillAction) {
+			for (var i = 1; i <= 7; i++) {
+				if (skillAction.action_id === skillData["action_" + i]) {
+					skillActions.push(skillAction)
+				}
+			}
+		});
+	}
+	return skillActions;
 }
 
 export function calculatePower(unit) {
@@ -245,19 +298,19 @@ export function calculatePower(unit) {
 	power += 4.5 * (unit.def + unit.magic_def + unit.life_steal);
 	power += 6 * (unit.dodge);
 
-	power += 10 * (unit.union_burst_level + unit.main_skill_1_level + unit.main_skill_2_level + unit.ex_skill_1_level);
+	power += 10 * (unit.skills.union_burst + unit.skills.main_skill_1 + unit.skills.main_skill_2 + unit.skills.ex_skill_1);
 
 	if (unit.rarity >= 5) {
 		power += 150;
 	}
 	if (unit.rarity >= 6) {
 		power += 2000;
-		power += 5 * unit.union_burst_level;
+		power += 5 * unit.union_burst;
 	}
 
 	if (unit.unique_equipment_unlocked) {
 		power += 100;
-		power += 2 * unit.main_skill_1_level;
+		power += 2 * unit.main_skill_1;
 	}
 
 	return power;
@@ -352,19 +405,29 @@ function simpleBattle(attacker, defender) {
 	}
 }
 
+export function getUnlockedUnits() {
+	return priconneDb.unit_data.filter(function(unit) {
+		return unit.guild_id !== 0 && unit.cutin_1 !== 0;
+	}).sort(function(a, b) {
+		if (a.unit_name > b.unit_name) return 1;
+		else if (a.unit_name < b.unit_name) return -1;
+		else return 0;
+	});
+}
+
 var units;
 var unitResults;
 var TESTS = 250;
-function test() {
+function test1() {
 	unlocked.units.sort();
 	units = unlocked.units.map(function(unitName) {
-		return createUnit({
+		return createActor({
 			name: unitName,
 			rarity: 5,
 			level: 80,
 			bond: 8,
 			rank: 7,
-			items: {
+			equipment: {
 				equip_slot_1: true,
 				refine_slot_1: 5,
 				equip_slot_2: true,
@@ -430,3 +493,249 @@ function test() {
 	document.write(resultTable);
 }
 //test();
+
+function test2() {
+	var unlockedUnits = getUnlockedUnits();
+	unlockedUnits.forEach(function(unit) {
+		var r7 = createActor({
+			id: unit.unit_id,
+			rarity: 3,
+			level: 50,
+			rank: 7,
+			equipment: {
+				slot1: {
+					equipped: true,
+					refine: 0,
+					id: -1
+				},
+				slot2: {
+					equipped: true,
+					refine: 0,
+					id: -1
+				},
+				slot3: {
+					equipped: true,
+					refine: 0,
+					id: -1
+				},
+				slot4: {
+					equipped: true,
+					refine: 0,
+					id: -1
+				},
+				slot5: {
+					equipped: true,
+					refine: 0,
+					id: -1
+				},
+				slot6: {
+					equipped: true,
+					refine: 0,
+					id: -1
+				}
+			},
+			skills: {
+				union_burst: 1,
+				main_skill_1: 1,
+				main_skill_2: 1,
+				ex_skill_1: 1
+			}
+		});
+
+		var r8 = createActor({
+			id: unit.unit_id,
+			rarity: 3,
+			level: 49,
+			rank: 8,
+			equipment: {
+				slot1: {
+					equipped: false,
+					refine: 0,
+					id: -1
+				},
+				slot2: {
+					equipped: false,
+					refine: 0,
+					id: -1
+				},
+				slot3: {
+					equipped: false,
+					refine: 0,
+					id: -1
+				},
+				slot4: {
+					equipped: false,
+					refine: 0,
+					id: -1
+				},
+				slot5: {
+					equipped: false,
+					refine: 0,
+					id: -1
+				},
+				slot6: {
+					equipped: false,
+					refine: 0,
+					id: -1
+				}
+			},
+			skills: {
+				union_burst: 1,
+				main_skill_1: 1,
+				main_skill_2: 1,
+				ex_skill_1: 1
+			}
+		});
+
+		var dif = {};
+		var log = false;
+
+		STAT_NAMES.forEach(function(stat) {
+			var difference = r8[stat] - r7[stat];
+			dif[stat] = difference;
+			if (difference !== 0) {
+				log = true;
+			}
+		});
+
+		if (log) {
+			console.warn(unit.unit_name + ": DIFFERENCE", dif);
+		}
+		else {
+			console.log(unit.unit_name + ": No difference");
+		}
+	});
+}
+
+function test3() {
+	var unlockedUnits = getUnlockedUnits();
+	var html = "<table><tr><th>Name</th><th>" + STAT_NAMES.join("</th><th>") + "</th><th>Power</th></tr>\n";
+	unlockedUnits.forEach(function(unit) {
+		var r7 = createActor({
+			id: unit.unit_id,
+			rarity: 5,
+			level: 50,
+			rank: 7,
+			equipment: {
+				slot1: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot2: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot3: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot4: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot5: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot6: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				}
+			},
+			skills: {
+				union_burst: 1,
+				main_skill_1: 1,
+				main_skill_2: 1,
+				ex_skill_1: 1
+			}
+		});
+
+		var r8 = createActor({
+			id: unit.unit_id,
+			rarity: 5,
+			level: 50,
+			rank: 8,
+			equipment: {
+				slot1: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot2: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot3: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot4: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot5: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				},
+				slot6: {
+					equipped: true,
+					refine: 5,
+					id: -1
+				}
+			},
+			skills: {
+				union_burst: 1,
+				main_skill_1: 1,
+				main_skill_2: 1,
+				ex_skill_1: 1
+			}
+		});
+
+		html += "<tr><td>" + unit.unit_name + "</td>"
+		STAT_NAMES.forEach(function(stat) {
+			var difference = r8[stat] - r7[stat];
+			html += "<td>" + Math.round(difference) + "</td>";
+		});
+		html += "<td>" + Math.round(calculatePower(r8) - calculatePower(r7)) + "</td>";
+		html += "</tr>\n"
+
+	});
+	html += "</table>"
+	document.body.innerHTML = html;
+}
+
+//test3();
+
+function test4() {
+	var unlockedUnits = getUnlockedUnits();
+	var output = "<pre>";
+	output += ["Char", "AtkType", "SkillType", "Base", "LevelScaling", "AttackScaling"].join(",") + "\n";
+
+	unlockedUnits.forEach(function(unitData) {
+		var unitSkills = lookupUnitSkills(unitData.unit_id);
+		SKILL_NAMES.forEach(function(skill) {
+			var skillData = lookupSkillData(unitSkills[skill]);
+			var actions = lookupActions(skillData);
+			actions.forEach(function(action) {
+				if (action.action_type === 1) {
+					output += [unitData.unit_name, unitData.atk_type, skill, action.action_value_1, action.action_value_2, action.action_value_3].join(",") + "\n"
+				}
+			});
+		});
+	});
+
+	output += "</pre>"
+	return output;
+}
+
+export var test = test4;
