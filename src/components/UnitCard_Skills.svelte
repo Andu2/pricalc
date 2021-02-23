@@ -62,7 +62,7 @@
 				});
 			});
 		}
-		console.log(allSkillData)
+		//console.log(allSkillData)
 		return allSkillData;
 	}
 
@@ -80,7 +80,7 @@
 				}
 			});
 		});
-		console.log(skillActions);
+		//console.log(skillActions);
 		return skillActions;
 	}
 
@@ -140,7 +140,7 @@
 		var attackPattern;
 		for (var i = 0; i < priconneDb.unit_attack_pattern.length; i++) {
 			if (priconneDb.unit_attack_pattern[i].unit_id === unitId) {
-				console.log(priconneDb.unit_attack_pattern[i])
+				//console.log(priconneDb.unit_attack_pattern[i])
 				return priconneDb.unit_attack_pattern[i];
 			}
 		}

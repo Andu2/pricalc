@@ -9,7 +9,8 @@
 		position: relative;
 		width: 80%;
 		background-color: white;
-		padding: 2em;
+		padding: 30px;
+		padding-top: 75px;
 		margin: 0 auto;
 		box-sizing: border-box;
 	}

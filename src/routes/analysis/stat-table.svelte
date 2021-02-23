@@ -109,7 +109,6 @@
 </script>
 
 <div>
-	<input type="checkbox" bind:checked={includeExSkill} on:change={recalculate} /> Include EX skill stat boosts
 	<table>
 		<tr>
 		{#each tableHeaders as header, i}

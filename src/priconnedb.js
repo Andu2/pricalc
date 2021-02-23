@@ -12,6 +12,7 @@ import skill_data from "./data/skill_data.json";
 import skill_action from "./data/skill_action.json";
 import chara_story_status from "./data/chara_story_status.json";
 import story_detail from "./data/story_detail.json";
+import unit_status_coefficient from "./data/unit_status_coefficient.json";
 
 export default {
 	unit_enemy_data,
@@ -27,5 +28,6 @@ export default {
 	skill_data,
 	skill_action,
 	chara_story_status,
-	story_detail
+	story_detail,
+	unit_status_coefficient
 }

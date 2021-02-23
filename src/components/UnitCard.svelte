@@ -1,78 +1,12 @@
 <script>
 	import UnitCard_EquipSet from "@src/components/UnitCard_EquipSet.svelte";
 	import UnitCard_Skills from "@src/components/UnitCard_Skills.svelte";
-	import { STAT_NAMES, createActor, calculatePower, getUnlockedUnits } from "@src/priconne.js";
+	import UnitCard_Stats from "@src/components/UnitCard_Stats.svelte";
+	import UnitCard_Bond from "@src/components/UnitCard_Bond.svelte";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, createActor, calculatePower, getUnlockedUnits } from "@src/priconne.js";
 	import priconneDb from "@src/priconnedb.js";
 
-	const STAT_DISPLAY_NAMES = {
-		"hp": "HP",
-		"atk": "Physical Attack",
-		"def": "Physical Defense",
-		"magic_str": "Magic Attack", 
-		"magic_def": "Magic Defense",
-		"physical_critical": "Physical Critical Rate",
-		"magic_critical": "Magic Critical Rate", 
-		"wave_hp_recovery": "HP Regen",
-		"wave_energy_recovery": "TP Regen",
-		"dodge": "Dodge",
-		"life_steal": "HP Drain",
-		"hp_recovery_rate": "HP Recovery Boost",
-		"energy_recovery_rate": "TP Boost",
-		"energy_reduce_rate": "TP Retain",
-		"accuracy": "Accuracy"
-	}
-
-	let unit = {
-		id: -1,
-		rarity: 1,
-		level: 1,
-		rank: 1,
-		bond: 8,
-		includeExSkillStats: true,
-		equipment: {
-			slot1: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot2: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot3: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot4: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot5: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot6: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			}
-		},
-		skills: {
-			union_burst: 1,
-			main_skill_1: 1,
-			main_skill_2: 1,
-			ex_skill_1: 1
-		},
-		bonds: []
-	};
-
-	var calculated = {
-		power: 0
-	}
+	export let unit;
 
 	function maxAll() {
 		unit.rarity = 5;
@@ -126,7 +60,6 @@
 	function recalculate() {
 		// garbage collect plz
 		actor = createActor(unit);
-		calculated.power = calculatePower(actor);
 		if (actor.unitData) {
 			unitComments = actor.unitData.comment;
 			var unitIdString = unit.id + "";
@@ -134,7 +67,7 @@
 			charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
 		}
 		else {
-			console.log(actor)
+			//console.log(actor)
 			unitComments = "???";
 			charImg = "images/unit/unit_icon_unit_unknown.png";
 		}
@@ -200,23 +133,13 @@
 		<div class="unit-card-description">
 			{unitComments}
 		</div>
+		<UnitCard_Bond />
 	</div>
 	<br />
 	Bond: <input type="number" min=0 max=8 bind:value={unit.bond} on:change={recalculate} />
-	Include EX skill stats: <input type="checkbox" bind:checked={unit.includeExSkillStats} on:change={recalculate} />
 	<div class="card-section-wrap">
 		<div class="card-section-row">
-			<div class="card-section">
-				<div class="card-section-header">Stats</div>
-				<div class="stat-power">
-					Power: {Math.round(calculated.power)}
-				</div>
-				<table>
-					{#each STAT_NAMES as stat}
-					<tr><td class="stat-label">{STAT_DISPLAY_NAMES[stat]}</td><td class="stat-value">{Math.round(actor[stat])}</td></tr>
-					{/each}
-				</table>
-			</div>
+			<UnitCard_Stats actor={actor} />
 			<UnitCard_EquipSet unitId={unit.id} rank={unit.rank} bind:equipment={unit.equipment} on:change={recalculate} />
 			<UnitCard_Skills unitId={unit.id} rank={unit.rank} actor={actor} bind:skillLevels={unit.skills} on:change={recalculate} />
 		</div>
@@ -225,18 +148,6 @@
 </div>
 
 <style>
-div.stat-power {
-	margin-bottom: 8px;
-}
-
-td.stat-label {
-	padding-right: 15px;
-}
-
-td.stat-value {
-	font-family: monospace;
-}
-
 div.unit-card-parameters {
 	display: inline-block;
 }

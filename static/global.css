@@ -1,3 +1,20 @@
+@font-face {
+	font-family: 'Segoe UI';
+	src: url('segoeui.ttf')  format('truetype');
+}
+
+@font-face {
+	font-family: 'Segoe UI';
+	src: url('segoeuib.ttf')  format('truetype');
+	font-weight:bold;
+}
+
+@font-face {
+	font-family: 'Segoe UI';
+	src: url('segoeuii.ttf')  format('truetype');
+	font-style: italic;
+}
+
 html, body {
 	position: relative;
 	width: 100%;
@@ -5,11 +22,23 @@ html, body {
 }
 
 body {
-	background-color: #dddddd;
-	color: #333;
+	background-color: #e7eef8;
 	margin: 0;
 	box-sizing: border-box;
-	font-family: sans-serif;
+	font-family: "Segoe UI", sans-serif;
+}
+
+main {
+	color: #232323;
+}
+
+p {
+	margin: 10px 0;
+}
+
+h1, h2, .heading {
+	font-weight: bold;
+	color: #303b5a;
 }
 
 div.card-section {
@@ -37,4 +66,22 @@ div.button {
 
 div.button:hover {
 	opacity: 1;
+}
+
+main a {
+	text-decoration: none;
+	font-weight: bold;
+	color: #ef7485;
+}
+
+main a:hover {
+	color: #566590
+}
+
+th {
+	text-align: left;
+}
+
+td {
+	vertical-align: top;
 }

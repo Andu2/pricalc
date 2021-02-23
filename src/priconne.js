@@ -4,6 +4,24 @@ export const STAT_NAMES = ["hp", "atk", "magic_str", "def", "magic_def", "physic
 	"wave_hp_recovery", "wave_energy_recovery", "dodge", //"physical_penetrate", "magic_penetrate",
 	"life_steal", "hp_recovery_rate", "energy_recovery_rate", "energy_reduce_rate", "accuracy"];
 
+export const STAT_DISPLAY_NAMES = {
+	"hp": "HP",
+	"atk": "Physical Attack",
+	"def": "Physical Defense",
+	"magic_str": "Magic Attack", 
+	"magic_def": "Magic Defense",
+	"physical_critical": "Physical Critical Rate",
+	"magic_critical": "Magic Critical Rate", 
+	"wave_hp_recovery": "HP Regen",
+	"wave_energy_recovery": "TP Regen",
+	"dodge": "Dodge",
+	"life_steal": "HP Drain",
+	"hp_recovery_rate": "HP Recovery Boost",
+	"energy_recovery_rate": "TP Boost",
+	"energy_reduce_rate": "TP Retain",
+	"accuracy": "Accuracy"
+}
+
 export const SKILL_NAMES = ["union_burst", "main_skill_1", "main_skill_2", "ex_skill_1"];
 
 // Stats are referenced by number throughout the database
@@ -109,10 +127,10 @@ export function createActor(attrs) {
 		// Action detail corresponds to stat numbers from bond boost?
 		if (attrs.rank >= 7 && attrs.skills.ex_skill_1) {
 			var exSkill = lookupSkillData(unitSkills.ex_skill_1);
-			console.log(exSkill)
+			//console.log(exSkill)
 			var exSkillActions = lookupActions(exSkill);
 			exSkillActions.forEach(function(action) {
-				console.log(action)
+				//console.log(action)
 				if (action.action_type === 90) {
 					var stat = NUMBER_TO_STAT[action.action_detail_1];
 					var amount = action.action_value_2 + action.action_value_3 * attrs.skills.ex_skill_1;
@@ -330,7 +348,7 @@ function isDodge(attackingUnit, defendingUnit) {
 		dodgeChance *= defendingUnit.level / attackingUnit.level;
 		var isDodge = (Math.random() < dodgeChance);
 		if (dodgeChance > 0) {
-			console.log("Dodge chance: " + dodgeChance.toFixed(2) + "; dodge: " + isDodge);
+			//console.log("Dodge chance: " + dodgeChance.toFixed(2) + "; dodge: " + isDodge);
 		}
 		return isDodge;
 	}
@@ -352,22 +370,22 @@ function isCrit(attackingUnit, defendingUnit) {
 	critChance *= attackingUnit.level / defendingUnit.level;
 	var isCrit = (Math.random() < critChance);
 	if (critChance > 0) {
-		console.log("Crit chance: " + critChance.toFixed(2) + "; crit: " + isCrit);
+		//console.log("Crit chance: " + critChance.toFixed(2) + "; crit: " + isCrit);
 	}
 	return isCrit;
 }
 
 function doAttack(attackingUnit, defendingUnit) {
-	console.log(attackingUnit.name + " attacks " + defendingUnit.name);
+	//console.log(attackingUnit.name + " attacks " + defendingUnit.name);
 	if (attackingUnit.atk_type !== 1 && attackingUnit.atk_type !== 2) {
 		throw Error("Invalid atk_type on attacking unit: " + attackingUnit.atk_type);
 	}
 	if (!isDodge(attackingUnit, defendingUnit)) {
 		var damage = getAttackDamage(attackingUnit, defendingUnit);
 		defendingUnit.currentHp = Math.max(0, defendingUnit.currentHp - damage);
-		console.log(damage.toFixed(0) + " damage; " + defendingUnit.name + " now has " + defendingUnit.currentHp.toFixed(0) + " hp");
+		//console.log(damage.toFixed(0) + " damage; " + defendingUnit.name + " now has " + defendingUnit.currentHp.toFixed(0) + " hp");
 		if (defendingUnit.currentHp <= 0) {
-			console.log(defendingUnit.name + " dies");
+			//console.log(defendingUnit.name + " dies");
 		}
 	}
 }
@@ -450,7 +468,7 @@ function test1() {
 		});
 	});
 
-	console.log = function(){};
+	//console.log = function(){};
 	unitResults = {};
 	units.forEach(function(attacker, i) {
 		unitResults[attacker.name] = {};
@@ -542,6 +560,8 @@ function test2() {
 			}
 		});
 
+		var test = 2;
+
 		var r8 = createActor({
 			id: unit.unit_id,
 			rarity: 3,
@@ -602,7 +622,7 @@ function test2() {
 			console.warn(unit.unit_name + ": DIFFERENCE", dif);
 		}
 		else {
-			console.log(unit.unit_name + ": No difference");
+			//console.log(unit.unit_name + ": No difference");
 		}
 	});
 }
@@ -738,4 +758,65 @@ function test4() {
 	return output;
 }
 
-export var test = test4;
+function test5() {
+	var unitId;
+	var unlockedUnits = getUnlockedUnits();
+	unlockedUnits.forEach(function(unitData) {
+		if (unitData.unit_name === "Kuka") {
+			unitId = unitData.unit_id;
+		}
+	});
+
+	var testUnit = createActor({
+		id: unitId,
+		rarity: 5,
+		level: 84,
+		rank: 7,
+		bond: 8,
+		equipment: {
+			slot1: {
+				equipped: false,
+				refine: 0,
+				id: -1
+			},
+			slot2: {
+				equipped: true,
+				refine: 5,
+				id: -1
+			},
+			slot3: {
+				equipped: true,
+				refine: 5,
+				id: -1
+			},
+			slot4: {
+				equipped: true,
+				refine: 5,
+				id: -1
+			},
+			slot5: {
+				equipped: true,
+				refine: 5,
+				id: -1
+			},
+			slot6: {
+				equipped: true,
+				refine: 5,
+				id: -1
+			}
+		},
+		skills: {
+			union_burst: 84,
+			main_skill_1: 84,
+			main_skill_2: 84,
+			ex_skill_1: 84
+		}
+	});
+
+	console.log(testUnit)
+	// should be 9496
+
+	return calculatePower(testUnit);
+}
+
+export var test = test5;

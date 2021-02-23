@@ -13,7 +13,8 @@ var dumpTables = [
 	"skill_data",
 	"skill_action",
 	"chara_story_status",
-	"story_detail"
+	"story_detail",
+	"unit_status_coefficient"
 ];
 
 // Note: Originally used "sqlite-json", found that package had a bug. Discovered this package was more popular.
