@@ -21,9 +21,9 @@ $: dodgeChance = Math.min(100, Math.max((dodge - accuracy), 0) * (dodgeDefenderL
 <p>Power is calculated by multiplying each stat by its given weight and adding it all up. The weights for each stat are:</p>
 <table><tr><th>Stat</th><th>Weight</th></tr>
 	{#each STAT_NAMES as stat}
-	<tr><td>{STAT_DISPLAY_NAMES[stat]}</td><td>{priconneDb.unit_status_coefficient[0][stat + "_coefficient"]}</td></tr>
+	<tr><td class="label">{STAT_DISPLAY_NAMES[stat]}</td><td class="number">{priconneDb.unit_status_coefficient[0][stat + "_coefficient"]}</td></tr>
 	{/each}
-	<tr><td>Skill levels</td><td>{priconneDb.unit_status_coefficient[0]["skill_lv_coefficient"]}</td>
+	<tr><td class="label">Skill levels</td><td class="number">{priconneDb.unit_status_coefficient[0]["skill_lv_coefficient"]}</td>
 </table>
 <p>Additionally, 150 power is added if it's a 5* rarity unit.</p>
 
@@ -41,18 +41,29 @@ $: dodgeChance = Math.min(100, Math.max((dodge - accuracy), 0) * (dodgeDefenderL
 </p>
 
 <h2>Accuracy and Dodging</h2>
-<p>Dodge chance in percentage is equal to (Defender dodge - Attacker accuracy) * (Defender level / Attacker level) / (1 + (Defender dodge - Attacker accuracy) / 100). It only works on physical attacks.</p>
+<p>Dodge chance in percentage is equal to (Defender dodge - Attacker accuracy) / (1 + (Defender dodge - Attacker accuracy) / 100). It only works on physical attacks.</p>
+<!-- <p>Dodge chance is apparently affected by difference in level, but I can't find the exact values. If you know more, let me know and I can update the formula.</p> -->
 <p>Try it out: With attacker accuracy <input id="accuracy" type="number" bind:value={accuracy} />
-	and level <input id="dodgeAttackerLevel" type="number" bind:value={dodgeAttackerLevel} />
+<!-- 	and level <input id="dodgeAttackerLevel" type="number" bind:value={dodgeAttackerLevel} /> -->
 	vs. defender dodge <input id="dodge" type="number" bind:value={dodge} />
-	and level <input id="dodgeDefenderLevel" type="number" bind:value={dodgeDefenderLevel} />,
+<!-- 	and level <input id="dodgeDefenderLevel" type="number" bind:value={dodgeDefenderLevel} />, -->
 	the chance of dodging is {dodgeChance.toFixed(2) + "%"}.
 </p>
-<hr />
-<p>The source for these formulas is <a href="https://docs.google.com/spreadsheets/d/1JjK7Ws4gfzKChRs5ueoxEZVN5SXK10nhDC1-nbm0NUs/edit?usp=sharing">this spreadsheet</a>, which does not cite a source.</p>
+<h2>TP Boost and HP Recovery Boost</h2>
+TP Boost and HP Recovery Boost are straight percentage increases. So, TP Boost of 30 means 30% faster TP gain. Note that HP Recovery Boost matters on the healer, not the healee.
+<hr class="hr" />
+<p>The source for these formulas is <a href="https://docs.google.com/spreadsheets/d/1JjK7Ws4gfzKChRs5ueoxEZVN5SXK10nhDC1-nbm0NUs/edit?usp=sharing">this spreadsheet</a>. If I got something wrong, please let me know!</p>
 
 <style>
 input[type="number"] {
 	width: 70px;
+}
+
+td.label {
+	padding-right: 20px;
+}
+
+td.number {
+	font-family: monospace;
 }
 </style>

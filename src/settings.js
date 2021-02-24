@@ -1,5 +1,7 @@
-let settings = {
-	includeExSkillStats: true
-}
+import { localStorageStore } from "./local-store.js";
 
-export default settings;
+export const includeExSkillStats = localStorageStore("includeExSkillStats", true);
+export const hideImpossibleRarities = localStorageStore("hideImpossibleRarities", false);
+// remember which analysis the user was looking at when switching back
+export const lastAnalysis = localStorageStore("lastAnalysis", "");
+export const lastGuide = localStorageStore("lastGuide", "");

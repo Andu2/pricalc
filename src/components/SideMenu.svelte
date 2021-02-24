@@ -12,27 +12,16 @@
 </nav>
 
 <style>
-div.tab {
-	display: inline-block;
-	padding: 10px 20px;
-	background-color: #dddddd;
-	cursor: pointer;
-}
-
-div.tab:hover {
-	background-color: #bbbbbb;
-}
-
-div.tab.active {
-	background-color: #bbbbbb;
-	font-weight: bold;
+li[aria-selected="true"] {
+	color: #303b5a;
 }
 
 li {
 	list-style-type: none;
+	padding: 1px 0;
 }
 
 ul {
-	padding-left: 10px;
+	padding-left: 0px;
 }
 </style>

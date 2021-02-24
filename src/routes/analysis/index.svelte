@@ -2,7 +2,6 @@
 
 </script>
 
-yes??
 <style>
 
 </style>

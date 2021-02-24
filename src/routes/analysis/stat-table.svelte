@@ -1,48 +1,77 @@
 <script>
-	import { STAT_NAMES, createActor, calculatePower, getUnlockedUnits } from "@src/priconne.js";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, createActor, calculatePower, getUnlockedUnits,
+		calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/priconne.js";
+	import DopeAssTable from "@src/components/DopeAssTable.svelte";
+	import { includeExSkillStats } from "@src/settings.js";
 
-	var maxedUnits;
-	var tableData;
-	var includeExSkill = true;
-	var sort = {
-		column: 0,
-		ascending: false
+	let tableData;
+	let tableColumns;
+
+	const alwaysDisplayCols = ["icon", "name"];
+	let columnConfig = {
+		"icon": {
+			attr: "icon",
+			displayName: "Icon",
+			sort: null,
+			html: true
+		},
+		"name": {
+			attr: "name",
+			displayName: "Name",
+			sort: "default"
+		},
+		"effective_physical_hp": {
+			attr: "effective_physical_hp",
+			displayName: "Effective Physical HP",
+			sort: "default"
+		},
+		"effective_magic_hp": {
+			attr: "effective_magic_hp",
+			displayName: "Effective Magic HP",
+			sort: "default"
+		},
+		"power": {
+			attr: "power",
+			displayName: "Power",
+			sort: "default"
+		}
 	}
-
-	var unlockedUnits = getUnlockedUnits();
-
-	var statsWeCareAbout = STAT_NAMES.filter(function(stat) {
-		return (["physical_penetrate", "magic_penetrate"].indexOf(stat) === -1)
+	STAT_NAMES.forEach(function(stat) {
+		columnConfig[stat] = {
+			attr: stat,
+			displayName: STAT_DISPLAY_NAMES[stat],
+			sort: "default"
+		}
 	});
-	var tableHeaders = ["Icon", "Name", "HP", "Physical Attack", "Magic Attack", "Physical Defense", "Magic Defense", "Physical Critical Rate", 
-		"Magic Critical Rate", "HP Regen", "TP Regen", "Dodge", "HP Drain", "HP Recovery Boost", "TP Boost", "TP Retain", "Accuracy", "Power"];
 
-	function changeSort(event) {
-		var i = event.target.getAttribute("data-colnum") * 1;
-		if (sort.column === i) {
-			sort.ascending = !sort.ascending;
-		}
-		else {
-			sort.ascending = false;
-			sort.column = i;
-		}
-
-		tableData.sort(function(row1, row2) {
-			if (row1[sort.column] > row2[sort.column]) {
-				return (sort.ascending ? 1 : -1);
-			}
-			else if (row1[sort.column] < row2[sort.column]) {
-				return (sort.ascending ? -1 : 1);
-			}
-			else return 0;
-		});
-
-		// This is to force svelte to update
-		tableData = tableData.slice();
+	let toggleDisplayCols = {
+		"hp": true,
+		"atk": true,
+		"def": true,
+		"magic_str": true, 
+		"magic_def": true,
+		"physical_critical": false,
+		"magic_critical": false, 
+		"wave_hp_recovery": false,
+		"wave_energy_recovery": false,
+		"dodge": false,
+		"life_steal": false,
+		"hp_recovery_rate": false,
+		"energy_recovery_rate": false,
+		"energy_reduce_rate": false,
+		"accuracy": false,
+		"effective_physical_hp": true, // calculated value
+		"effective_magic_hp": true, // calculated value
+		"power": false // calculated value
 	}
 
-	function recalculate() {
-		maxedUnits = unlockedUnits.map(function(unitData) {
+	const unlockedUnits = getUnlockedUnits();
+	let maxedActors = calculateMaxedActors();
+	tableData = calculateTableData(maxedActors);
+	$: tableColumns = calculateTableColumns(toggleDisplayCols);
+
+	function calculateMaxedActors() {
+		return unlockedUnits.map(function(unitData) {
 			return createActor({
 				id: unitData.unit_id,
 				rarity: 5,
@@ -53,32 +82,26 @@
 					slot1: {
 						equipped: true,
 						refine: 5,
-						id: -1
 					},
 					slot2: {
 						equipped: true,
 						refine: 5,
-						id: -1
 					},
 					slot3: {
 						equipped: true,
 						refine: 5,
-						id: -1
 					},
 					slot4: {
 						equipped: true,
 						refine: 5,
-						id: -1
 					},
 					slot5: {
 						equipped: true,
 						refine: 5,
-						id: -1
 					},
 					slot6: {
 						equipped: true,
 						refine: 5,
-						id: -1
 					}
 				},
 				skills: {
@@ -87,58 +110,85 @@
 					main_skill_2: 1,
 					ex_skill_1: 85
 				},
-				includeExSkillStats: includeExSkill
+				includeExSkillStats: $includeExSkillStats
 			});
 		});
+	}
 
-		tableData = maxedUnits.map(function(unit) {
-			var unitIdString = unit.id + "";
+	function calculateTableColumns(toggleDisplayCols) {
+		var tableColumns = [];
+		alwaysDisplayCols.forEach(function(attr) {
+			tableColumns.push(columnConfig[attr]);
+		});
+
+		for (var attr in toggleDisplayCols) {
+			if (toggleDisplayCols[attr]) {
+				tableColumns.push(columnConfig[attr]);
+			}
+		}
+
+		return tableColumns;
+	}
+
+	function calculateTableData() {
+		return maxedActors.map(function(actor) {
+			var unitIdString = actor.id + "";
 			var unitIdWithRarity = unitIdString.slice(0, 4) + "3" + unitIdString.slice(-1); 
 			var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
 
-			var row = [charImg, unit.unitData.unit_name];
-			statsWeCareAbout.forEach(function(stat) {
-				row.push(Math.round(unit[stat]));
-			});
-			row.push(Math.round(calculatePower(unit)));
+			var row = {
+				icon: "<img class=\"table-icon\" src=\"" + charImg + "\" />",
+				name: actor.unitData.unit_name,
+				power: Math.round(calculatePower(actor)),
+				effective_physical_hp: Math.round(calculateEffectivePhysicalHp(actor)),
+				effective_magic_hp: Math.round(calculateEffectiveMagicHp(actor))
+			};
+			STAT_NAMES.forEach(function(stat) {
+				row[stat] = Math.round(actor[stat]);
+			})
+			
 			return row;
 		});
 	}
 
-	recalculate();
 </script>
-
-<div>
-	<table>
-		<tr>
-		{#each tableHeaders as header, i}
-			<th data-colnum={i} on:click={changeSort}>{header}</th>
-		{/each}
-		</tr>
-		{#each tableData as row}
-		<tr>
-			{#each row as cellData, i}
-				{#if i===0} <!--special rule - turn first cell into image-->
-				<td><img class="icon" src={cellData}/></td>
-				{:else}
-				<td>{cellData}</td>
-				{/if}
+<table id="stats-table-table">
+	<tr>
+		<td id="stats-table-config">
+			<p>Stats listed are for 5* rarity at the maximum current rank.
+			</p>
+			<h4>Stats to include</h4>
+			{#each Object.keys(toggleDisplayCols) as attr}
+			<input type="checkbox" bind:checked={toggleDisplayCols[attr]} /> {columnConfig[attr].displayName}<br />
 			{/each}
-		</tr>
-		{/each}
-	</table>
-</div>
+		</td>
+		<td id="stats-table">
+			<div class="table-wrap">
+				<DopeAssTable data={tableData} columns={tableColumns} />
+			</div>
+		</td>
+	</tr>
+</table>
+<p>
+	Effective physical HP takes dodge chance into account. Numbers may be a bit off because of rounding errors. (If you have an example of some numbers that are off, I would like to know, because I would like to figure out exactly where and how the game decides to round values.)
+</p>
 
 <style>
-th {
-	cursor: pointer;
-	padding: 0px 5px;
+td#stats-table-config {
+	width: 180px;
+	border-right: 2px solid #cfe4ff;
 }
-td.imgcell {
-	/*white-space: nowrap;*/
+
+table#stats-table-table {
+	table-layout: fixed;
+	width: 100%;
 }
-img.icon {
-	width: 40px;
-	height: 40px;
+
+td#stats-table {
+	padding-left: 10px;
+}
+
+div.table-wrap {
+	overflow-x: auto;
 }
 </style>

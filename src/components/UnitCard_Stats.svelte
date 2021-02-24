@@ -27,10 +27,11 @@ div.stat-power {
 }
 
 td.stat-label {
-	padding-right: 20px;
+	padding-right: 10px;
 }
 
 td.stat-value {
 	font-family: monospace;
+	font-size: 10pt;
 }
 </style>

@@ -1,20 +1,29 @@
 <script>
 	import SideMenu from "@src/components/SideMenu.svelte";
+	import { lastAnalysis } from "@src/settings.js";
 
 	let tabs = [{
 		path: "stat-table",
 		displayName: "Max Stat Table"
+	}, {
+		path: "rank-comparison",
+		displayName: "Rank Comparison"
+	}, {
+		path: "damage-scaling",
+		displayName: "Skill Damage Scaling"
 	}];
 
 	export let segment;
-</script>
+	$: lastAnalysis.set(segment);
 
+</script>
 <div class="layout-wrap">
 	<div class="layout-row">
 		<div class="layout-cell sidemenu">
+			<h3>Analysis Tools</h3>
 			<SideMenu basePath="analysis/" tabs={tabs} segment={segment} />
 		</div>
-		<div class="layout-cell">
+		<div class="layout-cell content">
 			<main><slot></slot></main>
 		</div>
 	</div>
@@ -23,6 +32,8 @@
 <style>
 div.layout-wrap {
 	display: table;
+	table-layout: fixed;
+	width: 100%;
 }
 
 div.layout-row {
@@ -35,7 +46,11 @@ div.layout-cell {
 }
 
 div.sidemenu {
-	padding-right: 20px;
-	min-width: 150px;
+	width: 170px;
+	border-right: 2px solid #cfe4ff;
+}
+
+div.content {
+	padding-left: 20px;
 }
 </style>

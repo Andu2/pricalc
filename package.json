@@ -38,6 +38,7 @@
     "compression": "^1.7.1",
     "lz-string": "^1.4.4",
     "polka": "next",
-    "sirv": "^1.0.0"
+    "sirv": "^1.0.0",
+    "svelte-chartjs": "^1.0.1"
   }
 }

@@ -106,7 +106,7 @@ export function createActor(attrs) {
 					var refineData = lookupRefineData(equipmentSet["equip_slot_" + i]);
 					var maxRefine = getMaxRefine(refineData);
 					if (slot.refine > maxRefine) {
-						console.log("Cannot refine equipment id '" + equipmentSet["equip_slot_" + i] + "' to " + slot.refine + "; max refine is " + maxRefine);
+						//console.log("Cannot refine equipment id '" + equipmentSet["equip_slot_" + i] + "' to " + slot.refine + "; max refine is " + maxRefine);
 						slot.refine = maxRefine;
 					}
 					STAT_NAMES.forEach(function(stat) {
@@ -143,7 +143,7 @@ export function createActor(attrs) {
 	return actor;
 }
 
-function lookupUnitData(unitId) {
+export function lookupUnitData(unitId) {
 	var unitData = null;
 	for (var i = 0; i < priconneDb.unit_data.length; i++) {
 		if (priconneDb.unit_data[i].unit_id === unitId) {
@@ -271,7 +271,7 @@ function lookupBondStats(unitId, bond) {
 	return stats;
 }
 
-function lookupUnitSkills(unitId) {
+export function lookupUnitSkills(unitId) {
 	for (var i = 0; i < priconneDb.unit_skill_data.length; i++) {
 		if (priconneDb.unit_skill_data[i].unit_id === unitId) {
 			return priconneDb.unit_skill_data[i];
@@ -279,7 +279,7 @@ function lookupUnitSkills(unitId) {
 	}
 }
 
-function lookupSkillData(skillId) {
+export function lookupSkillData(skillId) {
 	if (skillId) {
 		for (var i = 0; i < priconneDb.skill_data.length; i++) {
 			if (priconneDb.skill_data[i].skill_id === skillId) {
@@ -289,7 +289,7 @@ function lookupSkillData(skillId) {
 	}
 }
 
-function lookupActions(skillData) {
+export function lookupActions(skillData) {
 	var skillActions = [];
 	if (skillData) {
 		priconneDb.skill_action.forEach(function(skillAction) {
@@ -332,6 +332,15 @@ export function calculatePower(unit) {
 	}
 
 	return power;
+}
+
+export function calculateEffectivePhysicalHp(actor) {
+	var dodgeChance = actor.dodge / (1 + actor.dodge / 100) / 100;
+	return actor.hp * (1 + actor.def / 100) / (1 - dodgeChance);
+}
+
+export function calculateEffectiveMagicHp(actor) {
+	return actor.hp * (1 + actor.magic_def / 100);
 }
 
 function initUnitForBattle(unit) {
@@ -627,136 +636,7 @@ function test2() {
 	});
 }
 
-function test3() {
-	var unlockedUnits = getUnlockedUnits();
-	var html = "<table><tr><th>Name</th><th>" + STAT_NAMES.join("</th><th>") + "</th><th>Power</th></tr>\n";
-	unlockedUnits.forEach(function(unit) {
-		var r7 = createActor({
-			id: unit.unit_id,
-			rarity: 5,
-			level: 50,
-			rank: 7,
-			equipment: {
-				slot1: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot2: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot3: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot4: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot5: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot6: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				}
-			},
-			skills: {
-				union_burst: 1,
-				main_skill_1: 1,
-				main_skill_2: 1,
-				ex_skill_1: 1
-			}
-		});
-
-		var r8 = createActor({
-			id: unit.unit_id,
-			rarity: 5,
-			level: 50,
-			rank: 8,
-			equipment: {
-				slot1: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot2: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot3: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot4: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot5: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				},
-				slot6: {
-					equipped: true,
-					refine: 5,
-					id: -1
-				}
-			},
-			skills: {
-				union_burst: 1,
-				main_skill_1: 1,
-				main_skill_2: 1,
-				ex_skill_1: 1
-			}
-		});
-
-		html += "<tr><td>" + unit.unit_name + "</td>"
-		STAT_NAMES.forEach(function(stat) {
-			var difference = r8[stat] - r7[stat];
-			html += "<td>" + Math.round(difference) + "</td>";
-		});
-		html += "<td>" + Math.round(calculatePower(r8) - calculatePower(r7)) + "</td>";
-		html += "</tr>\n"
-
-	});
-	html += "</table>"
-	document.body.innerHTML = html;
-}
-
 //test3();
-
-function test4() {
-	var unlockedUnits = getUnlockedUnits();
-	var output = "<pre>";
-	output += ["Char", "AtkType", "SkillType", "Base", "LevelScaling", "AttackScaling"].join(",") + "\n";
-
-	unlockedUnits.forEach(function(unitData) {
-		var unitSkills = lookupUnitSkills(unitData.unit_id);
-		SKILL_NAMES.forEach(function(skill) {
-			var skillData = lookupSkillData(unitSkills[skill]);
-			var actions = lookupActions(skillData);
-			actions.forEach(function(action) {
-				if (action.action_type === 1) {
-					output += [unitData.unit_name, unitData.atk_type, skill, action.action_value_1, action.action_value_2, action.action_value_3].join(",") + "\n"
-				}
-			});
-		});
-	});
-
-	output += "</pre>"
-	return output;
-}
 
 function test5() {
 	var unitId;

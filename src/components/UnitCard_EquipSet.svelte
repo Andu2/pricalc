@@ -115,6 +115,9 @@
 	function toggleEquip(slot) {
 		return function(e) {
 			equipment["slot" + slot].equipped = !equipment["slot" + slot].equipped;
+			if (!equipment["slot" + slot].equipped) {
+				equipment["slot" + slot].refine = 0;
+			}
 			dispatch("change", {})
 		}
 	}

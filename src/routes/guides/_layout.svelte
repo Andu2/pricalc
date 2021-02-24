@@ -1,5 +1,6 @@
 <script>
 	import SideMenu from "@src/components/SideMenu.svelte";
+	import { lastGuide } from "@src/settings.js";
 
 	let tabs = [{
 		path: "formulas",
@@ -7,6 +8,8 @@
 	}];
 
 	export let segment;
+	$: lastGuide.set(segment);
+
 </script>
 
 <div class="layout-wrap">
@@ -36,6 +39,6 @@ div.layout-cell {
 
 div.sidemenu {
 	padding-right: 20px;
-	min-width: 150px;
+	width: 170px;
 }
 </style>

@@ -14,7 +14,7 @@ else {
 		rarity: 1,
 		level: 1,
 		rank: 1,
-		bond: 8,
+		bond: 0,
 		includeExSkillStats: true,
 		equipment: {
 			slot1: {
@@ -63,6 +63,6 @@ import UnitCard from "@src/components/UnitCard.svelte";
 
 <UnitCard bind:unit={unit}/>
 
-<div>
+<!-- <div>
 	{LZString.compressToEncodedURIComponent(JSON.stringify(unit))}
-</div>
+</div> -->

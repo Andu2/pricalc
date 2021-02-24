@@ -15,6 +15,12 @@
 	font-style: italic;
 }
 
+@font-face {
+	font-family: 'Liberation Serif';
+	src: url('LiberationSerif-Bold.ttf')  format('truetype');
+	font-weight: bold;
+}
+
 html, body {
 	position: relative;
 	width: 100%;
@@ -26,6 +32,8 @@ body {
 	margin: 0;
 	box-sizing: border-box;
 	font-family: "Segoe UI", sans-serif;
+	font-size: 12pt;
+	min-width: 1000px;
 }
 
 main {
@@ -36,7 +44,7 @@ p {
 	margin: 10px 0;
 }
 
-h1, h2, .heading {
+h1, h2, h3, h4, .heading {
 	font-weight: bold;
 	color: #303b5a;
 }
@@ -44,7 +52,7 @@ h1, h2, .heading {
 div.card-section {
 	display: table-cell;
 	padding: 15px;
-	border: 3px solid #B6EBF5;
+	border: 3px solid #cfe4ff;
 	border-radius: 20px;
 }
 
@@ -84,4 +92,14 @@ th {
 
 td {
 	vertical-align: top;
+}
+
+img.table-icon {
+	width: 40px;
+	height: 40px;
+}
+
+/* hr must be styled by class */
+hr.hr {
+	margin: 20px 0;
 }

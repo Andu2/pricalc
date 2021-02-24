@@ -3,8 +3,11 @@
 	import UnitCard_Skills from "@src/components/UnitCard_Skills.svelte";
 	import UnitCard_Stats from "@src/components/UnitCard_Stats.svelte";
 	import UnitCard_Bond from "@src/components/UnitCard_Bond.svelte";
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, createActor, calculatePower, getUnlockedUnits } from "@src/priconne.js";
+	import RaritySelect from "@src/components/RaritySelect.svelte";
+	import UnitSelect from "@src/components/UnitSelect.svelte";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, createActor, calculatePower, getUnlockedUnits, lookupUnitData } from "@src/priconne.js";
 	import priconneDb from "@src/priconnedb.js";
+	import { hideImpossibleRarities } from "@src/settings.js";
 
 	export let unit;
 
@@ -12,6 +15,7 @@
 		unit.rarity = 5;
 		unit.level = 85;
 		unit.rank = 8;
+		unit.bond = 8;
 		unit.equipment = {
 			slot1: {
 				equipped: true,
@@ -55,21 +59,22 @@
 
 	let actor;
 	let unitComments = "???";
-	let charImg = "images/unit/unit_icon_unit_unknown.png";
 
 	function recalculate() {
-		// garbage collect plz
+		if ($hideImpossibleRarities && unit.id > -1) {
+			// TODO: Fix this mess
+			var unitData = lookupUnitData(unit.id);
+			if (unitData.rarity > unit.rarity) {
+				unit.rarity = unitData.rarity;
+			}
+		}
 		actor = createActor(unit);
 		if (actor.unitData) {
 			unitComments = actor.unitData.comment;
-			var unitIdString = unit.id + "";
-			var unitIdWithRarity = unitIdString.slice(0, 4) + (unit.rarity >= 3 ? "3" : "1") + unitIdString.slice(-1); 
-			charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
 		}
 		else {
 			//console.log(actor)
 			unitComments = "???";
-			charImg = "images/unit/unit_icon_unit_unknown.png";
 		}
 	}
 
@@ -110,33 +115,33 @@
 
 	let unlockedUnits = getUnlockedUnits();
 
-	recalculate();
+	$: recalculate(unit.rarity);
 </script>
 
 <div>
-	Unit: 
-	<select bind:value={unit.id} on:change={recalculate}>
-		{#each unlockedUnits as unit}
-		<option value={unit.unit_id}>{unit.unit_name}</option>
-		{/each}
-	</select><br />
 	<div class="unit-card-header">
 		<div class="unit-card-image">
-			<img class="char-image" src={charImg} />
+			<UnitSelect bind:unitId={unit.id} rarity={unit.rarity} />
 			<div class="unit-card-parameters">
 				<div><strong>{actor.unitData ? actor.unitData.unit_name: "Select a character..."}</strong></div>
-				<div>Rarity: <input type="number" min=1 max=5 bind:value={unit.rarity} on:change={recalculate} /></div>
-				<div>Level: <input type="number" min=1 max=85 bind:value={unit.level} on:change={recalculate} /></div>
-				<div>Rank: <input type="number" min=1 max=8 bind:value={unit.rank} on:change={resetEquipment} on:change={recalculate} /></div>
+				{#if unit.id > -1}
+				<table>
+					<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
+					<tr><td>Level:</td><td><input type="number" min=1 max=85 bind:value={unit.level} on:change={recalculate} /></td></tr>
+					<tr><td>Rank:</td><td><input type="number" min=1 max=8 bind:value={unit.rank} on:change={resetEquipment} on:change={recalculate} /></td></tr>
+					<tr><td>Bond:</td><td><input type="number" min=0 max=8 bind:value={unit.bond} on:change={recalculate} /></td></tr>
+				</table>
+				{/if}
 			</div>
 		</div>
+		{#if unit.id > -1}
 		<div class="unit-card-description">
 			{unitComments}
 		</div>
-		<UnitCard_Bond />
+		{/if}
+<!-- 		<UnitCard_Bond /> -->
 	</div>
-	<br />
-	Bond: <input type="number" min=0 max=8 bind:value={unit.bond} on:change={recalculate} />
+	{#if unit.id > -1}
 	<div class="card-section-wrap">
 		<div class="card-section-row">
 			<UnitCard_Stats actor={actor} />
@@ -145,11 +150,14 @@
 		</div>
 	</div>
 	<button type="button" on:click={maxAll}>Max all</button>
+	{/if}
 </div>
 
 <style>
 div.unit-card-parameters {
 	display: inline-block;
+	vertical-align: top;
+	padding-left: 10px;
 }
 
 div.card-section-row {
