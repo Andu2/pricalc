@@ -1,4 +1,4 @@
-import unit_enemy_data from "./data/unit_enemy_data.json";
+//import unit_enemy_data from "./data/unit_enemy_data.json";
 //import enemy_parameter from "./data/enemy_parameter.json";
 import equipment_data from "./data/equipment_data.json";
 import equipment_enhance_rate from "./data/equipment_enhance_rate.json";
@@ -15,7 +15,7 @@ import story_detail from "./data/story_detail.json";
 import unit_status_coefficient from "./data/unit_status_coefficient.json";
 
 export default {
-	unit_enemy_data,
+//	unit_enemy_data,
 //	enemy_parameter,
 	equipment_data,
 	equipment_enhance_rate,
