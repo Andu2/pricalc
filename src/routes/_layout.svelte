@@ -19,6 +19,12 @@
 		box-sizing: border-box;
 		overflow-x: auto;
 	}
+
+	@media only screen and (max-width: 1260px) {
+		main {
+			width: 100%;
+		}
+	}
 </style>
 
 <Nav {segment}/>
