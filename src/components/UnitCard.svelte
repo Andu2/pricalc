@@ -52,26 +52,61 @@
 		}
 	}
 
-	let actor;
+	// need dummy actor
+	let actor = createActor({
+		id: -1,
+		rarity: 1,
+		level: 1,
+		rank: 1,
+		bond: 0,
+		equipment: {
+			slot1: {
+				equipped: false,
+				refine: 0
+			},
+			slot2: {
+				equipped: false,
+				refine: 0
+			},
+			slot3: {
+				equipped: false,
+				refine: 0
+			},
+			slot4: {
+				equipped: false,
+				refine: 0
+			},
+			slot5: {
+				equipped: false,
+				refine: 0
+			},
+			slot6: {
+				equipped: false,
+				refine: 0
+			}
+		},
+		skills: {
+			union_burst: 1,
+			main_skill_1: 1,
+			main_skill_2: 1,
+			ex_skill_1: 1
+		},
+		bonds: []
+	});
 	let unitComments = "???";
 
 	function recalculate() {
-		validateUnit(unit); // does this cause an infinite reactivity loop?
+		let isValid = validateUnit(unit);
 
-		if ($hideImpossibleRarities && unit.id > -1) {
-			// TODO: Fix this mess
-			var unitData = lookupUnitData(unit.id);
-			if (unitData.rarity > unit.rarity) {
-				unit.rarity = unitData.rarity;
+		if (isValid) {
+			actor = createActor(unit, options);
+			if (actor.unitData) {
+				unitComments = actor.unitData.comment;
 			}
-		}
-		actor = createActor(unit, options);
-		if (actor.unitData) {
-			unitComments = actor.unitData.comment;
-		}
-		else {
-			//console.log(actor)
-			unitComments = "???";
+			else {
+				//console.log(actor)
+				unitComments = "???";
+			}
 		}
 	}
 
@@ -101,57 +136,72 @@
 			});
 		}
 		if (!isValid) {
-			console.warn("INVALID UNIT; RESETTING");
-			unit = {
-				id: -1,
-				rarity: 1,
-				level: 1,
-				rank: 1,
-				bond: 0,
-				equipment: {
-					slot1: {
-						equipped: false,
-						refine: 0
-					},
-					slot2: {
-						equipped: false,
-						refine: 0
-					},
-					slot3: {
-						equipped: false,
-						refine: 0
-					},
-					slot4: {
-						equipped: false,
-						refine: 0
-					},
-					slot5: {
-						equipped: false,
-						refine: 0
-					},
-					slot6: {
-						equipped: false,
-						refine: 0
-					}
-				},
-				skills: {
-					union_burst: 1,
-					main_skill_1: 1,
-					main_skill_2: 1,
-					ex_skill_1: 1
-				},
-				bonds: []
+			// console.warn("INVALID UNIT; RESETTING");
+			// unit = {
+			// 	id: -1,
+			// 	rarity: 1,
+			// 	level: 1,
+			// 	rank: 1,
+			// 	bond: 0,
+			// 	equipment: {
+			// 		slot1: {
+			// 			equipped: false,
+			// 			refine: 0
+			// 		},
+			// 		slot2: {
+			// 			equipped: false,
+			// 			refine: 0
+			// 		},
+			// 		slot3: {
+			// 			equipped: false,
+			// 			refine: 0
+			// 		},
+			// 		slot4: {
+			// 			equipped: false,
+			// 			refine: 0
+			// 		},
+			// 		slot5: {
+			// 			equipped: false,
+			// 			refine: 0
+			// 		},
+			// 		slot6: {
+			// 			equipped: false,
+			// 			refine: 0
+			// 		}
+			// 	},
+			// 	skills: {
+			// 		union_burst: 1,
+			// 		main_skill_1: 1,
+			// 		main_skill_2: 1,
+			// 		ex_skill_1: 1
+			// 	},
+			// 	bonds: []
+			// }
+		}
+
+		if (typeof unit.rarity === "number" && $hideImpossibleRarities && unit.id > -1) {
+			// TODO: Fix this mess
+			var unitData = lookupUnitData(unit.id);
+			if (unitData.rarity > unit.rarity) {
+				unit.rarity = unitData.rarity;
 			}
 		}
 
-		if (!unit.level)
-		if (unit.level > 85) unit.level = 85;
-		else if (unit.level < 1) unit.level = 1;
-		if (unit.rank > 8) unit.rank = 8;
-		else if (unit.rank < 1) unit.rank = 1;
-		if (unit.bond > 8) unit.bond = 8;
-		else if (unit.bond > 4 && unit.rarity < 3) unit.bond = 4;
-		else if (unit.bond < 0) unit.bond = 0;
+		if (typeof unit.level === "number") {
+			if (unit.level > 85) unit.level = 85;
+			else if (unit.level < 1) unit.level = 1;
+		}
+		if (typeof unit.rank === "number") {
+			if (unit.rank > 8) unit.rank = 8;
+			else if (unit.rank < 1) unit.rank = 1;
+		}
+		if (typeof unit.bond === "number") {
+			if (unit.bond > 8) unit.bond = 8;
+			else if (unit.bond > 4 && typeof unit.rarity === "number" && unit.rarity < 3) unit.bond = 4;
+			else if (unit.bond < 0) unit.bond = 0;
+		}
+
+		return isValid;
 	}
 
 	function resetEquipment() {

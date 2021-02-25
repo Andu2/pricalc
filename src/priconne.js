@@ -63,22 +63,40 @@ export function createActor(attrs, options) {
 
 	options = options || {};
 
+	let attrsCopy = {};
+	for (var key in attrs) {
+		attrsCopy[key] = attrs[key];
+	}
+
+	// let's assume some defaults I guess
+	if (typeof attrsCopy.rank !== "number") {
+		attrsCopy.rank = 1;
+	}
+	if (typeof attrsCopy.level !== "number") {
+		attrsCopy.level = 1;
+	}
+
+if (typeof attrsCopy.bond !== "number") {
+		attrsCopy.bond = 0;
+	}
+
+
 	var actor = {
-		id: attrs.id,
-		rarity: attrs.rarity,
-		level: attrs.level,
-		bond: attrs.bond,
-		rank: attrs.rank,
-		equipment: attrs.equipment,
-		skills: attrs.skills,
+		id: attrsCopy.id,
+		rarity: attrsCopy.rarity,
+		level: attrsCopy.level,
+		bond: attrsCopy.bond,
+		rank: attrsCopy.rank,
+		equipment: attrsCopy.equipment,
+		skills: attrsCopy.skills,
 		includeExSkillStats: options.includeExSkillStats
 	}
 
-	var unitData = lookupUnitData(attrs.id);
+	var unitData = lookupUnitData(attrsCopy.id);
 	if (unitData === null) {
 		return actor;
 	}
-	var unitRarityStats = lookupUnitRarityStats(unitData.unit_id, attrs.rarity);
+	var unitRarityStats = lookupUnitRarityStats(unitData.unit_id, attrsCopy.rarity);
 
 	actor.unitData = unitData;
 	actor.unitRarityStats = unitRarityStats;
@@ -89,20 +107,20 @@ export function createActor(attrs, options) {
 
 	// Stats based on: rarity, level, bond, rank, equipment
 	STAT_NAMES.forEach(function(stat) {
-		actor[stat] = Math.round(unitRarityStats[stat] + unitRarityStats[stat + "_growth"] * (attrs.level + attrs.rank));
+		actor[stat] = Math.round(unitRarityStats[stat] + unitRarityStats[stat + "_growth"] * (attrsCopy.level + attrsCopy.rank));
 	});
 
-	if (attrs.rank > 1) {
-		var unitRankStats = lookupUnitRankStats(unitData.unit_id, attrs.rank);
+	if (attrsCopy.rank > 1) {
+		var unitRankStats = lookupUnitRankStats(unitData.unit_id, attrsCopy.rank);
 		actor.unitRankStats = unitRankStats;
 		STAT_NAMES.forEach(function(stat) {
 			actor[stat] += Math.ceil(unitRankStats[stat]);
 		});
 	}
 
-	var equipmentSet = lookupEquipmentSet(unitData.unit_id, attrs.rank);
+	var equipmentSet = lookupEquipmentSet(unitData.unit_id, attrsCopy.rank);
 	for (var i = 1; i <= 6; i++) {
-		var slot = attrs.equipment["slot" + i];
+		var slot = attrsCopy.equipment["slot" + i];
 		if (slot.equipped) {
 			var equipmentData = lookupEquipmentData(equipmentSet["equip_slot_" + i]);
 			if (equipmentData) {
@@ -123,18 +141,18 @@ export function createActor(attrs, options) {
 			}
 		}
 	}
-	var bondStats = lookupBondStats(unitData.unit_id, attrs.bond);
+	var bondStats = lookupBondStats(unitData.unit_id, attrsCopy.bond);
 	STAT_NAMES.forEach(function(stat) {
 		actor[stat] += bondStats[stat];
 	});
 
-	var unitSkills = lookupUnitSkills(attrs.id);
+	var unitSkills = lookupUnitSkills(attrsCopy.id);
 
 	if (options.includeExSkillStats) {
 		// Action detail corresponds to stat numbers from bond boost?
 		actor.statsFromExSkill = {};
-		if (attrs.rank >= 7 && attrs.skills.ex_skill_1) {
-			if (attrs.rarity >= 5) {
+		if (attrsCopy.rank >= 7 && attrsCopy.skills.ex_skill_1) {
+			if (attrsCopy.rarity >= 5) {
 				var exSkill = lookupSkillData(unitSkills.ex_skill_evolution_1);
 			}
 			else {
@@ -147,7 +165,7 @@ export function createActor(attrs, options) {
 				//console.log(action)
 				if (action.action_type === 90) {
 					var stat = NUMBER_TO_STAT[action.action_detail_1];
-					var amount = action.action_value_2 + action.action_value_3 * attrs.skills.ex_skill_1;
+					var amount = action.action_value_2 + action.action_value_3 * attrsCopy.skills.ex_skill_1;
 					actor[stat] += amount;
 					if (actor.statsFromExSkill[stat] === undefined) {
 						actor.statsFromExSkill[stat] = 0;
@@ -323,6 +341,8 @@ export function lookupActions(skillData) {
 
 export function calculatePower(unit) {
 	var power = 0;
+
+	if (!unit.unitData) return 0;
 
 	// TODO: do this in a less dumb way
 	if (unit.includeExSkillStats && unit.statsFromExSkill) {

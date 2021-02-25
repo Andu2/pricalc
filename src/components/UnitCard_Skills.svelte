@@ -23,6 +23,11 @@
 	let unlockedSkills;
 	$: unlockedSkills = getUnlockedSkills(rank);
 
+	// Avoid it lookup like crap when user presses backspace
+	$: if (typeof rank !== "number") rank = 1;
+	$: if (typeof level !== "number") level = 1;
+	$: if (typeof rarity !== "number") rarity = 1;
+
 	function getSkillIds(unitId) {
 		for (var i = 0; i < priconneDb.unit_skill_data.length; i++) {
 			if (priconneDb.unit_skill_data[i].unit_id === unitId) {
@@ -34,6 +39,9 @@
 	const SKILL_NAMES = ["union_burst", "main_skill_1", "main_skill_2", "ex_skill_1"];
 
 	function getUnlockedSkills(rank) {
+		if (typeof rank !== "number") {
+			return unlockedSkills || [];
+		}
 		var unlockedSkills = [];
 		if (rank >= 1) {
 			unlockedSkills.push("union_burst");
@@ -67,7 +75,7 @@
 				});
 			});
 		}
-		console.log(allSkillData)
+		//console.log(allSkillData)
 		return allSkillData;
 	}
 
@@ -103,6 +111,7 @@
 	}
 
 	function getActionDescription(action, level) {
+		if (!actor.unitData) return "";
 		var replaceVal = "???";
 		var additionalVal = "";
 
@@ -231,7 +240,7 @@
 		}
 
 		if (description !== "" && replaceVal === "???") {
-			console.log(action);
+			//console.log(action);
 		}
 
 		return description;
