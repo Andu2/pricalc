@@ -26,6 +26,10 @@ div.stat-power {
 	margin-bottom: 8px;
 }
 
+td {
+	vertical-align: text-bottom;
+}
+
 td.stat-label {
 	padding-right: 10px;
 }

@@ -7,9 +7,11 @@
 	import UnitSelect from "@src/components/UnitSelect.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, createActor, calculatePower, getUnlockedUnits, lookupUnitData } from "@src/priconne.js";
 	import priconneDb from "@src/priconnedb.js";
-	import { hideImpossibleRarities } from "@src/settings.js";
+	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
 
 	export let unit;
+	let options = {};
+	$: options.includeExSkillStats = $includeExSkillStats;
 
 	function maxAll() {
 		unit.rarity = 5;
@@ -19,33 +21,27 @@
 		unit.equipment = {
 			slot1: {
 				equipped: true,
-				refine: 5,
-				id: -1
+				refine: 5
 			},
 			slot2: {
 				equipped: true,
-				refine: 5,
-				id: -1
+				refine: 5
 			},
 			slot3: {
 				equipped: true,
-				refine: 5,
-				id: -1
+				refine: 5
 			},
 			slot4: {
 				equipped: true,
-				refine: 5,
-				id: -1
+				refine: 5
 			},
 			slot5: {
 				equipped: true,
-				refine: 5,
-				id: -1
+				refine: 5
 			},
 			slot6: {
 				equipped: true,
-				refine: 5,
-				id: -1
+				refine: 5
 			}
 		},
 		unit.skills = {
@@ -54,13 +50,14 @@
 			main_skill_2: 85,
 			ex_skill_1: 85
 		}
-		recalculate();
 	}
 
 	let actor;
 	let unitComments = "???";
 
 	function recalculate() {
+		validateUnit(unit); // does this cause an infinite reactivity loop?
+
 		if ($hideImpossibleRarities && unit.id > -1) {
 			// TODO: Fix this mess
 			var unitData = lookupUnitData(unit.id);
@@ -68,7 +65,7 @@
 				unit.rarity = unitData.rarity;
 			}
 		}
-		actor = createActor(unit);
+		actor = createActor(unit, options);
 		if (actor.unitData) {
 			unitComments = actor.unitData.comment;
 		}
@@ -78,44 +75,117 @@
 		}
 	}
 
+	function validateUnit() {
+		// Make sure shit isn't jacked up - using localstorage kinda scary
+		var isValid = true;
+		if (typeof unit !== "object" || typeof unit.equipment !== "object" || typeof unit.skills !== "object") {
+			isValid = false;
+		}
+		else {
+			["id", "rarity", "level", "rank", "bond"].forEach(function(attr) {
+				if (typeof unit[attr] !== "number") {
+					isValid = false;
+				}
+			});
+			[1, 2, 3, 4, 5, 6].forEach(function(slot) {
+				if (typeof unit.equipment["slot" + slot] !== "object") {
+					isValid = false;
+				}
+				else {
+					if (typeof unit.equipment["slot" + slot].equipped !== "boolean") isValid = false;
+					if (typeof unit.equipment["slot" + slot].refine !== "number") isValid = false;
+				}
+			});
+			["union_burst", "main_skill_1", "main_skill_2", "ex_skill_1"].forEach(function(skill) {
+				if (typeof unit.skills[skill] !== "number") isValid = false;
+			});
+		}
+		if (!isValid) {
+			console.warn("INVALID UNIT; RESETTING");
+			unit = {
+				id: -1,
+				rarity: 1,
+				level: 1,
+				rank: 1,
+				bond: 0,
+				equipment: {
+					slot1: {
+						equipped: false,
+						refine: 0
+					},
+					slot2: {
+						equipped: false,
+						refine: 0
+					},
+					slot3: {
+						equipped: false,
+						refine: 0
+					},
+					slot4: {
+						equipped: false,
+						refine: 0
+					},
+					slot5: {
+						equipped: false,
+						refine: 0
+					},
+					slot6: {
+						equipped: false,
+						refine: 0
+					}
+				},
+				skills: {
+					union_burst: 1,
+					main_skill_1: 1,
+					main_skill_2: 1,
+					ex_skill_1: 1
+				},
+				bonds: []
+			}
+		}
+
+		if (!unit.level)
+		if (unit.level > 85) unit.level = 85;
+		else if (unit.level < 1) unit.level = 1;
+		if (unit.rank > 8) unit.rank = 8;
+		else if (unit.rank < 1) unit.rank = 1;
+		if (unit.bond > 8) unit.bond = 8;
+		else if (unit.bond > 4 && unit.rarity < 3) unit.bond = 4;
+		else if (unit.bond < 0) unit.bond = 0;
+	}
+
 	function resetEquipment() {
 		unit.equipment = {
 			slot1: {
 				equipped: false,
-				refine: 0,
-				id: -1
+				refine: 0
 			},
 			slot2: {
 				equipped: false,
-				refine: 0,
-				id: -1
+				refine: 0
 			},
 			slot3: {
 				equipped: false,
-				refine: 0,
-				id: -1
+				refine: 0
 			},
 			slot4: {
 				equipped: false,
-				refine: 0,
-				id: -1
+				refine: 0
 			},
 			slot5: {
 				equipped: false,
-				refine: 0,
-				id: -1
+				refine: 0
 			},
 			slot6: {
 				equipped: false,
-				refine: 0,
-				id: -1
+				refine: 0
 			}
 		}
 	}
 
 	let unlockedUnits = getUnlockedUnits();
 
-	$: recalculate(unit.rarity);
+	$: recalculate(unit);
 </script>
 
 <div>
@@ -127,16 +197,23 @@
 				{#if unit.id > -1}
 				<table>
 					<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
-					<tr><td>Level:</td><td><input type="number" min=1 max=85 bind:value={unit.level} on:change={recalculate} /></td></tr>
-					<tr><td>Rank:</td><td><input type="number" min=1 max=8 bind:value={unit.rank} on:change={resetEquipment} on:change={recalculate} /></td></tr>
-					<tr><td>Bond:</td><td><input type="number" min=0 max=8 bind:value={unit.bond} on:change={recalculate} /></td></tr>
+					<tr><td>Level:</td><td><input type="number" min=1 max=85 bind:value={unit.level} /></td></tr>
+					<tr><td>Rank:</td><td><input type="number" min=1 max=8 bind:value={unit.rank} on:change={resetEquipment} /></td></tr>
+					<tr><td>Bond:</td><td><input type="number" min=0 max=8 bind:value={unit.bond} /></td></tr>
 				</table>
 				{/if}
 			</div>
 		</div>
 		{#if unit.id > -1}
-		<div class="unit-card-description">
-			{unitComments}
+		<div class="card-middle-row-wrap">
+			<div class="unit-card-middlerow">
+				<div class="max-all-button-wrap">
+					<div class="button max-all-button" on:click={maxAll}>Max all</div>
+				</div>
+				<div class="unit-card-description">
+					{unitComments}
+				</div>
+			</div>
 		</div>
 		{/if}
 <!-- 		<UnitCard_Bond /> -->
@@ -145,15 +222,18 @@
 	<div class="card-section-wrap">
 		<div class="card-section-row">
 			<UnitCard_Stats actor={actor} />
-			<UnitCard_EquipSet unitId={unit.id} rank={unit.rank} bind:equipment={unit.equipment} on:change={recalculate} />
-			<UnitCard_Skills unitId={unit.id} rank={unit.rank} actor={actor} bind:skillLevels={unit.skills} on:change={recalculate} />
+			<UnitCard_EquipSet unitId={unit.id} rank={unit.rank} bind:equipment={unit.equipment} />
+			<UnitCard_Skills unitId={unit.id} rank={unit.rank} level={unit.level} rarity={unit.rarity} actor={actor} bind:skillLevels={unit.skills} />
 		</div>
 	</div>
-	<button type="button" on:click={maxAll}>Max all</button>
 	{/if}
 </div>
 
 <style>
+div.unit-card-header {
+	padding-left: 10px;
+}
+
 div.unit-card-parameters {
 	display: inline-block;
 	vertical-align: top;
@@ -167,6 +247,32 @@ div.card-section-row {
 div.card-section-wrap {
 	display: table;
 	border-spacing: 10px;
+}
+
+div.card-middle-row-wrap {
+	padding-top: 10px;
+	padding-bottom: 5px;
+	border-spacing: 10px;
+	display: table;
+}
+
+div.unit-card-middlerow {
+	display: table-row;
+}
+
+div.max-all-button-wrap {
+	display: table-cell;
+	min-width: 80px;
+	vertical-align: top;
+}
+
+div.max-all-button {
+	padding: 5px;
+}
+
+div.unit-card-description {
+	display: table-cell;
+	vertical-align: top;
 }
 
 img.char-image {

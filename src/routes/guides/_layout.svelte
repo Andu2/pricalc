@@ -15,9 +15,10 @@
 <div class="layout-wrap">
 	<div class="layout-row">
 		<div class="layout-cell sidemenu">
-			<SideMenu basePath="guides/" tabs={tabs} segment={segment}/>
+			<h3>Guides</h3>
+			<SideMenu basePath="guides/" tabs={tabs} segment={segment} />
 		</div>
-		<div class="layout-cell">
+		<div class="layout-cell content">
 			<main><slot></slot></main>
 		</div>
 	</div>
@@ -26,6 +27,8 @@
 <style>
 div.layout-wrap {
 	display: table;
+	table-layout: fixed;
+	width: 100%;
 }
 
 div.layout-row {
@@ -38,7 +41,11 @@ div.layout-cell {
 }
 
 div.sidemenu {
-	padding-right: 20px;
 	width: 170px;
+	border-right: 2px solid #cfe4ff;
+}
+
+div.content {
+	padding-left: 20px;
 }
 </style>

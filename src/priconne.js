@@ -53,13 +53,15 @@ export var NUMBER_TO_STAT = {
 // 	etc...
 // }
 // 1 = top left, 2 = top right, 3 = middle left, etc
-export function createActor(attrs) {
+export function createActor(attrs, options) {
 	var requiredAttrs = ["id", "rarity", "level", "rank", "equipment", "skills"];
 	requiredAttrs.forEach(function(attr) {
 		if (attrs[attr] === undefined) {
 			throw Error("Cannot create unit: Missing required attribute: " + attr);
 		}
 	});
+
+	options = options || {};
 
 	var actor = {
 		id: attrs.id,
@@ -68,7 +70,8 @@ export function createActor(attrs) {
 		bond: attrs.bond,
 		rank: attrs.rank,
 		equipment: attrs.equipment,
-		skills: attrs.skills
+		skills: attrs.skills,
+		includeExSkillStats: options.includeExSkillStats
 	}
 
 	var unitData = lookupUnitData(attrs.id);
@@ -80,16 +83,20 @@ export function createActor(attrs) {
 	actor.unitData = unitData;
 	actor.unitRarityStats = unitRarityStats;
 
+	if (unitRarityStats === null) {
+		return actor;
+	}
+
 	// Stats based on: rarity, level, bond, rank, equipment
 	STAT_NAMES.forEach(function(stat) {
-		actor[stat] = unitRarityStats[stat] + unitRarityStats[stat + "_growth"] * (attrs.level + attrs.rank);
+		actor[stat] = Math.round(unitRarityStats[stat] + unitRarityStats[stat + "_growth"] * (attrs.level + attrs.rank));
 	});
 
 	if (attrs.rank > 1) {
 		var unitRankStats = lookupUnitRankStats(unitData.unit_id, attrs.rank);
 		actor.unitRankStats = unitRankStats;
 		STAT_NAMES.forEach(function(stat) {
-			actor[stat] += unitRankStats[stat];
+			actor[stat] += Math.ceil(unitRankStats[stat]);
 		});
 	}
 
@@ -100,7 +107,7 @@ export function createActor(attrs) {
 			var equipmentData = lookupEquipmentData(equipmentSet["equip_slot_" + i]);
 			if (equipmentData) {
 				STAT_NAMES.forEach(function(stat) {
-					actor[stat] += equipmentData[stat];
+					actor[stat] += Math.ceil(equipmentData[stat]);
 				});
 				if (slot.refine) {
 					var refineData = lookupRefineData(equipmentSet["equip_slot_" + i]);
@@ -110,7 +117,7 @@ export function createActor(attrs) {
 						slot.refine = maxRefine;
 					}
 					STAT_NAMES.forEach(function(stat) {
-						actor[stat] += refineData[stat] * slot.refine;
+						actor[stat] += Math.ceil(refineData[stat] * slot.refine);
 					});
 				}
 			}
@@ -123,10 +130,17 @@ export function createActor(attrs) {
 
 	var unitSkills = lookupUnitSkills(attrs.id);
 
-	if (attrs.includeExSkillStats) {
+	if (options.includeExSkillStats) {
 		// Action detail corresponds to stat numbers from bond boost?
+		actor.statsFromExSkill = {};
 		if (attrs.rank >= 7 && attrs.skills.ex_skill_1) {
-			var exSkill = lookupSkillData(unitSkills.ex_skill_1);
+			if (attrs.rarity >= 5) {
+				var exSkill = lookupSkillData(unitSkills.ex_skill_evolution_1);
+			}
+			else {
+				var exSkill = lookupSkillData(unitSkills.ex_skill_1);
+			}
+
 			//console.log(exSkill)
 			var exSkillActions = lookupActions(exSkill);
 			exSkillActions.forEach(function(action) {
@@ -135,6 +149,10 @@ export function createActor(attrs) {
 					var stat = NUMBER_TO_STAT[action.action_detail_1];
 					var amount = action.action_value_2 + action.action_value_3 * attrs.skills.ex_skill_1;
 					actor[stat] += amount;
+					if (actor.statsFromExSkill[stat] === undefined) {
+						actor.statsFromExSkill[stat] = 0;
+					}
+					actor.statsFromExSkill[stat] += amount;
 				}
 			});
 		}
@@ -166,7 +184,7 @@ function lookupUnitRarityStats(unitId, rarity) {
 		}
 	}
 	if (unitRarityStats === null) {
-		throw Error("Unable to find rarity stats for unit id '" + unitId + "' rarity " + rarity);
+		//throw Error("Unable to find rarity stats for unit id '" + unitId + "' rarity " + rarity);
 	}
 	return unitRarityStats;
 }
@@ -180,7 +198,7 @@ function lookupUnitRankStats(unitId, rank) {
 		}
 	}
 	if (unitRankStats === null) {
-		throw Error("Unable to find rank stats for unit id '" + unitId + "' rank " + rank);
+		//throw Error("Unable to find rank stats for unit id '" + unitId + "' rank " + rank);
 	}
 	return unitRankStats;
 }
@@ -306,15 +324,35 @@ export function lookupActions(skillData) {
 export function calculatePower(unit) {
 	var power = 0;
 
-	power += 0.1 * (unit.hp + unit.wave_hp_recovery);
-	power += 0.3 * (unit.wave_energy_recovery);
-	power += 0.5 * (unit.physical_critical + unit.magic_critical);
-	power += 1 * (unit.atk + unit.magic_str + unit.hp_recovery_rate);
-	power += 1.5 * (unit.energy_recovery_rate);
-	power += 2 * (unit.accuracy);
-	power += 3 * (unit.energy_reduce_rate);
-	power += 4.5 * (unit.def + unit.magic_def + unit.life_steal);
-	power += 6 * (unit.dodge);
+	// TODO: do this in a less dumb way
+	if (unit.includeExSkillStats && unit.statsFromExSkill) {
+		for (var stat in unit.statsFromExSkill) {
+			unit[stat] -= unit.statsFromExSkill[stat];
+		}
+	}
+
+	var weights = {
+		hp: 0.1,
+		wave_hp_recovery: 0.1,
+		wave_energy_recovery: 0.3,
+		physical_critical: 0.5,
+		magic_critical: 0.5,
+		atk: 1,
+		magic_str: 1,
+		hp_recovery_rate: 1,
+		energy_recovery_rate: 1.5,
+		accuracy: 2,
+		energy_reduce_rate: 3,
+		def: 4.5,
+		magic_def: 4.5,
+		life_steal: 4.5,
+		dodge: 6
+	}
+
+	for (var stat in weights) {
+		power += unit[stat] * weights[stat];
+	}
+	power = Math.round(power);
 
 	power += 10 * (unit.skills.union_burst + unit.skills.main_skill_1 + unit.skills.main_skill_2 + unit.skills.ex_skill_1);
 
@@ -329,6 +367,12 @@ export function calculatePower(unit) {
 	if (unit.unique_equipment_unlocked) {
 		power += 100;
 		power += 2 * unit.main_skill_1;
+	}
+
+	if (unit.includeExSkillStats && unit.statsFromExSkill) {
+		for (var stat in unit.statsFromExSkill) {
+			unit[stat] += unit.statsFromExSkill[stat];
+		}
 	}
 
 	return power;

@@ -47,7 +47,7 @@ function startSelect() {
 <img class="char-image" src={charImg} on:click={startSelect} />
 
 <div class="unit-select" class:is-selecting={isSelecting}>
-	<div class="fade-background"></div>
+	<div class="fade-background" on:click={selectUnit(unitId)}></div>
 	<div class="unit-list">
 		<h2>Select a character</h2>
 		<table>

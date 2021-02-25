@@ -2,61 +2,14 @@
 import { stores } from "@sapper/app";
 import LZString from "lz-string";
 const { page } = stores();
+import { savedUnit } from "@src/settings.js"
 
-let unit;
+// if ($page.query.data) {
+// 	unit = JSON.parse(LZString.decompressFromEncodedURIComponent($page.query.data));
+// }
 
-if ($page.query.data) {
-	unit = JSON.parse(LZString.decompressFromEncodedURIComponent($page.query.data));
-}
-else {
-	unit = {
-		id: -1,
-		rarity: 1,
-		level: 1,
-		rank: 1,
-		bond: 0,
-		includeExSkillStats: true,
-		equipment: {
-			slot1: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot2: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot3: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot4: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot5: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			},
-			slot6: {
-				equipped: false,
-				refine: 0,
-				id: -1
-			}
-		},
-		skills: {
-			union_burst: 1,
-			main_skill_1: 1,
-			main_skill_2: 1,
-			ex_skill_1: 1
-		},
-		bonds: []
-	};
-}
+let unit = $savedUnit;
+$: savedUnit.set(unit)
 
 import UnitCard from "@src/components/UnitCard.svelte";
 </script>

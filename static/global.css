@@ -67,13 +67,21 @@ div.button {
 	user-select: none;
 	text-align: center;
 	cursor: pointer;
-	border: 3px solid #3399AA;
+	background-color: #4e81e0;
+	border-bottom: 2px solid #303b5a;
 	border-radius: 4px;
-	opacity: 0.7;
+	opacity: 0.8;
+	color: white;
 }
 
 div.button:hover {
 	opacity: 1;
+}
+
+div.button:active {
+	border-top: 2px solid white;
+	border-bottom-width: 0;
+	border-radius: 5px 5px 4px 4px;
 }
 
 main a {

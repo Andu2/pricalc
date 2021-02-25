@@ -109,7 +109,8 @@
 					main_skill_1: 1,
 					main_skill_2: 1,
 					ex_skill_1: 85
-				},
+				}
+			}, {
 				includeExSkillStats: $includeExSkillStats
 			});
 		});
