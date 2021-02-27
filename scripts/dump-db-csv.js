@@ -1,4 +1,5 @@
 // CSV import should be smaller since we don't have to store header data in every row
+// TODO: fix line breaks
 
 const fs = require('fs');
 const path = require('path');

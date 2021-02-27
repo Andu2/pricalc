@@ -130,8 +130,8 @@
 			let actor2 = createActor({
 				id: unitData.unit_id,
 				rarity: rarity,
-				level: 85,
-				bond: 8,
+				level: 1,
+				bond: 0,
 				rank: RANK_OPTIONS[rank2].rank,
 				equipment: {
 					slot1: {

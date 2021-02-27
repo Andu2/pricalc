@@ -1,6 +1,6 @@
 <script>
 	import { createEventDispatcher } from "svelte";
-	import { NUMBER_TO_STAT, tables } from "@src/data/priconnedb";
+	import { NUMBER_TO_STAT, SKILL_NAMES, lookupRows, getUnitSkills } from "@src/data/priconnedb";
 
 	export let unitId;
 	export let rank;
@@ -9,101 +9,52 @@
 	export let level;
 	export let rarity;
 
-	let skillIds;
-	$: skillIds = getSkillIds(unitId);
-	let skillData;
-	$: skillData = getSkillData(skillIds, rarity);
-	let skillActions;
-	$: skillActions = getSkillActions(skillData);
-	let attackPattern;
-	$: attackPattern = getAttackPattern(unitId);
-	let skillImages;
-	$: skillImages = getSkillImages(skillData);
-	let unlockedSkills;
-	$: unlockedSkills = getUnlockedSkills(rank);
+	$: unitSkills = getUnitSkillsEx(unitId);
+	$: attackPattern = lookupRows("unit_attack_pattern", { unit_id: unitId })[0];
+	$: skillImages = getSkillImages(unitSkills);
+	$: unlockedSkills = getUnlockedSkills(rank, unitSkills);
 
-	// Avoid it lookup like crap when user presses backspace
+	// Avoid it looking like crap when user presses backspace
 	$: if (typeof rank !== "number") rank = 1;
 	$: if (typeof level !== "number") level = 1;
 	$: if (typeof rarity !== "number") rarity = 1;
 
-	function getSkillIds(unitId) {
-		for (var i = 0; i < tables.unit_skill_data.length; i++) {
-			if (tables.unit_skill_data[i].unit_id === unitId) {
-				return tables.unit_skill_data[i];
-			}
+	function getUnitSkillsEx(unitId) {
+		let unitSkills = getUnitSkills(unitId);
+		if (rarity >= 5) {
+			unitSkills.ex_skill_1 = unitSkills.ex_skill_evolution_1;
 		}
+		return unitSkills
 	}
-
-	const SKILL_NAMES = ["union_burst", "main_skill_1", "main_skill_2", "ex_skill_1"];
 
 	function getUnlockedSkills(rank) {
 		if (typeof rank !== "number") {
 			return unlockedSkills || [];
 		}
 		var unlockedSkills = [];
-		if (rank >= 1) {
+		if (rank >= 1 && unitSkills.union_burst.data) {
 			unlockedSkills.push("union_burst");
 		}
-		if (rank >= 2) {
+		if (rank >= 2 && unitSkills.main_skill_1.data) {
 			unlockedSkills.push("main_skill_1");
 		}
-		if (rank >= 4) {
+		if (rank >= 4 && unitSkills.main_skill_2.data) {
 			unlockedSkills.push("main_skill_2");
 		}
-		if (rank >= 7) {
+		if (rank >= 7 && unitSkills.ex_skill_1.data) {
 			unlockedSkills.push("ex_skill_1");
 		}
 		return unlockedSkills;
 	}
 
-	function getSkillData(unitSkillData) {
-		var allSkillData = {};
-		SKILL_NAMES.forEach(function(skill) {
-			allSkillData[skill] = {};
-		});
-		if (unitSkillData) {
-			tables.skill_data.forEach(function(skillData) {
-				SKILL_NAMES.forEach(function(skill) {
-					if (rarity >= 5 && skill === "ex_skill_1" && skillData.skill_id === unitSkillData["ex_skill_evolution_1"]) {
-						allSkillData[skill] = skillData;
-					}
-					else if (skillData.skill_id === unitSkillData[skill]) {
-						allSkillData[skill] = skillData;
-					}
-				});
-			});
-		}
-		//console.log(allSkillData)
-		return allSkillData;
-	}
-
-	function getSkillActions(skillData) {
-		var skillActions = {};
-		SKILL_NAMES.forEach(function(skill) {
-			skillActions[skill] = [];
-		});
-		tables.skill_action.forEach(function(skillAction) {
-			SKILL_NAMES.forEach(function(skill) {
-				for (var i = 1; i <= 7; i++) {
-					if (skillAction.action_id === skillData[skill]["action_" + i]) {
-						skillActions[skill].push(skillAction)
-					}
-				}
-			});
-		});
-		//console.log(skillActions);
-		return skillActions;
-	}
-
-	function getSkillImages(skillData) {
+	function getSkillImages(unitSkills) {
 		var skillImages = {};
 		SKILL_NAMES.forEach(function(skill) {
-			if (!skillData[skill].icon_type) {
+			if (!unitSkills[skill].data || !unitSkills[skill].data.icon_type) {
 				skillImages[skill] = "images/equipment/icon_icon_equipment_999999.png";
 			}
 			else {
-				skillImages[skill] = "images/skill/icon_icon_skill_" + skillData[skill].icon_type + ".png";
+				skillImages[skill] = "images/skill/icon_icon_skill_" + unitSkills[skill].data.icon_type + ".png";
 			}
 		});
 		return skillImages;
@@ -263,11 +214,11 @@
 					pattern.push("LOOP START");
 				}
 
-				if (rank >= 2 && attackPattern["atk_pattern_" + i] === 1001) {
-					pattern.push(skillData["main_skill_1"].name);
+				if (rank >= 2 && attackPattern["atk_pattern_" + i] === 1001 && unitSkills["main_skill_1"].data) {
+					pattern.push(unitSkills["main_skill_1"].data.name);
 				}
-				else if (rank >= 4 && attackPattern["atk_pattern_" + i] === 1002) {
-					pattern.push(skillData["main_skill_2"].name);
+				else if (rank >= 4 && attackPattern["atk_pattern_" + i] === 1002 && unitSkills["main_skill_1"].data) {
+					pattern.push(unitSkills["main_skill_2"].data.name);
 				}
 				else {
 					pattern.push("Attack");
@@ -303,15 +254,15 @@
 		<div class="skill-box">
 			<img class="skill" src={skillImages[skill]} /> 
 			<div class="skill-header">
-				<div class="skill-name"><strong>{skillData[skill].name}</strong></div>
+				<div class="skill-name"><strong>{unitSkills[skill].data.name}</strong></div>
 				<div class="skill-level">
 					<div class="level-input">Level: <input type="number" min=1 max={level} bind:value={skillLevels[skill]} on:change /></div>
 					<div class="button" on:click={maxSkill(skill)}>Max</div>
 				</div>
 			</div>
 			<div class="skill-description">
-				{skillData[skill].description}<br />
-				{#each skillActions[skill] as action}
+				{unitSkills[skill].data.description}<br />
+				{#each unitSkills[skill].actions as action}
 					<em>{getActionDescription(action, skillLevels[skill])}</em>
 				{/each}
 			</div>

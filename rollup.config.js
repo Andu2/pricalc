@@ -17,6 +17,14 @@ const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
 const legacy = !!process.env.SAPPER_LEGACY_BUILD;
 
+function processCsvNumbers(row) {
+	for (var key in row) {
+		if (!isNaN(row[key] * 1)) {
+			row[key] = row[key] * 1;
+		}
+	}
+}
+
 const onwarn = (warning, onwarn) =>
 	(warning.code === 'MISSING_EXPORT' && /'preload'/.test(warning.message)) ||
 	(warning.code === 'CIRCULAR_DEPENDENCY' && /[/\\]@sapper[/\\]/.test(warning.message)) ||
@@ -48,7 +56,9 @@ export default {
 			commonjs(),
 
 			json(),
-			dsv(),
+			dsv({
+				processRow: processCsvNumbers
+			}),
 
 			alias({
 				entries: [
@@ -109,7 +119,9 @@ export default {
 			commonjs(),
 
 			json(),
-			dsv(),
+			dsv({
+				processRow: processCsvNumbers
+			}),
 
 			alias({
 				entries: [

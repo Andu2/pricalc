@@ -5,7 +5,8 @@
   "main": "priconne.js",
   "scripts": {
     "build-db": "scripts/priconnedb-create.sh && node scripts/dump-db.js",
-    "dump-db": "node scripts/dump-db-csv.js",
+    "dump-db": "node scripts/dump-db-json.js",
+    "dump-db-csv": "node scripts/dump-db-csv.js",
     "dump-db-json": "node scripts/dump-db-json.js",
     "dev": "sapper dev",
     "build": "sapper build --legacy",

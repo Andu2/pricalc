@@ -1,15 +1,14 @@
 <script>
-import { getUnlockedUnits } from "@src/priconne.js"
+import { UNLOCKED_UNITS } from "@src/data/priconnedb"
 export let unitId;
 export let rarity;
 
 $: charImg = getCharImg(unitId, rarity);
 
 let isSelecting = false;
-let unlockedUnits = getUnlockedUnits();
 const selectionColumns = 7;
 let rows = [];
-unlockedUnits.forEach(function(unit, i) {
+UNLOCKED_UNITS.forEach(function(unit, i) {
 	if (i % selectionColumns === 0) {
 		rows.push([]);
 	}

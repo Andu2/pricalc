@@ -1,6 +1,6 @@
 <script>
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, UNLOCKED_UNITS, MAX_LEVEL, MAX_RANK, MAX_RANK_EQUIPMENT } from "@src/data/priconnedb";
-	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/priconne";
+	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/unit";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import { includeExSkillStats } from "@src/settings.js";
 

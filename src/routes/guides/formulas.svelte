@@ -1,6 +1,7 @@
 <script>
-import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/logic/priconne";
-import { tables } from "@src/data/priconnedb";
+import { STAT_NAMES, STAT_DISPLAY_NAMES, lookupRows } from "@src/data/priconnedb";
+
+let coefficients = lookupRows("unit_status_coefficient", {})[0];
 
 let defense = 132;
 $: defenseMult = 1 / (1 + defense / 100);
@@ -21,9 +22,9 @@ $: dodgeChance = Math.min(100, Math.max((dodge - accuracy), 0) * (dodgeDefenderL
 <p>Power is calculated by multiplying each stat by its given weight and adding it all up. The weights for each stat are:</p>
 <table><tr><th>Stat</th><th>Weight</th></tr>
 	{#each STAT_NAMES as stat}
-	<tr><td class="label">{STAT_DISPLAY_NAMES[stat]}</td><td class="number">{tables.unit_status_coefficient[0][stat + "_coefficient"]}</td></tr>
+	<tr><td class="label">{STAT_DISPLAY_NAMES[stat]}</td><td class="number">{coefficients[stat + "_coefficient"]}</td></tr>
 	{/each}
-	<tr><td class="label">Skill levels</td><td class="number">{tables.unit_status_coefficient[0]["skill_lv_coefficient"]}</td>
+	<tr><td class="label">Skill levels</td><td class="number">{coefficients["skill_lv_coefficient"]}</td>
 </table>
 <p>Additionally, 150 power is added if it's a 5* rarity unit.</p>
 

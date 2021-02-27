@@ -1,4 +1,4 @@
-import { lookupRows, STAT_NAMES, NUMBER_TO_STAT } from "@src/data/priconnedb";
+import { lookupRows, STAT_NAMES, NUMBER_TO_STAT, getUnitSkills } from "@src/data/priconnedb";
 
 // skills: {
 // 	union_burst: 1, 
@@ -116,7 +116,7 @@ export function createActor(attrs, options) {
 	}
 
 	// BOND TODO: Account for alternate outfits
-	var shortUnitId = Math.floor(unitId / 100); // Stories seem to correlate to first part of unit ID
+	var shortUnitId = Math.floor(attrsCopy.id / 100); // Stories seem to correlate to first part of unit ID
 	var bondStories = lookupRows("story_detail", { story_group_id: shortUnitId });
 	var unlockedStoryIds = bondStories.filter(function(story) {
 		return (story.love_level <= attrsCopy.bond)
@@ -126,19 +126,15 @@ export function createActor(attrs, options) {
 	var storyStatData = lookupRows("chara_story_status", { story_id: unlockedStoryIds });
 	storyStatData.forEach(function(storyStatus) {
 		for (var i = 1; i <= 5; i++) {
-			var stat = NUMBER_TO_STAT[charaStory["status_type_" + i]];
+			var stat = NUMBER_TO_STAT[storyStatus["status_type_" + i]];
 			if (stat !== undefined) {
-				actor[stat] += charaStory["status_rate_" + i];
+				actor[stat] += storyStatus["status_rate_" + i];
 			}
 		}
 	});
 
-	var unitSkills = lookupRows("unit_skills", { unit_id: attrsCopy.id });
+	var unitSkills = getUnitSkills(attrsCopy.id);
 	actor.unitSkills = unitSkills;
-	if (unitSkills === undefined) {
-		console.warn("Unable to find skill set for unit " + unitData.unit_name);
-		return actor;
-	}
 
 	actor.power = calculatePower(actor);
 
@@ -147,29 +143,26 @@ export function createActor(attrs, options) {
 		actor.statsFromExSkill = {};
 		if (attrsCopy.rank >= 7 && attrsCopy.skills.ex_skill_1) {
 			if (attrsCopy.rarity >= 5) {
-				var exSkill = lookupRows("skill_data", { skill_id: unitSkills.ex_skill_evolution_1 })[0];
+				var exSkill = unitSkills.ex_skill_evolution_1;
 			}
 			else {
-				var exSkill = lookupRows("skill_data", { skill_id: unitSkills.ex_skill_1 })[0];
+				var exSkill = unitSkills.ex_skill_1;
 			}
-			if (exSkill === undefined) {
+			if (!exSkill.data) {
 				console.warn("Unable to find ex skill for unit " + unitData.unit_name);
 			}
 			else {
-				for (var i = 1; i <= 7; i++) {
-					var action = lookupRows("skill_action", { action_id: exSkill["action_" + i] })[0];
-					if (action !== undefined) {
-						if (action.action_type === 90) {
-							var stat = NUMBER_TO_STAT[action.action_detail_1];
-							var amount = action.action_value_2 + action.action_value_3 * attrsCopy.skills.ex_skill_1;
-							actor[stat] += amount;
-							if (actor.statsFromExSkill[stat] === undefined) {
-								actor.statsFromExSkill[stat] = 0;
-							}
-							actor.statsFromExSkill[stat] += amount;
+				exSkill.actions.forEach(function(action) {
+					if (action.action_type === 90) {
+						var stat = NUMBER_TO_STAT[action.action_detail_1];
+						var amount = action.action_value_2 + action.action_value_3 * attrsCopy.skills.ex_skill_1;
+						actor[stat] += amount;
+						if (actor.statsFromExSkill[stat] === undefined) {
+							actor.statsFromExSkill[stat] = 0;
 						}
+						actor.statsFromExSkill[stat] += amount;
 					}
-				}
+				});
 			}
 		}
 	}
@@ -205,9 +198,9 @@ export function calculatePower(actor) {
 
 	var weights = lookupRows("unit_status_coefficient", {})[0]
 
-	for (var stat in STAT_NAMES) {
+	STAT_NAMES.forEach(function(stat) {
 		power += actor[stat] * weights[stat + "_coefficient"];
-	}
+	});
 	power = Math.round(power);
 
 	power += weights.skill_lv_coefficient * (actor.skills.union_burst + actor.skills.main_skill_1 + actor.skills.main_skill_2 + actor.skills.ex_skill_1);
