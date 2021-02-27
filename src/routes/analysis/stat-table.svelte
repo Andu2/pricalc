@@ -1,6 +1,6 @@
 <script>
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, createActor, calculatePower, getUnlockedUnits,
-		calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/priconne.js";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, UNLOCKED_UNITS, MAX_LEVEL, MAX_RANK, MAX_RANK_EQUIPMENT } from "@src/data/priconnedb";
+	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/priconne";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import { includeExSkillStats } from "@src/settings.js";
 
@@ -65,19 +65,18 @@
 		"power": false // calculated value
 	}
 
-	const unlockedUnits = getUnlockedUnits();
 	let maxedActors = calculateMaxedActors();
 	tableData = calculateTableData(maxedActors);
 	$: tableColumns = calculateTableColumns(toggleDisplayCols);
 
 	function calculateMaxedActors() {
-		return unlockedUnits.map(function(unitData) {
+		return UNLOCKED_UNITS.map(function(unitData) {
 			return createActor({
 				id: unitData.unit_id,
 				rarity: 5,
-				level: 85,
+				level: MAX_LEVEL,
 				bond: 8,
-				rank: 8,
+				rank: MAX_RANK,
 				equipment: {
 					slot1: {
 						equipped: true,
@@ -108,7 +107,7 @@
 					union_burst: 1,
 					main_skill_1: 1,
 					main_skill_2: 1,
-					ex_skill_1: 85
+					ex_skill_1: MAX_LEVEL
 				}
 			}, {
 				includeExSkillStats: $includeExSkillStats

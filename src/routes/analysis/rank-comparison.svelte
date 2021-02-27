@@ -1,6 +1,6 @@
 <script>
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, createActor, calculatePower, getUnlockedUnits,
-		calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/priconne.js";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, UNLOCKED_UNITS } from "@src/data/priconnedb";
+	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/unit";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import { hideImpossibleRarities } from "@src/settings.js";
@@ -77,21 +77,20 @@
 		"power": false // calculated value
 	}
 
-	const unlockedUnits = getUnlockedUnits();
 	$: tableData = calculateStatDifferences(rank1, rank2, rarity);
 	$: tableColumns = calculateTableColumns(toggleDisplayCols);
 
 	function calculateStatDifferences(rank1, rank2, rarity) {
 		let differences = [];
-		unlockedUnits.forEach(function(unitData) {
+		UNLOCKED_UNITS.forEach(function(unitData) {
 			if ($hideImpossibleRarities && rarity < unitData.rarity) {
 				return;
 			}
 			let actor1 = createActor({
 				id: unitData.unit_id,
 				rarity: rarity,
-				level: 85,
-				bond: 8,
+				level: 1, // doesn't matter
+				bond: 0,
 				rank: RANK_OPTIONS[rank1].rank,
 				equipment: {
 					slot1: {

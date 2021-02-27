@@ -10,6 +10,7 @@ import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import json from '@rollup/plugin-json';
+import dsv from '@rollup/plugin-dsv';
 import alias from '@rollup/plugin-alias';
 
 const mode = process.env.NODE_ENV;
@@ -47,6 +48,7 @@ export default {
 			commonjs(),
 
 			json(),
+			dsv(),
 
 			alias({
 				entries: [
@@ -107,6 +109,7 @@ export default {
 			commonjs(),
 
 			json(),
+			dsv(),
 
 			alias({
 				entries: [

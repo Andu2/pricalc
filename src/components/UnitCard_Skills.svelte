@@ -1,7 +1,6 @@
 <script>
 	import { createEventDispatcher } from "svelte";
-	import priconneDb from "@src/priconnedb.js";
-	import { NUMBER_TO_STAT } from "@src/priconne.js";
+	import { NUMBER_TO_STAT, tables } from "@src/data/priconnedb";
 
 	export let unitId;
 	export let rank;
@@ -29,9 +28,9 @@
 	$: if (typeof rarity !== "number") rarity = 1;
 
 	function getSkillIds(unitId) {
-		for (var i = 0; i < priconneDb.unit_skill_data.length; i++) {
-			if (priconneDb.unit_skill_data[i].unit_id === unitId) {
-				return priconneDb.unit_skill_data[i];
+		for (var i = 0; i < tables.unit_skill_data.length; i++) {
+			if (tables.unit_skill_data[i].unit_id === unitId) {
+				return tables.unit_skill_data[i];
 			}
 		}
 	}
@@ -64,7 +63,7 @@
 			allSkillData[skill] = {};
 		});
 		if (unitSkillData) {
-			priconneDb.skill_data.forEach(function(skillData) {
+			tables.skill_data.forEach(function(skillData) {
 				SKILL_NAMES.forEach(function(skill) {
 					if (rarity >= 5 && skill === "ex_skill_1" && skillData.skill_id === unitSkillData["ex_skill_evolution_1"]) {
 						allSkillData[skill] = skillData;
@@ -84,7 +83,7 @@
 		SKILL_NAMES.forEach(function(skill) {
 			skillActions[skill] = [];
 		});
-		priconneDb.skill_action.forEach(function(skillAction) {
+		tables.skill_action.forEach(function(skillAction) {
 			SKILL_NAMES.forEach(function(skill) {
 				for (var i = 1; i <= 7; i++) {
 					if (skillAction.action_id === skillData[skill]["action_" + i]) {
@@ -248,10 +247,10 @@
 
 	function getAttackPattern(unitId) {
 		var attackPattern;
-		for (var i = 0; i < priconneDb.unit_attack_pattern.length; i++) {
-			if (priconneDb.unit_attack_pattern[i].unit_id === unitId) {
-				//console.log(priconneDb.unit_attack_pattern[i])
-				return priconneDb.unit_attack_pattern[i];
+		for (var i = 0; i < tables.unit_attack_pattern.length; i++) {
+			if (tables.unit_attack_pattern[i].unit_id === unitId) {
+				//console.log(tables.unit_attack_pattern[i])
+				return tables.unit_attack_pattern[i];
 			}
 		}
 	}

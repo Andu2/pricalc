@@ -1,6 +1,10 @@
 export default {
-	version: "0.1",
+	version: "0.2",
 	changeLog: [{
+		version: "0.2",
+		date: "???",
+		notes: []
+	}, {
 		version: "0.1",
 		date: "2021-02-24",
 		notes: [

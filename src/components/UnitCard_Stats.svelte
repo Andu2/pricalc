@@ -1,6 +1,6 @@
 <script>
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, calculatePower, 
-		calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/priconne.js";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
+	import { calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/unit";
 	export let actor;
 
 	$: power = calculatePower(actor);

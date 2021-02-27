@@ -5,7 +5,8 @@
 	import UnitCard_Bond from "@src/components/UnitCard_Bond.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import UnitSelect from "@src/components/UnitSelect.svelte";
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, createActor, calculatePower, getUnlockedUnits, lookupUnitData } from "@src/priconne.js";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, lookupRows } from "@src/data/priconnedb";
+	import { createActor, calculatePower } from "@src/logic/unit";
 	import priconneDb from "@src/priconnedb.js";
 	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
 
@@ -181,7 +182,7 @@
 
 		if (typeof unit.rarity === "number" && $hideImpossibleRarities && unit.id > -1) {
 			// TODO: Fix this mess
-			var unitData = lookupUnitData(unit.id);
+			var unitData = lookupRows("unit_data", { unit_id: unit.id })[0];
 			if (unitData.rarity > unit.rarity) {
 				unit.rarity = unitData.rarity;
 			}
@@ -232,8 +233,6 @@
 			}
 		}
 	}
-
-	let unlockedUnits = getUnlockedUnits();
 
 	$: recalculate(unit);
 </script>

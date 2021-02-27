@@ -1,5 +1,6 @@
 <script>
-	import { lookupEquipmentSet, lookupEquipmentData, lookupRefineData, getMaxRefine } from "@src/priconne.js"
+	import { lookupRows } from "@src/data/priconnedb"
+	import { getMaxRefine } from "@src/logic/unit"
 	import { createEventDispatcher } from "svelte";
 
 	export let unitId = -1;
@@ -43,7 +44,7 @@
 	let equipmentSetData;
 	let equipmentRefineData;
 	let equipmentImages;
-	$: equipmentSet = lookupEquipmentSet(unitId, rank);
+	$: equipmentSet = lookupRows("unit_promotion", { unit_id: unitId, promotion_level: rank })[0];
 	$: equipmentData = getEquipmentDataSet(equipmentSet);
 	$: equipmentMaxRefine = getMaxRefineSet(equipmentSet);
 	$: equipmentImages = getEquipmentImages(equipment, equipmentSet);
@@ -75,7 +76,7 @@
 		var equipmentData = {};
 		if (equipmentSet) {
 			for (var i = 1; i <= 6; i++) {
-				equipmentData["slot" + i] = lookupEquipmentData(equipmentSet["equip_slot_" + i]);
+				equipmentData["slot" + i] = lookupRows("equipment_data", { equipment_id: equipmentSet["equip_slot_" + i] })[0];
 			}
 		}
 		return equipmentData;
@@ -85,7 +86,7 @@
 		var maxRefine = {};
 		for (var i = 1; i <= 6; i++) {
 			if (equipmentSet) {
-				maxRefine["slot" + i] = getMaxRefine(lookupRefineData(equipmentSet["equip_slot_" + i]));
+				maxRefine["slot" + i] = getMaxRefine(lookupRows("equipment_enhance_rate", { equipment_id: equipmentSet["equip_slot_" + i] })[0]);
 			}
 			else {
 				maxRefine["slot" + i] = 0;

@@ -5,7 +5,8 @@
   "main": "priconne.js",
   "scripts": {
     "build-db": "scripts/priconnedb-create.sh && node scripts/dump-db.js",
-    "dump-db": "node scripts/dump-db.js",
+    "dump-db": "node scripts/dump-db-csv.js",
+    "dump-db-json": "node scripts/dump-db-json.js",
     "dev": "sapper dev",
     "build": "sapper build --legacy",
     "export": "sapper export --legacy",
@@ -35,6 +36,7 @@
     "svelte": "^3.17.3"
   },
   "dependencies": {
+    "@rollup/plugin-dsv": "^2.0.1",
     "compression": "^1.7.1",
     "lz-string": "^1.4.4",
     "polka": "next",

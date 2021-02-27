@@ -1,5 +1,5 @@
 <script>
-	import { SKILL_NAMES, getUnlockedUnits, lookupUnitSkills, lookupSkillData, lookupActions } from "@src/priconne.js";
+	import { SKILL_NAMES, UNLOCKED_UNITS, lookupRows } from "@src/data/priconnedb";
 	import Scatter from "svelte-chartjs/src/Scatter.svelte";
 
 	let data = {
@@ -57,24 +57,25 @@
 
 	let csvData = "data:text/csv;charset=utf-8,";
 	
-	var unlockedUnits = getUnlockedUnits();
 	csvData += ["Char", "AtkType", "SkillType", "Base", "LevelScaling", "AttackScaling"].join(",") + "\n";
-	unlockedUnits.forEach(function(unitData) {
-		var unitSkills = lookupUnitSkills(unitData.unit_id);
+	UNLOCKED_UNITS.forEach(function(unitData) {
+		var unitSkills = lookupRows("unit_skills", { unit_id: unitData.unit_id })[0];
 		SKILL_NAMES.forEach(function(skill) {
 			var datasetIndex = ["union_burst", "main_skill_1", "main_skill_2"].indexOf(skill);
-			var skillData = lookupSkillData(unitSkills[skill]);
-			var actions = lookupActions(skillData);
-			actions.forEach(function(action) {
-				if (action.action_type === 1) {
-					csvData += [unitData.unit_name, unitData.atk_type, skill, action.action_value_1, action.action_value_2, action.action_value_3].join(",") + "\n";
-					data.datasets[datasetIndex].data.push({
-						x: action.action_value_3,
-						y: action.action_value_2,
-						name: unitData.unit_name
-					})
+			var skillData = lookupRows("skill_data", { skill_id: unitSkills[skill] })[0];
+			for (var i = 1; i <= 7; i++) {
+				var action = lookupRows("skill_action", { action_id: skillData["action_" + i] })[0];
+				if (action !== undefined) {
+					if (action.action_type === 1) {
+						csvData += [unitData.unit_name, unitData.atk_type, skill, action.action_value_1, action.action_value_2, action.action_value_3].join(",") + "\n";
+						data.datasets[datasetIndex].data.push({
+							x: action.action_value_3,
+							y: action.action_value_2,
+							name: unitData.unit_name
+						})
+					}
 				}
-			});
+			}
 		});
 	});
 
