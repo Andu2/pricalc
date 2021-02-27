@@ -1,7 +1,6 @@
 <script>
 	import { lookupRows } from "@src/data/priconnedb"
 	import { getMaxRefine } from "@src/logic/unit"
-	import { createEventDispatcher } from "svelte";
 
 	export let unitId = -1;
 	export let rank = 1;
@@ -37,8 +36,6 @@
 			id: -1
 		}
 	}
-
-	const dispatch = createEventDispatcher();
 
 	let equipmentSet;
 	let equipmentSetData;
@@ -119,7 +116,6 @@
 			if (!equipment["slot" + slot].equipped) {
 				equipment["slot" + slot].refine = 0;
 			}
-			dispatch("change", {})
 		}
 	}
 
@@ -134,7 +130,6 @@
 					equipment["slot" + slot].equipped = true;
 				}
 			}
-			dispatch("change", {})
 		}
 	}
 
@@ -148,7 +143,6 @@
 				equipment["slot" + i].equipped = true;
 			}
 		}
-		dispatch("change", {})
 	}
 
 	function toggleAllRefine() {
@@ -161,7 +155,6 @@
 				equipment["slot" + i].refine = equipmentMaxRefine["slot" + i];
 			}
 		}
-		dispatch("change", {})
 	}
 </script>
 

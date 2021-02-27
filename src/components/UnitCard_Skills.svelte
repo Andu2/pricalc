@@ -1,5 +1,4 @@
 <script>
-	import { createEventDispatcher } from "svelte";
 	import { NUMBER_TO_STAT, SKILL_NAMES, lookupRows, getUnitSkills } from "@src/data/priconnedb";
 
 	export let unitId;
