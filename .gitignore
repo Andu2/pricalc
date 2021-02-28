@@ -1,6 +1,5 @@
 node_modules
 master.db
-src/data/*.json
 /public/build/
 .DS_Store
 .vercel
