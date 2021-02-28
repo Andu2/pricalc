@@ -31,6 +31,9 @@ $: dodgeChance = Math.min(100, Math.max((dodge - accuracy), 0) * (dodgeDefenderL
 <h2>Defense</h2>
 <p>The damage formula is: Damage = Attack / (1 + Defense / 100)</p>
 <p>This means 100 defense halves incoming damage, and 300 defense quarters it. It is the same for both magical and physical attacks.</p>
+<p>If we analyze this formula, we can see that defense linearly increases the amount of damage a character can take. This means that the benefit of adding defense stays constant regardless of how much defense the character already has. For example, if a character with 10,000 HP and 0 defense equips an item that adds 100 defense,
+they will be able to take 10,000 HP more raw damage before dying. If a character with 10,000 HP but 800 defense equips the same item,
+they will also be able to take 10,000 HP more raw damage.</p>
 <p>Try it out: With defense <input id="defense" type="number" bind:value={defense} />, incoming damage is multiplied by {defenseMult.toFixed(4)}</p>
 
 <h2>Critical Hits</h2>
