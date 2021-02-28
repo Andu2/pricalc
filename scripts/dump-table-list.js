@@ -15,5 +15,8 @@ module.exports = [
 	"story_detail",
 	"unit_status_coefficient",
 	"experience_unit",
-	"experience_team"
+	"experience_team",
+	"arena_max_rank_reward",
+	"arena_max_season_rank_reward",
+	"unit_profile"
 ]

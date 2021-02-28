@@ -14,6 +14,9 @@ import chara_story_status from "@src/data/chara_story_status.json";
 import story_detail from "@src/data/story_detail.json";
 import unit_status_coefficient from "@src/data/unit_status_coefficient.json";
 import experience_team from "@src/data/experience_team.json";
+import arena_max_rank_reward from "@src/data/arena_max_rank_reward.json";
+import arena_max_season_rank_reward from "@src/data/arena_max_season_rank_reward.json";
+import unit_profile from "@src/data/unit_profile.json";
 
 const tables = {
 //	unit_enemy_data,
@@ -31,7 +34,10 @@ const tables = {
 	chara_story_status,
 	story_detail,
 	unit_status_coefficient,
-	experience_team
+	experience_team,
+	arena_max_rank_reward,
+	arena_max_season_rank_reward,
+	unit_profile
 }
 
 export const MAX_LEVEL = experience_team.slice(-1)[0].team_level - 1; // Database has one more than current max level

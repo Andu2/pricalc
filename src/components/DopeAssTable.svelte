@@ -28,20 +28,26 @@
 
 				if (typeof column.sort === "function") {
 					data.sort(column.sort);
-					if (!sort.ascending) {
-						data.reverse();
-					}
+				}
+				else if (column.sort === "numeric") {
+					data.sort(function(row1, row2) {
+						let row1Numeric = row1[sort.attr] * 1;
+						let row2Numeric = row2[sort.attr] * 1;
+						if (row1Numeric > row2Numeric) return 1;
+						else if (row1Numeric < row2Numeric) return -1;
+						else return 0;
+					});
 				}
 				else {
 					data.sort(function(row1, row2) {
-						if (row1[sort.attr] > row2[sort.attr]) {
-							return (sort.ascending ? 1 : -1);
-						}
-						else if (row1[sort.attr] < row2[sort.attr]) {
-							return (sort.ascending ? -1 : 1);
-						}
+						if (row1[sort.attr] > row2[sort.attr]) return 1;
+						else if (row1[sort.attr] < row2[sort.attr]) return -1;
 						else return 0;
 					});
+				}
+
+				if (!sort.ascending) {
+					data.reverse();
 				}
 
 				// This is to force svelte to update
@@ -63,6 +69,8 @@
 			{#each columns as column}
 				{#if column.html}
 				<td>{@html row[column.attr]}</td>
+				{:else if typeof column.displayValue === "function"}
+				<td>{@html column.displayValue(row)}</td>
 				{:else}
 				<td class:positive={options.colorValues && typeof row[column.attr] === "number" && row[column.attr] > 0}
 					class:negative={options.colorValues && typeof row[column.attr] === "number" && row[column.attr] < 0}>{row[column.attr]}</td>
@@ -97,6 +105,7 @@ tr.even {
 
 div.table-wrap {
 	max-height: 800px;
+	overflow-x: auto;
 }
 
 td.positive {

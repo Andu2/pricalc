@@ -5,7 +5,17 @@
 	let tabs = [{
 		path: "formulas",
 		displayName: "Formulas"
-	}];
+	}, {
+		path: "arena-jewels",
+		displayName: "Arena Jewels"
+	}, {
+		path: "chara-profiles",
+		displayName: "Character Profiles"
+	}].sort(function(a, b) {
+		if (a.displayName < b.displayName) return -1;
+		else if (a.displayName > b.displayName) return 1;
+		else return 0;
+	});
 
 	export let segment;
 	$: lastGuide.set(segment);
