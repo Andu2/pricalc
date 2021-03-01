@@ -3,6 +3,10 @@
 	import { lastVersion } from "@src/settings.js";
 	import config from "@src/config.js";
 
+	let isNewVersion = ($lastVersion !== config.version);
+	if (isNewVersion) {
+		console.log("NEW VERSION DETECTED (" + $lastVersion + " -> " + config.version + ")");
+	}
 	lastVersion.set(config.version);
 
 	export let segment;

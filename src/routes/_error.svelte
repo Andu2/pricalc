@@ -47,6 +47,10 @@
 <h1>{status}</h1>
 
 <p>{error.message}</p>
+
+<p>If you were just switching pages and got this error page, try refreshing the page. 
+I've been having an issue with the framework I'm using where it will break when I release a new version until the user refreshes.
+Sorry for the inconvenience!</p>
 {#if dev}
 <p>{JSON.stringify(status)}</p>
 <p>{JSON.stringify(error)}</p>

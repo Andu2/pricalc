@@ -21,7 +21,8 @@ client.all("SELECT name FROM sqlite_master WHERE type='table'", function (err, r
 					result.forEach(function(row) {
 						var nextRow = [];
 						headers.forEach(function(header) {
-							nextRow.push(row[header]);
+							let dataVal = row[header] + "";
+							nextRow.push("\"" + dataVal.replace(/"/g, "\"\"") + "\"");
 						});
 						fileData += nextRow.join(",") + "\n";
 					});
