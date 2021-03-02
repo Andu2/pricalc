@@ -16,7 +16,7 @@ export function createActor(attrs, options) {
 	var requiredAttrs = ["id", "rarity", "level", "rank", "equipment", "skills"];
 	requiredAttrs.forEach(function(attr) {
 		if (attrs[attr] === undefined) {
-			throw Error("Cannot create unit: Missing required attribute: " + attr);
+			// throw Error("Cannot create unit: Missing required attribute: " + attr);
 		}
 	});
 
@@ -38,6 +38,8 @@ export function createActor(attrs, options) {
 		attrsCopy.bond = 0;
 	}
 
+	let unitType = getUnitType(attrsCopy.id);
+
 	var actor = {
 		id: attrsCopy.id,
 		rarity: attrsCopy.rarity,
@@ -49,123 +51,159 @@ export function createActor(attrs, options) {
 		includeExSkillStats: options.includeExSkillStats
 	}
 
-	var unitData = lookupRows("unit_data", { unit_id: attrsCopy.id })[0];
+	if (unitType === "character") {
+		var unitData = lookupRows("unit_data", { unit_id: attrsCopy.id })[0];
+	}
+	else {
+		var unitData = lookupRows("enemy_parameter", { unit_id: attrsCopy.id })[0];
+		if (attrs.enemyId) {
+			var variantData = lookupRows("enemy_parameter", { enemy_id: attrs.enemyId })[0];
+			if (unitData.name === variantData.name) {
+				unitData = variantData;
+				attrs.id = variantData.unit_id;
+				attrsCopy.id = variantData.unit_id;
+			}
+			else {
+				attrs.enemyId = undefined;
+			}
+		}
+	}
 	actor.unitData = unitData;
 	if (unitData === undefined) {
 		return actor;
 	}
 
-	var unitRarityStats = lookupRows("unit_rarity", { unit_id: attrsCopy.id, rarity: attrsCopy.rarity })[0];
-	actor.unitRarityStats = unitRarityStats;
-	if (unitRarityStats === undefined) {
-		return actor;
+	if (unitType === "character") {
+		actor.name = unitData.unit_name;
 	}
-
-	// Stats based on: rarity, level, bond, rank, equipment
-	STAT_NAMES.forEach(function(stat) {
-		actor[stat] = Math.round(unitRarityStats[stat] + unitRarityStats[stat + "_growth"] * (attrsCopy.level + attrsCopy.rank));
-	});
-
-	if (attrsCopy.rank > 1) {
-		var unitRankStats = lookupRows("unit_promotion_status", { unit_id: attrsCopy.id, promotion_level: attrsCopy.rank })[0];
-		actor.unitRankStats = unitRankStats;
-		if (unitRarityStats === undefined) {
-			console.warn("Unable to find rank data for unit " + unitData.unit_name + " rank " + attrsCopy.rank);
-			return actor;
-		}
-		STAT_NAMES.forEach(function(stat) {
-			actor[stat] += Math.ceil(unitRankStats[stat]);
-		});
+	else {
+		actor.name = unitData.name;
 	}
-
-	var equipmentSet = lookupRows("unit_promotion", { unit_id: attrsCopy.id, promotion_level: attrsCopy.rank })[0];
-	actor.equipmentSet = equipmentSet;
-	if (equipmentSet === undefined) {
-		console.warn("Unable to find equipment set for unit " + unitData.unit_name + " rank " + attrsCopy.rank);
-		return actor;
-	}
-	for (var i = 1; i <= 6; i++) {
-		var slot = attrsCopy.equipment["slot" + i];
-		if (slot.equipped && equipmentSet["equip_slot_" + i] !== 999999) {
-			var equipmentData = lookupRows("equipment_data", { equipment_id: equipmentSet["equip_slot_" + i] })[0];
-			if (equipmentData === undefined) {
-				console.warn("Unable to find equipment data for equipment " + equipmentSet["equip_slot_" + i]);
-			}
-			else {
-				STAT_NAMES.forEach(function(stat) {
-					actor[stat] += Math.ceil(equipmentData[stat]);
-				});
-				if (slot.refine > 0) {
-					var refineData = lookupRows("equipment_enhance_rate", { equipment_id: equipmentSet["equip_slot_" + i] })[0];
-					if (refineData === undefined) {
-						console.warn("Unable to find refine data for equipment " + equipmentSet["equip_slot_" + i]);
-					}
-					else {
-						var maxRefine = getMaxRefine(refineData);
-						if (slot.refine > maxRefine) {
-							//console.log("Cannot refine equipment id '" + equipmentSet["equip_slot_" + i] + "' to " + slot.refine + "; max refine is " + maxRefine);
-							slot.refine = maxRefine;
-						}
-						STAT_NAMES.forEach(function(stat) {
-							actor[stat] += Math.ceil(refineData[stat] * slot.refine);
-						});
-					}
-				}
-			}
-		}
-	}
-
-	// BOND TODO: Account for alternate outfits
-	var shortUnitId = Math.floor(attrsCopy.id / 100); // Stories seem to correlate to first part of unit ID
-	var bondStories = lookupRows("story_detail", { story_group_id: shortUnitId });
-	var unlockedStoryIds = bondStories.filter(function(story) {
-		return (story.love_level <= attrsCopy.bond)
-	}).map(function(story) {
-		return story.story_id;
-	});
-	var storyStatData = lookupRows("chara_story_status", { story_id: unlockedStoryIds });
-	storyStatData.forEach(function(storyStatus) {
-		for (var i = 1; i <= 5; i++) {
-			var stat = NUMBER_TO_STAT[storyStatus["status_type_" + i]];
-			if (stat !== undefined) {
-				actor[stat] += storyStatus["status_rate_" + i];
-			}
-		}
-	});
 
 	var unitSkills = getUnitSkills(attrsCopy.id);
 	actor.unitSkills = unitSkills;
 
-	actor.power = calculatePower(actor);
+	if (unitType === "character") {
+		var unitRarityStats = lookupRows("unit_rarity", { unit_id: attrsCopy.id, rarity: attrsCopy.rarity })[0];
+		actor.unitRarityStats = unitRarityStats;
+		if (unitRarityStats === undefined) {
+			return actor;
+		}
 
-	if (options.includeExSkillStats) {
-		// Action detail corresponds to stat numbers from bond boost?
-		actor.statsFromExSkill = {};
-		if (attrsCopy.rank >= 7 && attrsCopy.skills.ex_skill_1) {
-			if (attrsCopy.rarity >= 5) {
-				var exSkill = unitSkills.ex_skill_evolution_1;
+		// Stats based on: rarity, level, bond, rank, equipment
+		STAT_NAMES.forEach(function(stat) {
+			actor[stat] = Math.round(unitRarityStats[stat] + unitRarityStats[stat + "_growth"] * (attrsCopy.level + attrsCopy.rank));
+		});
+
+		if (attrsCopy.rank > 1) {
+			var unitRankStats = lookupRows("unit_promotion_status", { unit_id: attrsCopy.id, promotion_level: attrsCopy.rank })[0];
+			actor.unitRankStats = unitRankStats;
+			if (unitRarityStats === undefined) {
+				console.warn("Unable to find rank data for unit " + unitData.unit_name + " rank " + attrsCopy.rank);
+				return actor;
 			}
-			else {
-				var exSkill = unitSkills.ex_skill_1;
-			}
-			if (!exSkill.data) {
-				console.warn("Unable to find ex skill for unit " + unitData.unit_name);
-			}
-			else {
-				exSkill.actions.forEach(function(action) {
-					if (action.action_type === 90) {
-						var stat = NUMBER_TO_STAT[action.action_detail_1];
-						var amount = action.action_value_2 + action.action_value_3 * attrsCopy.skills.ex_skill_1;
-						actor[stat] += amount;
-						if (actor.statsFromExSkill[stat] === undefined) {
-							actor.statsFromExSkill[stat] = 0;
+			STAT_NAMES.forEach(function(stat) {
+				actor[stat] += Math.ceil(unitRankStats[stat]);
+			});
+		}
+
+		var equipmentSet = lookupRows("unit_promotion", { unit_id: attrsCopy.id, promotion_level: attrsCopy.rank })[0];
+		actor.equipmentSet = equipmentSet;
+		if (equipmentSet === undefined) {
+			console.warn("Unable to find equipment set for unit " + unitData.unit_name + " rank " + attrsCopy.rank);
+			return actor;
+		}
+		for (var i = 1; i <= 6; i++) {
+			var slot = attrsCopy.equipment["slot" + i];
+			if (slot.equipped && equipmentSet["equip_slot_" + i] !== 999999) {
+				var equipmentData = lookupRows("equipment_data", { equipment_id: equipmentSet["equip_slot_" + i] })[0];
+				if (equipmentData === undefined) {
+					console.warn("Unable to find equipment data for equipment " + equipmentSet["equip_slot_" + i]);
+				}
+				else {
+					STAT_NAMES.forEach(function(stat) {
+						actor[stat] += Math.ceil(equipmentData[stat]);
+					});
+					if (slot.refine > 0) {
+						var refineData = lookupRows("equipment_enhance_rate", { equipment_id: equipmentSet["equip_slot_" + i] })[0];
+						if (refineData === undefined) {
+							console.warn("Unable to find refine data for equipment " + equipmentSet["equip_slot_" + i]);
 						}
-						actor.statsFromExSkill[stat] += amount;
+						else {
+							var maxRefine = getMaxRefine(refineData);
+							if (slot.refine > maxRefine) {
+								//console.log("Cannot refine equipment id '" + equipmentSet["equip_slot_" + i] + "' to " + slot.refine + "; max refine is " + maxRefine);
+								slot.refine = maxRefine;
+							}
+							STAT_NAMES.forEach(function(stat) {
+								actor[stat] += Math.ceil(refineData[stat] * slot.refine);
+							});
+						}
 					}
-				});
+				}
+			}
+		}
+
+		// BOND TODO: Account for alternate outfits
+		var shortUnitId = Math.floor(attrsCopy.id / 100); // Stories seem to correlate to first part of unit ID
+		var bondStories = lookupRows("story_detail", { story_group_id: shortUnitId });
+		var unlockedStoryIds = bondStories.filter(function(story) {
+			return (story.love_level <= attrsCopy.bond)
+		}).map(function(story) {
+			return story.story_id;
+		});
+		var storyStatData = lookupRows("chara_story_status", { story_id: unlockedStoryIds });
+		storyStatData.forEach(function(storyStatus) {
+			for (var i = 1; i <= 5; i++) {
+				var stat = NUMBER_TO_STAT[storyStatus["status_type_" + i]];
+				if (stat !== undefined) {
+					actor[stat] += storyStatus["status_rate_" + i];
+				}
+			}
+		});
+
+		actor.power = calculatePower(actor);
+
+		if (options.includeExSkillStats) {
+			// Action detail corresponds to stat numbers from bond boost?
+			actor.statsFromExSkill = {};
+			if (attrsCopy.rank >= 7 && attrsCopy.skills.ex_skill_1) {
+				if (attrsCopy.rarity >= 5) {
+					var exSkill = unitSkills.ex_skill_evolution_1;
+				}
+				else {
+					var exSkill = unitSkills.ex_skill_1;
+				}
+				if (!exSkill.data) {
+					console.warn("Unable to find ex skill for unit " + unitData.unit_name);
+				}
+				else {
+					exSkill.actions.forEach(function(action) {
+						if (action.action_type === 90) {
+							var stat = NUMBER_TO_STAT[action.action_detail_1];
+							var amount = action.action_value_2 + action.action_value_3 * attrsCopy.skills.ex_skill_1;
+							actor[stat] += amount;
+							if (actor.statsFromExSkill[stat] === undefined) {
+								actor.statsFromExSkill[stat] = 0;
+							}
+							actor.statsFromExSkill[stat] += amount;
+						}
+					});
+				}
 			}
 		}
 	}
+	else {
+		STAT_NAMES.forEach(function(stat) {
+			actor[stat] = unitData[stat];
+		});
+
+		actor.power = calculatePower(actor);
+
+		let resistData = lookupRows("resist_data", { resist_status_id: unitData.resist_status_id })[0];
+		actor.resistData = resistData;
+	}
+	console.log(actor);
 	
 	return actor;
 }
@@ -234,6 +272,20 @@ export function calculateEffectivePhysicalHp(actor) {
 
 export function calculateEffectiveMagicHp(actor) {
 	return actor.hp * (1 + actor.magic_def / 100);
+}
+
+export function getUnitType(unitId) {
+	let unitTypeNum = Math.floor(unitId / 100000);
+	if (unitTypeNum === 1) {
+		return "character";
+	}
+	else if (unitTypeNum === 2) {
+		return "enemy";
+	}
+	else if (unitTypeNum === 3) {
+		return "boss";
+	}
+	return "???";
 }
 
 function initUnitForBattle(unit) {

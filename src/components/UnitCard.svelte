@@ -3,15 +3,37 @@
 	import UnitCard_Skills from "@src/components/UnitCard_Skills.svelte";
 	import UnitCard_Stats from "@src/components/UnitCard_Stats.svelte";
 	import UnitCard_Bond from "@src/components/UnitCard_Bond.svelte";
+	import UnitCard_Resistances from "@src/components/UnitCard_Resistances.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import UnitSelect from "@src/components/UnitSelect.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, lookupRows } from "@src/data/priconnedb";
-	import { createActor, calculatePower } from "@src/logic/unit";
+	import { createActor, calculatePower, getUnitType } from "@src/logic/unit";
 	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
 
 	export let unit;
 	let options = {};
 	$: options.includeExSkillStats = $includeExSkillStats;
+
+	$: unitType = getUnitType(unit.id);
+
+	$: unitVariants = getUnitVariants(unit.id);
+
+	function getUnitVariants(unitId) {
+		let unitVariants = [];
+		if (getUnitType(unitId) !== "boss") return unitVariants;
+		let baseUnitVariant = lookupRows("enemy_parameter", { unit_id: unitId })[0];
+		if (baseUnitVariant !== undefined) {
+			let allVariants = lookupRows("enemy_parameter", { name: baseUnitVariant.name });
+			return allVariants.map(function(variant) {
+				return {
+					enemyId: variant.enemy_id,
+					unitId: variant.unit_id,
+					displayName: "Level " + variant.level
+				}
+			});
+		}
+		return [];
+	}
 
 	function maxAll() {
 		unit.rarity = 5;
@@ -241,8 +263,8 @@
 		<div class="unit-card-image">
 			<UnitSelect bind:unitId={unit.id} rarity={unit.rarity} />
 			<div class="unit-card-parameters">
-				<div><strong>{actor.unitData ? actor.unitData.unit_name: "Select a character..."}</strong></div>
-				{#if unit.id > -1}
+				<div><strong>{actor.name ? actor.name: "Select a character..."}</strong></div>
+				{#if unitType === "character"}
 				<table>
 					<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
 					<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>
@@ -250,9 +272,20 @@
 					<tr><td>Bond:</td><td><input type="number" min=0 max=8 bind:value={unit.bond} /></td></tr>
 				</table>
 				{/if}
+				{#if unitType === "boss"}
+				<table>
+					<tr><td>Variant:</td><td>
+						<select bind:value={unit.enemyId}>
+							{#each unitVariants as variant}
+							<option value={variant.enemyId}>{variant.displayName}</option>
+							{/each}
+						</select>
+					</td></tr>
+				</table>
+				{/if}
 			</div>
 		</div>
-		{#if unit.id > -1}
+		{#if unitType === "character"}
 		<div class="card-middle-row-wrap">
 			<div class="unit-card-middlerow">
 				<div class="max-all-button-wrap">
@@ -266,12 +299,19 @@
 		{/if}
 <!-- 		<UnitCard_Bond /> -->
 	</div>
-	{#if unit.id > -1}
+	{#if unitType !== "???"}
 	<div class="card-section-wrap">
 		<div class="card-section-row">
 			<UnitCard_Stats actor={actor} />
+			{#if unitType === "character"}
 			<UnitCard_EquipSet unitId={unit.id} rank={unit.rank} bind:equipment={unit.equipment} />
+			{/if}
+			{#if unitType === "boss"}
+			<UnitCard_Resistances resistanceData={actor.resistData} />
+			{/if}
+			{#if unitType === "character" || unitType === "boss"}
 			<UnitCard_Skills unitId={unit.id} rank={unit.rank} level={unit.level} rarity={unit.rarity} actor={actor} bind:skillLevels={unit.skills} />
+			{/if}
 		</div>
 	</div>
 	{/if}

@@ -18,6 +18,9 @@ import arena_max_rank_reward from "@src/data/arena_max_rank_reward.csv";
 import arena_max_season_rank_reward from "@src/data/arena_max_season_rank_reward.csv";
 import arena_daily_rank_reward from "@src/data/arena_daily_rank_reward.csv";
 import unit_profile from "@src/data/unit_profile.csv";
+import enemy_parameter from "@src/data/enemy_parameter.csv";
+import resist_data from "@src/data/resist_data.csv";
+import ailment_data from "@src/data/ailment_data.csv";
 
 const tables = {
 //	unit_enemy_data,
@@ -39,7 +42,10 @@ const tables = {
 	arena_max_rank_reward,
 	arena_max_season_rank_reward,
 	arena_daily_rank_reward,
-	unit_profile
+	unit_profile,
+	enemy_parameter,
+	resist_data,
+	ailment_data
 }
 
 export const MAX_LEVEL = experience_team.slice(-1)[0].team_level - 1; // Database has one more than current max level
@@ -133,6 +139,7 @@ export function getUnitSkills(unitId) {
 	let skillsToLookup = SKILL_NAMES.concat(["ex_skill_evolution_1"]);
 	skillsToLookup.forEach(function(skillName) {
 		unitSkills[skillName] = {
+			type: skillName,
 			data: null,
 			actions: []
 		}
@@ -146,16 +153,24 @@ export function getUnitSkills(unitId) {
 
 	// skills
 	tables.skill_data.forEach(function(skillData) {
-		skillsToLookup.forEach(function(skillName) {
+		for (var skillName in unitSkillData) {
+			if (skillName === "unit_id") continue;
 			if (skillData.skill_id === unitSkillData[skillName]) {
+				if (!unitSkills[skillName]) {
+					unitSkills[skillName] = {
+						type: skillName,
+						data: null,
+						actions: []
+					}
+				}
 				unitSkills[skillName].data = skillData;
 			}
-		});
+		}
 	});
 
 	// actions
 	tables.skill_action.forEach(function(skillAction) {
-		skillsToLookup.forEach(function(skillName) {
+		for (var skillName in unitSkills) {
 			if (unitSkills[skillName].data) {
 				for (var i = 1; i <= 7; i++) {
 					if (skillAction.action_id === unitSkills[skillName].data["action_" + i]) {
@@ -163,7 +178,7 @@ export function getUnitSkills(unitId) {
 					}
 				}
 			}
-		});
+		}
 	});
 
 	return unitSkills;

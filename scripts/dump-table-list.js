@@ -19,5 +19,7 @@ module.exports = [
 	"arena_max_rank_reward",
 	"arena_max_season_rank_reward",
 	"arena_daily_rank_reward",
-	"unit_profile"
+	"unit_profile",
+	"resist_data",
+	"ailment_data"
 ]

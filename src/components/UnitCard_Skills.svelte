@@ -1,5 +1,6 @@
 <script>
-	import { NUMBER_TO_STAT, SKILL_NAMES, lookupRows, getUnitSkills } from "@src/data/priconnedb";
+	import { NUMBER_TO_STAT, SKILL_NAMES, STAT_DISPLAY_NAMES, lookupRows, getUnitSkills } from "@src/data/priconnedb";
+	import { getUnitType } from "@src/logic/unit";
 
 	export let unitId;
 	export let rank;
@@ -11,7 +12,8 @@
 	$: unitSkills = getUnitSkillsEx(unitId);
 	$: attackPattern = lookupRows("unit_attack_pattern", { unit_id: unitId })[0];
 	$: skillImages = getSkillImages(unitSkills);
-	$: unlockedSkills = getUnlockedSkills(rank, unitSkills);
+	$: unlockedSkills = getUnlockedSkills(rank, unitId, unitSkills);
+	$: unitType = getUnitType(unitId);
 
 	// Avoid it looking like crap when user presses backspace
 	$: if (typeof rank !== "number") rank = 1;
@@ -19,18 +21,30 @@
 	$: if (typeof rarity !== "number") rarity = 1;
 
 	function getUnitSkillsEx(unitId) {
+		let unitType = getUnitType(unitId);
 		let unitSkills = getUnitSkills(unitId);
-		if (rarity >= 5) {
+		if (unitType === "character" && rarity >= 5) {
 			unitSkills.ex_skill_1 = unitSkills.ex_skill_evolution_1;
 		}
 		return unitSkills
 	}
 
-	function getUnlockedSkills(rank) {
+	function getUnlockedSkills(rank, unitId, unitSkills) {
+		let unitType = getUnitType(unitId);
+		let unlockedSkills = [];
+
 		if (typeof rank !== "number") {
 			return unlockedSkills || [];
 		}
-		var unlockedSkills = [];
+		if (unitType === "boss") {
+			for (var skillName in unitSkills) {
+				if (unitSkills[skillName].data) {
+					unlockedSkills.push(skillName);
+				}
+			}
+			return unlockedSkills;
+		}
+
 		if (rank >= 1 && unitSkills.union_burst.data) {
 			unlockedSkills.push("union_burst");
 		}
@@ -59,13 +73,36 @@
 		return skillImages;
 	}
 
+	// action 8 is speed manip
+	const action8Detail = {
+		1: "Slow",
+		2: "Haste",
+		3: "Paralyze",
+		4: "Freeze",
+		5: "Bind",
+		6: "Sleep",
+		7: "Stun",
+		8: "Petrify",
+		9: "Confine"
+	}
+	const action9Detail = {
+		0: "Confine Damage",
+		1: "Poison",
+		2: "Burn",
+		3: "Curse"
+	}
+
 	function getActionDescription(action, level) {
 		if (!actor.unitData) return "";
 		var replaceVal = "???";
 		var additionalVal = "";
+		var description = action.description || "";
 
 		if (action.action_type === 1) {
 			// damage. val 1 = base, val 2 = per level, val 3 = attack mult
+			if (!description) {
+				description = "Damage {0}";
+			}
 			var stat = "atk";
 			if (actor.unitData.atk_type === 2) {
 				stat = "magic_str"
@@ -99,9 +136,15 @@
 			replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level);
 			additionalVal = action.action_value_3 + " seconds";
 		}
+		else if (action.action_type === 7) {
+			additionalVal = "Target enemy in position " + (action.target_number + 1);
+		}
 		else if (action.action_type === 8) {
 			// action speed change, including stun
 			// val 3 = stun base time
+			if (!description) {
+				description = action8Detail[action.action_detail_1];
+			}
 			additionalVal = action.action_value_3 + " seconds";
 			if (action.action_value_1 > 0) {
 				additionalVal += ", action speed multiplied by " + action.action_value_1
@@ -109,24 +152,73 @@
 		}
 		else if (action.action_type === 9) {
 			// poison, val 1 = base, val 2 = per level, val 3 = time
+			if (!description) {
+				description = action9Detail[action.action_detail_1];
+			}
 			replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level)
 			additionalVal = action.action_value_3 + " seconds";
 		}
 		else if (action.action_type === 10) {
 			// buff. val 2 = base, val 3 = per level, val 4 = time
+			let isDebuff = (action.action_detail_1 % 2 === 1);
+			let stat = NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10) + 1];
+			if (!description) {
+				description = (isDebuff ? "Lowers " : "Raises ") + STAT_DISPLAY_NAMES[stat] + " by {0}"
+			}
 			replaceVal = Math.round(action.action_value_2 + action.action_value_3 * level);
 			additionalVal = action.action_value_4 + " seconds";
 			if (action.target_range > 0 && action.target_range < 2160) {
 				additionalVal += ", " + action.target_range + " range";
 			}
 		}
+		else if (action.action_type === 11) {
+			// charm
+			additionalVal = action.action_value_1 + " seconds";
+		}
 		else if (action.action_type === 12) {
 			//blind
-			additionalVal = action.action_value_1 + " seconds, " + action.action_value_3 + "% base chance";
+			if (!description) {
+				description = "Blind"
+			}
+			additionalVal = "Causes " + (100 - action.action_detail_1) + "% miss chance on physical attacks for " + action.action_value_1 + " seconds"
+		}
+		else if (action.action_type === 13) {
+			// silence
+			if (!description) {
+				description = "Silence"
+			}
+			additionalVal = action.action_value_1 + " seconds"
+		}
+		else if (action.action_type === 15) {
+			additionalVal = "Summon";
 		}
 		else if (action.action_type === 16) {
 			// TP
 			replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level);
+		}
+		else if (action.action_type === 17) {
+			// HP activation
+			additionalVal = "Activates when below " + action.action_value_3 + "% HP";
+		}
+		else if (action.action_type === 18) {
+			if (action.action_detail_2 === 100300302) {
+				 // Rei
+				additionalVal = "Charge " + action.action_value_3 + " seconds, then deal additional damage equal to " + action.action_value_1 + " times damage taken";
+			}
+		}
+		else if (action.action_type === 20) {
+			// taunt
+			additionalVal = (action.action_value_1 + action.action_value_2 * level) + " seconds";
+		}
+		else if (action.action_type === 21) {
+			// ghostie/lima/annasplosion
+			var time = action.action_value_1 + action.action_value_2 * level;
+			if (time > 0) {
+				additionalVal = "invulnerable " + (action.action_value_1 + action.action_value_2 * level) + " seconds";
+			}
+		}
+		else if (action.action_type === 22) {
+			// Some kind of percentage damage buff on a skill?
 		}
 		else if (action.action_type === 26) {
 			// Saren's berserk
@@ -137,6 +229,10 @@
 			if (action.action_detail_2 === 102500103) {
 				additionalVal = action.action_detail_1 + "% chance to succeed";
 			}
+		}
+		else if (action.action_type === 30) {
+			//death
+			additionalVal = "Instant death";
 		}
 		else if (action.action_type === 32) {
 			// Akari's HP Drain thing
@@ -165,25 +261,28 @@
 			replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level);
 			additionalVal = action.action_value_3 + " seconds, " + action.action_value_5 + " range";
 		}
-		else if (action.action_type === 18) {
-			if (action.action_detail_2 === 100300302) {
-				 // Rei
-				additionalVal = "Charge " + action.action_value_3 + " seconds, then deal additional damage equal to " + action.action_value_1 + " times damage taken";
-			}
+		else if (action.action_type === 42) {
+			// Akino
 		}
-		else if (action.action_type === 21) {
-			// ghostie/lima/annasplosion
-			var time = action.action_value_1 + action.action_value_2 * level;
-			if (time > 0) {
-				additionalVal = "invulnerable " + (action.action_value_1 + action.action_value_2 * level) + " seconds";
+		else if (action.action_type === 44) {
+			// Lima
+		}
+		else if (action.action_type === 45) {
+			// Arisa
+		}
+		else if (action.action_type === 46) {
+			// Ziz percent HP based damage
+			if (!description) {
+				description = "Damage {0}% of max HP";
 			}
+			replaceVal = action.action_value_1;
 		}
 		else if (action.action_type === 90) {
 			// skill boost. val 2 = base, val 3 = per level
 			replaceVal = Math.round(action.action_value_2 + action.action_value_3 * level)
 		}
 
-		var description = action.description.replace("{0}", replaceVal);
+		description = description.replace("{0}", replaceVal);
 		if (additionalVal) {
 			description += " (" + additionalVal + ")";
 		}
@@ -214,10 +313,10 @@
 				}
 
 				if (rank >= 2 && attackPattern["atk_pattern_" + i] === 1001 && unitSkills["main_skill_1"].data) {
-					pattern.push(unitSkills["main_skill_1"].data.name);
+					pattern.push(unitSkills["main_skill_1"].data.name || unitSkills["main_skill_1"].type);
 				}
-				else if (rank >= 4 && attackPattern["atk_pattern_" + i] === 1002 && unitSkills["main_skill_1"].data) {
-					pattern.push(unitSkills["main_skill_2"].data.name);
+				else if (rank >= 4 && attackPattern["atk_pattern_" + i] === 1002 && unitSkills["main_skill_2"].data) {
+					pattern.push(unitSkills["main_skill_2"].data.name || unitSkills["main_skill_2"].type);
 				}
 				else {
 					pattern.push("Attack");
@@ -249,15 +348,17 @@
 
 <div class="card-section">
 	<div class="card-section-header">Skills</div>
-	{#each unlockedSkills as skill}
+	{#each unlockedSkills as skill, i}
 		<div class="skill-box">
 			<img class="skill" src={skillImages[skill]} /> 
 			<div class="skill-header">
-				<div class="skill-name"><strong>{unitSkills[skill].data.name}</strong></div>
+				<div class="skill-name"><strong>{unitSkills[skill].data.name || unitSkills[skill].type }</strong></div>
+				{#if unitType === "character"}
 				<div class="skill-level">
 					<div class="level-input">Level: <input type="number" min=1 max={level} bind:value={skillLevels[skill]} on:change /></div>
 					<div class="button" on:click={maxSkill(skill)}>Max</div>
 				</div>
+				{/if}
 			</div>
 			<div class="skill-description">
 				{unitSkills[skill].data.description}<br />
