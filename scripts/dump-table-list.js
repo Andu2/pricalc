@@ -25,5 +25,7 @@ module.exports = [
 	"quest_data",
 	"wave_group_data",
 	"enemy_reward_data",
-	"item_data"
+	"item_data",
+	"clan_battle_boss_group",
+	"clan_battle_map_data"
 ]

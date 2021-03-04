@@ -45,7 +45,7 @@
 			let row2Numeric = row2.age * 1;
 			if (row1Numeric < row2Numeric) return -1;
 			else if (row1Numeric > row2Numeric) return 1;
-			else return birthdaySort(row1, row2);
+			else return birthdaySort(row2, row1);
 		}
 	}, {
 	// 	attr: "guild",
@@ -104,11 +104,11 @@
 
 	function getBirthdaySortVal(row) {
 		let sortVal = "";
-		if (row.birth_month.length < 2) {
+		if (row.birth_month < 10) {
 			sortVal += "0"
 		}
 		sortVal += row.birth_month;
-		if (row.birth_day.length < 2) {
+		if (row.birth_day < 10) {
 			sortVal += "0"
 		}
 		sortVal += row.birth_day;
