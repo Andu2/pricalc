@@ -10,6 +10,7 @@ let bossBaseIds = [];
 let enemyBaseIds = []
 let bosses = lookupRows("enemy_parameter", {}).filter(function(enemy) {
 	if (getUnitType(enemy.unit_id) === "boss") {
+		if (enemy.unit_id === 390100) return false; // "Omniscient Kaiser", weird data
 		if (bossBaseIds.indexOf(getUnitIdBase(enemy.unit_id)) === -1) {
 			bossBaseIds.push(getUnitIdBase(enemy.unit_id));
 			return true;
@@ -125,6 +126,12 @@ function getRarityId(unitId) {
 function selectUnit(id) {
 	return function() {
 		unitId = id;
+		if (getUnitType(unitId) !== "character") {
+			let enemies = lookupRows("enemy_parameter", { unit_id: id });
+			if (enemies.length) {
+				enemyId = enemies[0].enemy_id;
+			}
+		}
 		isSelecting = false;
 	}
 }

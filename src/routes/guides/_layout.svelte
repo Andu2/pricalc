@@ -1,6 +1,7 @@
 <script>
 	import SideMenu from "@src/components/SideMenu.svelte";
 	import { lastGuide } from "@src/settings.js";
+	import { sortByAttr } from "@src/utils";
 
 	let tabs = [{
 		path: "formulas",
@@ -11,11 +12,7 @@
 	}, {
 		path: "chara-profiles",
 		displayName: "Character Profiles"
-	}].sort(function(a, b) {
-		if (a.displayName < b.displayName) return -1;
-		else if (a.displayName > b.displayName) return 1;
-		else return 0;
-	});
+	}].sort(sortByAttr("displayName"));
 
 	export let segment;
 	$: lastGuide.set(segment);

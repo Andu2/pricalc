@@ -56,7 +56,6 @@ export function createActor(attrs, options) {
 		var unitData = lookupRows("unit_data", { unit_id: attrsCopy.id })[0];
 	}
 	else {
-		var unitData = lookupRows("unit_enemy_data", { unit_id: attrsCopy.id })[0];
 		var enemyData = lookupRows("enemy_parameter", { unit_id: attrsCopy.id })[0];
 		if (attrs.enemyId) {
 			var variantData = lookupRows("enemy_parameter", { enemy_id: attrs.enemyId })[0];
@@ -70,6 +69,8 @@ export function createActor(attrs, options) {
 			}
 		}
 		actor.enemyData = enemyData;
+
+		var unitData = lookupRows("unit_enemy_data", { unit_id: attrsCopy.id })[0];
 	}
 	actor.unitData = unitData;
 	if (unitData === undefined) {

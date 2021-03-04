@@ -62,14 +62,14 @@
 
 	function getSkillImages(unitSkills) {
 		var skillImages = {};
-		SKILL_NAMES.forEach(function(skill) {
-			if (!unitSkills[skill].data || !unitSkills[skill].data.icon_type) {
-				skillImages[skill] = "images/equipment/icon_icon_equipment_999999.png";
+		for (var skillName in unitSkills) {
+			if (!unitSkills[skillName].data || !unitSkills[skillName].data.icon_type) {
+				skillImages[skillName] = "images/equipment/icon_icon_equipment_999999.png";
 			}
 			else {
-				skillImages[skill] = "images/skill/icon_icon_skill_" + unitSkills[skill].data.icon_type + ".png";
+				skillImages[skillName] = "images/skill/icon_icon_skill_" + unitSkills[skillName].data.icon_type + ".png";
 			}
-		});
+		}
 		return skillImages;
 	}
 
@@ -92,8 +92,18 @@
 		3: "Curse"
 	}
 
-	function getActionDescription(action, level) {
+	function getActionDescription(action, skillName) {
 		if (!actor.unitData) return "";
+
+		let level = 0;
+		if (unitType === "character") {
+			level = skillLevels[skillName]
+		}
+		else if (actor.enemyData) {
+			let lvColumn = skillName.replace("skill_", "skill_lv_").replace("burst", "burst_level");
+			level = actor.enemyData[lvColumn];
+		}
+
 		var replaceVal = "???";
 		var additionalVal = "";
 		var description = action.description || "";
@@ -137,7 +147,9 @@
 			additionalVal = action.action_value_3 + " seconds";
 		}
 		else if (action.action_type === 7) {
-			additionalVal = "Target enemy in position " + (action.target_number + 1);
+			if (action.target_type !== 2) {
+				additionalVal = "Target enemy in position " + (action.target_number + 1);
+			}
 		}
 		else if (action.action_type === 8) {
 			// action speed change, including stun
@@ -153,7 +165,7 @@
 		else if (action.action_type === 9) {
 			// poison, val 1 = base, val 2 = per level, val 3 = time
 			if (!description) {
-				description = action9Detail[action.action_detail_1];
+				description = action9Detail[action.action_detail_1] + " {0}";
 			}
 			replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level)
 			additionalVal = action.action_value_3 + " seconds";
@@ -282,6 +294,15 @@
 			replaceVal = Math.round(action.action_value_2 + action.action_value_3 * level)
 		}
 
+		if (action.target_type === 2) {
+			if (additionalVal) {
+				additionalVal += ", target random";
+			}
+			else {
+				additionalVal = "target random";
+			}
+		}
+
 		description = description.replace("{0}", replaceVal);
 		if (additionalVal) {
 			description += " (" + additionalVal + ")";
@@ -361,10 +382,14 @@
 				{/if}
 			</div>
 			<div class="skill-description">
+				{#if unitType !== "boss"}
+				<!-- bosses have janky descriptions, exclude them to avoid confusion-->
 				{unitSkills[skill].data.description}<br />
+				{/if}
 				{#each unitSkills[skill].actions as action}
-					<em>{getActionDescription(action, skillLevels[skill])}</em>
+					<em>{getActionDescription(action, skill, actor)}</em>
 				{/each}
+				<!-- <em>Skill cast time {unitSkills[skill].data.skill_cast_time}</em> -->
 			</div>
 		</div>
 	{/each}

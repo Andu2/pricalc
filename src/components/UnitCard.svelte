@@ -122,7 +122,6 @@
 		},
 		bonds: []
 	});
-	let unitComments = "???";
 
 	function recalculate() {
 		let isValid = validateUnit(unit);
@@ -257,11 +256,16 @@
 	}
 
 	$: actor = recalculate(unit);
+	$: unitComments = getUnitComments(actor);
 
 	function getUnitComments(actor) {
-		console.log("ran dat shit", actor.unitData)
 		if (actor.unitData) {
-			return actor.unitData.comment.replace(/\\n/g, "<br />");
+			if (typeof actor.unitData.comment === "string") {
+				return actor.unitData.comment.replace(/\\n/g, "<br />");
+			}
+			else {
+				return "No description"
+			}
 		}
 		else {
 			//console.log(actor)
@@ -305,7 +309,7 @@
 				</div>
 				{/if}
 				<div class="unit-card-description">
-					{@html getUnitComments(actor)}
+					{@html unitComments}
 				</div>
 			</div>
 		</div>
