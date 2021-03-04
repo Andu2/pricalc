@@ -2,7 +2,7 @@ export default {
 	version: "0.2",
 	changeLog: [{
 		version: "0.2",
-		date: "???",
+		date: "2021-03-04",
 		notes: [
 			"Added enemies to unit viewer",
 			"Guides: Character profiles, arena jewels",
