@@ -1,5 +1,3 @@
-//import unit_enemy_data from "@src/data/unit_enemy_data.csv";
-//import enemy_parameter from "@src/data/enemy_parameter.csv";
 import equipment_data from "@src/data/equipment_data.csv";
 import equipment_enhance_rate from "@src/data/equipment_enhance_rate.csv";
 import unit_attack_pattern from "@src/data/unit_attack_pattern.csv";
@@ -19,12 +17,15 @@ import arena_max_season_rank_reward from "@src/data/arena_max_season_rank_reward
 import arena_daily_rank_reward from "@src/data/arena_daily_rank_reward.csv";
 import unit_profile from "@src/data/unit_profile.csv";
 import enemy_parameter from "@src/data/enemy_parameter.csv";
+import unit_enemy_data from "@src/data/unit_enemy_data.csv";
 import resist_data from "@src/data/resist_data.csv";
 import ailment_data from "@src/data/ailment_data.csv";
+import quest_data from "@src/data/quest_data.csv";
+import wave_group_data from "@src/data/wave_group_data.csv";
+import enemy_reward_data from "@src/data/enemy_reward_data.csv";
+import item_data from "@src/data/item_data.csv";
 
 const tables = {
-//	unit_enemy_data,
-//	enemy_parameter,
 	equipment_data,
 	equipment_enhance_rate,
 	unit_attack_pattern,
@@ -43,9 +44,14 @@ const tables = {
 	arena_max_season_rank_reward,
 	arena_daily_rank_reward,
 	unit_profile,
+	unit_enemy_data,
 	enemy_parameter,
 	resist_data,
-	ailment_data
+	ailment_data,
+	quest_data,
+	wave_group_data,
+	enemy_reward_data,
+	item_data
 }
 
 export const MAX_LEVEL = experience_team.slice(-1)[0].team_level - 1; // Database has one more than current max level
@@ -72,7 +78,9 @@ export const UNLOCKED_UNITS = (unit_data.filter(function(unit) {
 	if (a.unit_name > b.unit_name) return 1;
 	else if (a.unit_name < b.unit_name) return -1;
 	else return 0;
-}))
+}));
+
+export const DROPPABLE_ITEMS = getDroppableItems();
 
 export const STAT_NAMES = ["hp", "atk", "magic_str", "def", "magic_def", "physical_critical", "magic_critical", 
 	"wave_hp_recovery", "wave_energy_recovery", "dodge", //"physical_penetrate", "magic_penetrate",
@@ -115,14 +123,17 @@ export const NUMBER_TO_STAT = {
 }
 
 // TODO: Cache lookups if performance becomes an issue
-export function lookupRows(tableName, constraints) {
+export function lookupRows(tableName, constraints, calculated = {}) {
 	if (tables[tableName] === undefined) {
 		console.warn("Invalid table name for lookup: " + tableName);
 		return [];
 	}
 	return tables[tableName].filter(function(row) {
 		for (var column in constraints) {
-			if (constraints[column] instanceof Array) {
+			if (typeof calculated[column] === "function") {
+				if (constraints[column] !== calculated[column](row)) return false;
+			}
+			else if (constraints[column] instanceof Array) {
 				if (constraints[column].indexOf(row[column]) === -1) return false;
 			}
 			else {
@@ -182,4 +193,28 @@ export function getUnitSkills(unitId) {
 	});
 
 	return unitSkills;
+}
+
+function getDroppableItems() {
+	let items = [];
+
+	let quests = lookupRows("quest_data", {});
+	quests.forEach(function(quest) {
+		for (var waveNum = 1; waveNum <= 3; waveNum++) {
+			let wave = lookupRows("wave_group_data", { wave_group_id: quest["wave_group_id_" + waveNum]})[0];
+			for (var enemyNum = 1; enemyNum <= 5; enemyNum++) {
+				let rewardId = wave["drop_reward_id_" + enemyNum];
+				if (rewardId > 0) {
+					let rewardData = lookupRows("enemy_reward_data", { drop_reward_id: rewardId })[0];
+					for (var rewardNum = 1; rewardNum <= 5; rewardNum++) {
+						if (items.indexOf(rewardData["reward_id_" + rewardNum]) === -1) {
+							items.push(rewardData["reward_id_" + rewardNum])
+						}
+					}
+				}
+			}
+		}
+	});
+
+	return items;
 }

@@ -1,28 +1,43 @@
 <script>
 import { UNLOCKED_UNITS, lookupRows } from "@src/data/priconnedb"
+import { getUnitIdBase } from "@src/logic/unit"
+import { sortByAttr } from "@src/utils"
 export let unitId;
+export let enemyId;
 export let rarity;
 
-let bossNames = [];
+let bossBaseIds = [];
+let enemyBaseIds = []
 let bosses = lookupRows("enemy_parameter", {}).filter(function(enemy) {
 	if (getUnitType(enemy.unit_id) === "boss") {
-		if (bossNames.indexOf(enemy.name) === -1) {
-			bossNames.push(enemy.name);
+		if (bossBaseIds.indexOf(getUnitIdBase(enemy.unit_id)) === -1) {
+			bossBaseIds.push(getUnitIdBase(enemy.unit_id));
 			return true;
 		}
 	}
 	return false;
-}).sort(function(a, b) {
-	if (a.name > b.name) return 1;
-	else if (a.name < b.name) return -1;
-	else return 0;
-});
+}).sort(sortByAttr("name"));
+let enemies = lookupRows("enemy_parameter", {}).filter(function(enemy) {
+	if (getUnitType(enemy.unit_id) === "enemy" || getUnitType(enemy.unit_id) === "shadow") {
+		if (enemyBaseIds.indexOf(getUnitIdBase(enemy.unit_id)) === -1) {
+			enemyBaseIds.push(getUnitIdBase(enemy.unit_id));
+			return true;
+		}
+	}
+	return false;
+}).sort(sortByAttr("name"));
 
 let options = {
-	bosses: bosses.map(function(boss) {
+	bosses: bosses.map(function(enemy) {
 		return {
-			id: boss.unit_id,
-			name: boss.name
+			id: enemy.unit_id,
+			name: enemy.name
+		}
+	}),
+	enemies: enemies.map(function(enemy) {
+		return {
+			id: enemy.unit_id,
+			name: enemy.name
 		}
 	}),
 	characters: UNLOCKED_UNITS.map(function(character) {
@@ -38,17 +53,31 @@ function getUnitType(unitId) {
 	if (unitTypeNum === 1) {
 		return "character";
 	}
+	else if(unitTypeNum === 2) {
+		return "enemy";
+	}
 	else if (unitTypeNum === 3) {
 		return "boss";
+	}
+	else if (unitTypeNum === 6) {
+		return "shadow";
 	}
 	return "???";
 }
 
 let isSelecting = false;
-let selectTab = "characters";
+let selectTab = getInitialSelectTab(unitId);
+
+function getInitialSelectTab(unitId) {
+	let unitType = getUnitType(unitId);
+	if (unitType === "boss") return "bosses";
+	else if (unitType === "enemy" || unitType === "shadow") return "enemies";
+	else return "characters";
+}
+
 $: selectRows = getUnitSelectionRows(selectTab);
 
-$: charImg = getCharImg(unitId, rarity);
+$: charImg = getCharImg(unitId, rarity, enemyId);
 
 function getUnitSelectionRows(selectTab) {
 	let rows = [];
@@ -63,7 +92,7 @@ function getUnitSelectionRows(selectTab) {
 	return rows;
 }
 
-function getCharImg(unitId, rarity, selectTab) {
+function getCharImg(unitId, rarity, enemyId) {
 	rarity = rarity || 1;
 	if (unitId > -1) {
 		let unitType = getUnitType(unitId);
@@ -72,9 +101,11 @@ function getCharImg(unitId, rarity, selectTab) {
 			var unitIdWithRarity = unitIdString.slice(0, 4) + (rarity >= 3 ? "3" : "1") + unitIdString.slice(-1); 
 			return "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
 		}
+		else if (unitType === "shadow") {
+			return "images/unit/unit_icon_shadow_" + (unitId - 500000 + 10) + ".png";
+		}
 		else {
-			var unitIdString = unitId + "";
-			return "images/unit/unit_icon_unit_" + unitIdString.slice(0, 5) + "0" + ".png";
+			return "images/unit/unit_icon_unit_" + unitId + ".png";
 		}
 	}
 	else {
@@ -119,6 +150,7 @@ function switchTab(tabName) {
 			<div class="unit-tabs-wrap">
 				<table class="unit-tabs"><tr>
 					<td><div class="tab" class:selected={selectTab === "characters"} on:click={switchTab("characters")}>Characters</div></td>
+					<td><div class="tab" class:selected={selectTab === "enemies"} on:click={switchTab("enemies")}>Enemies</div></td>
 					<td><div class="tab" class:selected={selectTab === "bosses"} on:click={switchTab("bosses")}>Bosses</div></td>
 				</tr></table>
 			</div>
@@ -130,7 +162,7 @@ function switchTab(tabName) {
 				<tr>
 					{#each selectRow as unit}
 					<td class="select-unit" class:large-icon={selectTab==="bosses"} on:click={selectUnit(unit.id)}>
-						<img class="select-icon" class:large-icon={selectTab==="bosses"} src={"images/unit/unit_icon_unit_" + getRarityId(unit.id) + ".png"} /><br />
+						<img class="select-icon" class:large-icon={selectTab==="bosses"} src={getCharImg(unit.id)} /><br />
 						<span class="select-unit-name">{unit.name}</span>
 					</td>
 					{/each}

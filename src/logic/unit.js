@@ -41,6 +41,7 @@ export function createActor(attrs, options) {
 	let unitType = getUnitType(attrsCopy.id);
 
 	var actor = {
+		type: unitType,
 		id: attrsCopy.id,
 		rarity: attrsCopy.rarity,
 		level: attrsCopy.level,
@@ -55,11 +56,12 @@ export function createActor(attrs, options) {
 		var unitData = lookupRows("unit_data", { unit_id: attrsCopy.id })[0];
 	}
 	else {
-		var unitData = lookupRows("enemy_parameter", { unit_id: attrsCopy.id })[0];
+		var unitData = lookupRows("unit_enemy_data", { unit_id: attrsCopy.id })[0];
+		var enemyData = lookupRows("enemy_parameter", { unit_id: attrsCopy.id })[0];
 		if (attrs.enemyId) {
 			var variantData = lookupRows("enemy_parameter", { enemy_id: attrs.enemyId })[0];
-			if (unitData.name === variantData.name) {
-				unitData = variantData;
+			if (getUnitIdBase(enemyData.unit_id) === getUnitIdBase(variantData.unit_id)) {
+				enemyData = variantData;
 				attrs.id = variantData.unit_id;
 				attrsCopy.id = variantData.unit_id;
 			}
@@ -67,6 +69,7 @@ export function createActor(attrs, options) {
 				attrs.enemyId = undefined;
 			}
 		}
+		actor.enemyData = enemyData;
 	}
 	actor.unitData = unitData;
 	if (unitData === undefined) {
@@ -77,7 +80,7 @@ export function createActor(attrs, options) {
 		actor.name = unitData.unit_name;
 	}
 	else {
-		actor.name = unitData.name;
+		actor.name = enemyData.name;
 	}
 
 	var unitSkills = getUnitSkills(attrsCopy.id);
@@ -195,12 +198,12 @@ export function createActor(attrs, options) {
 	}
 	else {
 		STAT_NAMES.forEach(function(stat) {
-			actor[stat] = unitData[stat];
+			actor[stat] = enemyData[stat];
 		});
 
 		actor.power = calculatePower(actor);
 
-		let resistData = lookupRows("resist_data", { resist_status_id: unitData.resist_status_id })[0];
+		let resistData = lookupRows("resist_data", { resist_status_id: enemyData.resist_status_id })[0];
 		actor.resistData = resistData;
 	}
 	console.log(actor);
@@ -275,7 +278,14 @@ export function calculateEffectiveMagicHp(actor) {
 }
 
 export function getUnitType(unitId) {
-	let unitTypeNum = Math.floor(unitId / 100000);
+	let unitTypeNum = 0;
+	if (unitId >= 100000) {
+		unitTypeNum = Math.floor(unitId / 100000);
+	}
+	else if (unitId >= 1000) {
+		// base ID
+		unitTypeNum = Math.floor(unitId / 1000);
+	}
 	if (unitTypeNum === 1) {
 		return "character";
 	}
@@ -285,7 +295,15 @@ export function getUnitType(unitId) {
 	else if (unitTypeNum === 3) {
 		return "boss";
 	}
+	else if (unitTypeNum === 6) {
+		return "shadow";
+	}
 	return "???";
+}
+
+// take a 6-digit unit ID, give a 4-digit
+export function getUnitIdBase(unitId) {
+	return Math.floor(unitId / 100);
 }
 
 function initUnitForBattle(unit) {

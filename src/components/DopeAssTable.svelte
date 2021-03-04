@@ -12,12 +12,16 @@
 
 	let sort = {
 		attr: undefined,
+		column: null,
 		ascending: false
 	};
+
+	$: resort(sort, data);
 
 	function changeSort(column) {
 		return function() {
 			if (column.sort) {
+				sort.column = column;
 				if (sort.attr === column.attr) {
 					sort.ascending = !sort.ascending;
 				}
@@ -25,35 +29,39 @@
 					sort.ascending = false;
 					sort.attr = column.attr;
 				}
-
-				if (typeof column.sort === "function") {
-					data.sort(column.sort);
-				}
-				else if (column.sort === "numeric") {
-					data.sort(function(row1, row2) {
-						let row1Numeric = row1[sort.attr] * 1;
-						let row2Numeric = row2[sort.attr] * 1;
-						if (row1Numeric > row2Numeric) return 1;
-						else if (row1Numeric < row2Numeric) return -1;
-						else return 0;
-					});
-				}
-				else {
-					data.sort(function(row1, row2) {
-						if (row1[sort.attr] > row2[sort.attr]) return 1;
-						else if (row1[sort.attr] < row2[sort.attr]) return -1;
-						else return 0;
-					});
-				}
-
-				if (!sort.ascending) {
-					data.reverse();
-				}
-
-				// This is to force svelte to update
-				data = data.slice();
 			}
 		}
+	}
+
+	function resort(sort) {
+		let column = sort.column;
+		if (!column) return;
+		if (typeof column.sort === "function") {
+			data.sort(column.sort);
+		}
+		else if (column.sort === "numeric") {
+			data.sort(function(row1, row2) {
+				let row1Numeric = row1[sort.attr] * 1;
+				let row2Numeric = row2[sort.attr] * 1;
+				if (row1Numeric > row2Numeric) return 1;
+				else if (row1Numeric < row2Numeric) return -1;
+				else return 0;
+			});
+		}
+		else {
+			data.sort(function(row1, row2) {
+				if (row1[sort.attr] > row2[sort.attr]) return 1;
+				else if (row1[sort.attr] < row2[sort.attr]) return -1;
+				else return 0;
+			});
+		}
+
+		if (!sort.ascending) {
+			data.reverse();
+		}
+
+		// This is to force svelte to update
+		data = data.slice();
 	}
 </script>
 

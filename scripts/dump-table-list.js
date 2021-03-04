@@ -21,5 +21,9 @@ module.exports = [
 	"arena_daily_rank_reward",
 	"unit_profile",
 	"resist_data",
-	"ailment_data"
+	"ailment_data",
+	"quest_data",
+	"wave_group_data",
+	"enemy_reward_data",
+	"item_data"
 ]

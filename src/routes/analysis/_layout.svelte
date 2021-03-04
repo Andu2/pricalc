@@ -1,6 +1,7 @@
 <script>
 	import SideMenu from "@src/components/SideMenu.svelte";
 	import { lastAnalysis } from "@src/settings.js";
+	import { sortByAttr } from "@src/utils";
 
 	let tabs = [{
 		path: "stat-table",
@@ -11,7 +12,10 @@
 	}, {
 		path: "damage-scaling",
 		displayName: "Skill Damage Scaling"
-	}];
+	}, {
+		path: "drops",
+		displayName: "Drops Per Stamina"
+	}].sort(sortByAttr("displayName"));
 
 	export let segment;
 	$: lastAnalysis.set(segment);

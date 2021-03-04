@@ -4,11 +4,13 @@
 	import UnitCard_Stats from "@src/components/UnitCard_Stats.svelte";
 	import UnitCard_Bond from "@src/components/UnitCard_Bond.svelte";
 	import UnitCard_Resistances from "@src/components/UnitCard_Resistances.svelte";
+	import UnitCard_Drops from "@src/components/UnitCard_Drops.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import UnitSelect from "@src/components/UnitSelect.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, lookupRows } from "@src/data/priconnedb";
-	import { createActor, calculatePower, getUnitType } from "@src/logic/unit";
+	import { createActor, calculatePower, getUnitType, getUnitIdBase } from "@src/logic/unit";
 	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
+	import { sortByAttr } from "@src/utils"
 
 	export let unit;
 	let options = {};
@@ -20,19 +22,24 @@
 
 	function getUnitVariants(unitId) {
 		let unitVariants = [];
-		if (getUnitType(unitId) !== "boss") return unitVariants;
-		let baseUnitVariant = lookupRows("enemy_parameter", { unit_id: unitId })[0];
-		if (baseUnitVariant !== undefined) {
-			let allVariants = lookupRows("enemy_parameter", { name: baseUnitVariant.name });
-			return allVariants.map(function(variant) {
-				return {
-					enemyId: variant.enemy_id,
-					unitId: variant.unit_id,
-					displayName: "Level " + variant.level
-				}
-			});
-		}
-		return [];
+		if (getUnitType(unitId) !== "boss" && getUnitType(unitId) !== "enemy" && getUnitType(unitId) !== "shadow") return unitVariants;
+
+		let unitBaseId = getUnitIdBase(unitId);
+		let allVariants = lookupRows("enemy_parameter", { baseId: unitBaseId }, { 
+			baseId: function(row) {
+				return getUnitIdBase(row.unit_id);
+			}
+		});
+		let variantOptions = allVariants.map(function(variant) {
+			return {
+				enemyId: variant.enemy_id,
+				unitId: variant.unit_id,
+				level: variant.level,
+				displayName: variant.name + " - Level " + variant.level
+			}
+		});
+		variantOptions.sort(sortByAttr("level"));
+		return variantOptions;
 	}
 
 	function maxAll() {
@@ -121,15 +128,9 @@
 		let isValid = validateUnit(unit);
 
 		if (isValid) {
-			actor = createActor(unit, options);
-			if (actor.unitData) {
-				unitComments = actor.unitData.comment;
-			}
-			else {
-				//console.log(actor)
-				unitComments = "???";
-			}
+			return createActor(unit, options);
 		}
+		else return actor;
 	}
 
 	function validateUnit() {
@@ -255,7 +256,18 @@
 		}
 	}
 
-	$: recalculate(unit);
+	$: actor = recalculate(unit);
+
+	function getUnitComments(actor) {
+		console.log("ran dat shit", actor.unitData)
+		if (actor.unitData) {
+			return actor.unitData.comment.replace(/\\n/g, "<br />");
+		}
+		else {
+			//console.log(actor)
+			return "???";
+		}
+	}
 </script>
 
 <div>
@@ -272,7 +284,7 @@
 					<tr><td>Bond:</td><td><input type="number" min=0 max=8 bind:value={unit.bond} /></td></tr>
 				</table>
 				{/if}
-				{#if unitType === "boss"}
+				{#if unitType === "boss" || unitType === "enemy" || unitType === "shadow"}
 				<table>
 					<tr><td>Variant:</td><td>
 						<select bind:value={unit.enemyId}>
@@ -285,18 +297,18 @@
 				{/if}
 			</div>
 		</div>
-		{#if unitType === "character"}
 		<div class="card-middle-row-wrap">
 			<div class="unit-card-middlerow">
+				{#if unitType === "character"}
 				<div class="max-all-button-wrap">
 					<div class="button max-all-button" on:click={maxAll}>Max all</div>
 				</div>
+				{/if}
 				<div class="unit-card-description">
-					{unitComments}
+					{@html getUnitComments(actor)}
 				</div>
 			</div>
 		</div>
-		{/if}
 <!-- 		<UnitCard_Bond /> -->
 	</div>
 	{#if unitType !== "???"}
@@ -306,10 +318,13 @@
 			{#if unitType === "character"}
 			<UnitCard_EquipSet unitId={unit.id} rank={unit.rank} bind:equipment={unit.equipment} />
 			{/if}
-			{#if unitType === "boss"}
+			{#if unitType === "boss" || unitType === "enemy"}
 			<UnitCard_Resistances resistanceData={actor.resistData} />
 			{/if}
-			{#if unitType === "character" || unitType === "boss"}
+			{#if unitType === "enemy" || unitType === "shadow"}
+			<UnitCard_Drops enemyId={unit.enemyId} />
+			{/if}
+			{#if unitType === "character" || unitType === "boss" || unitType === "shadow"}
 			<UnitCard_Skills unitId={unit.id} rank={unit.rank} level={unit.level} rarity={unit.rarity} actor={actor} bind:skillLevels={unit.skills} />
 			{/if}
 		</div>

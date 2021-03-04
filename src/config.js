@@ -3,7 +3,11 @@ export default {
 	changeLog: [{
 		version: "0.2",
 		date: "???",
-		notes: ["Guides: Character profiles, arena jewels"]
+		notes: [
+			"Added enemies to unit viewer",
+			"Guides: Character profiles, arena jewels",
+			"Analysis: Drops per stamina"
+		]
 	}, {
 		version: "0.1",
 		date: "2021-02-24",

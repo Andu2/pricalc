@@ -27,6 +27,9 @@
 		{#each statusData as status}
 		<tr><td class="stat-label">{status.status}</td><td class="stat-value">{status.resistance}</td></tr>
 		{/each}
+		{#if statusData.length === 0}
+		No resistances or immunities
+		{/if}
 	</table>
 </div>
 
