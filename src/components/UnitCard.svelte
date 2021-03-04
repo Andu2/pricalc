@@ -321,7 +321,7 @@
 			{#if unitType === "boss" || unitType === "enemy"}
 			<UnitCard_Resistances resistanceData={actor.resistData} />
 			{/if}
-			{#if unitType === "enemy" || unitType === "shadow"}
+			{#if false && (unitType === "enemy" || unitType === "shadow")}
 			<UnitCard_Drops enemyId={unit.enemyId} />
 			{/if}
 			{#if unitType === "character" || unitType === "boss" || unitType === "shadow"}
