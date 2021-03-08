@@ -1,5 +1,9 @@
 import { lookupRows, STAT_NAMES, NUMBER_TO_STAT, getUnitSkills } from "@src/data/priconnedb";
 
+export function isValidUnitConfiguration(unitConfig) {
+
+}
+
 // skills: {
 // 	union_burst: 1, 
 // 	etc...

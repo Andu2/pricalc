@@ -204,7 +204,7 @@
 		if (typeof unit.rarity === "number" && $hideImpossibleRarities && unit.id > -1) {
 			// TODO: Fix this mess
 			var unitData = lookupRows("unit_data", { unit_id: unit.id })[0];
-			if (unitData.rarity > unit.rarity) {
+			if (unitData && unitData.rarity > unit.rarity) {
 				unit.rarity = unitData.rarity;
 			}
 		}
