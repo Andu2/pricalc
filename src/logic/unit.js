@@ -52,7 +52,7 @@ export function createActor(attrs, options) {
 		includeExSkillStats: options.includeExSkillStats
 	}
 
-	if (unitType === "character") {
+	if (unitType === "character" || unitType === "summon") {
 		var unitData = lookupRows("unit_data", { unit_id: attrsCopy.id })[0];
 	}
 	else {
@@ -77,7 +77,7 @@ export function createActor(attrs, options) {
 		return actor;
 	}
 
-	if (unitType === "character") {
+	if (unitType === "character" || unitType === "summon") {
 		actor.name = unitData.unit_name;
 	}
 	else {
@@ -87,7 +87,7 @@ export function createActor(attrs, options) {
 	var unitSkills = getUnitSkills(attrsCopy.id);
 	actor.unitSkills = unitSkills;
 
-	if (unitType === "character") {
+	if (unitType === "character" || unitType === "summon") {
 		var unitRarityStats = lookupRows("unit_rarity", { unit_id: attrsCopy.id, rarity: attrsCopy.rarity })[0];
 		actor.unitRarityStats = unitRarityStats;
 		if (unitRarityStats === undefined) {
@@ -295,6 +295,9 @@ export function getUnitType(unitId) {
 	}
 	else if (unitTypeNum === 3) {
 		return "boss";
+	}
+	else if (unitTypeNum === 4) {
+		return "summon";
 	}
 	else if (unitTypeNum === 6) {
 		return "shadow";

@@ -280,7 +280,7 @@
 			<UnitSelect bind:unitId={unit.id} rarity={unit.rarity} />
 			<div class="unit-card-parameters">
 				<div><strong>{actor.name ? actor.name: "Select a character..."}</strong></div>
-				{#if unitType === "character"}
+				{#if unitType === "character" || unitType === "summon"}
 				<table>
 					<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
 					<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>

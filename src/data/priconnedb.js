@@ -73,6 +73,9 @@ export const MAX_RANK_EQUIPMENT = maxEquipmentFound;
 
 
 export const UNLOCKED_UNITS = (unit_data.filter(function(unit) {
+	if (Math.floor(unit.unit_id / 100000) === 4) {// summon
+		return true;
+	}
 	return unit.guild_id !== 0 && unit.cutin_1 !== 0;
 }).sort(function(a, b) {
 	if (a.unit_name > b.unit_name) return 1;
