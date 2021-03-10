@@ -7,12 +7,11 @@ export const hideImpossibleRarities = localStorageStore("hideImpossibleRarities"
 export const lastAnalysis = localStorageStore("lastAnalysis", "");
 export const lastGuide = localStorageStore("lastGuide", "");
 
-export const savedUnit = localStorageStore("savedUnit", {
+export const baseUnitConfig = {
 	id: -1,
 	rarity: 1,
 	level: 1,
 	rank: 1,
-	bond: 0,
 	equipment: {
 		slot1: {
 			equipped: false,
@@ -45,7 +44,8 @@ export const savedUnit = localStorageStore("savedUnit", {
 		main_skill_2: 1,
 		ex_skill_1: 1
 	},
-	bonds: []
-});
+	bond: {}
+};
+export const savedUnit = localStorageStore("savedUnit", baseUnitConfig);
 
 export const lastVersion = localStorageStore("lastVersion", config.version);

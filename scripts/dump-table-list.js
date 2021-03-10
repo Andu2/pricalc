@@ -27,5 +27,8 @@ module.exports = [
 	"enemy_reward_data",
 	"item_data",
 	"clan_battle_boss_group",
-	"clan_battle_map_data"
+	"clan_battle_map_data",
+	"clan_battle_schedule",
+	"clan_battle_period",
+	"clan_battle_boss_fix_reward"
 ]

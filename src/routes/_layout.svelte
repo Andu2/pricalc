@@ -1,7 +1,16 @@
 <script>
 	import Nav from '@src/components/Nav.svelte';
+	import Loading from '@src/components/Loading.svelte';
 	import { lastVersion } from "@src/settings.js";
 	import config from "@src/config.js";
+	import { stores } from "@sapper/app";
+	import { derived } from "svelte/store";
+	const { preloading } = stores();
+	let isLongLoad = derived(preloading, function(current, set) {
+		setTimeout(function() {
+			set(current)
+		}, 250)
+	});
 
 	let isNewVersion = ($lastVersion !== config.version);
 	if (isNewVersion) {
@@ -24,6 +33,15 @@
 		overflow-x: auto;
 	}
 
+	div.footer {
+		color:#999999;
+		text-align: center;
+	}
+
+	div.footer a {
+		color:#999999;
+	}
+
 	@media only screen and (max-width: 1260px) {
 		main {
 			width: 100%;
@@ -34,5 +52,12 @@
 <Nav {segment}/>
 
 <main>
+	{#if $preloading && $isLongLoad}
+	<Loading />
+	{:else}
 	<slot></slot>
+	{/if}
 </main>
+
+<div class="footer">
+</div>

@@ -1,11 +1,18 @@
 <script>
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, UNLOCKED_UNITS, MAX_LEVEL, MAX_RANK, MAX_RANK_EQUIPMENT } from "@src/data/priconnedb";
-	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/unit";
+	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, getUnitIdBase } from "@src/logic/unit";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import { includeExSkillStats } from "@src/settings.js";
 
 	let tableData;
 	let tableColumns;
+
+	// Fuck it, add every character bond
+	let maxedBonds = {};
+	UNLOCKED_UNITS.forEach(function(unitData) {
+		let unitIdBase = getUnitIdBase(unitData.unit_id);
+		maxedBonds[unitIdBase] = 8;
+	});
 
 	const alwaysDisplayCols = ["icon", "name"];
 	let columnConfig = {
@@ -75,7 +82,7 @@
 				id: unitData.unit_id,
 				rarity: 5,
 				level: MAX_LEVEL,
-				bond: 8,
+				bond: maxedBonds,
 				rank: MAX_RANK,
 				equipment: {
 					slot1: {
@@ -132,7 +139,7 @@
 
 	function calculateTableData() {
 		return maxedActors.map(function(actor) {
-			var unitIdString = actor.id + "";
+			var unitIdString = actor.config.id + "";
 			var unitIdWithRarity = unitIdString.slice(0, 4) + "3" + unitIdString.slice(-1); 
 			var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
 

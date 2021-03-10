@@ -12,6 +12,9 @@
 	}, {
 		path: "chara-profiles",
 		displayName: "Character Profiles"
+	}, {
+		path: "clan-battle-laps",
+		displayName: "Clan Battle Laps"
 	}].sort(sortByAttr("displayName"));
 
 	export let segment;

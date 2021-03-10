@@ -2,13 +2,17 @@
 import { stores } from "@sapper/app";
 import LZString from "lz-string";
 const { page } = stores();
-import { savedUnit } from "@src/settings.js"
+import { savedUnit, baseUnitConfig } from "@src/settings.js"
+import { isValidUnitConfiguration } from "@src/logic/unit";
 
 // if ($page.query.data) {
 // 	unit = JSON.parse(LZString.decompressFromEncodedURIComponent($page.query.data));
 // }
 
 let unit = $savedUnit;
+if (!isValidUnitConfiguration(unit)) {
+	unit = baseUnitConfig;
+}
 $: savedUnit.set(unit)
 
 import UnitCard from "@src/components/UnitCard.svelte";

@@ -8,7 +8,7 @@
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import UnitSelect from "@src/components/UnitSelect.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, lookupRows } from "@src/data/priconnedb";
-	import { createActor, calculatePower, getUnitType, getUnitIdBase } from "@src/logic/unit";
+	import { createActor, calculatePower, getUnitType, getUnitIdBase, isValidUnitConfiguration } from "@src/logic/unit";
 	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
 	import { sortByAttr } from "@src/utils"
 
@@ -17,7 +17,6 @@
 	$: options.includeExSkillStats = $includeExSkillStats;
 
 	$: unitType = getUnitType(unit.id);
-
 	$: unitVariants = getUnitVariants(unit.id);
 
 	function getUnitVariants(unitId) {
@@ -46,7 +45,6 @@
 		unit.rarity = 5;
 		unit.level = MAX_LEVEL;
 		unit.rank = 8;
-		unit.bond = 8;
 		unit.equipment = {
 			slot1: {
 				equipped: true,
@@ -72,137 +70,30 @@
 				equipped: true,
 				refine: 5
 			}
-		},
+		};
 		unit.skills = {
 			union_burst: MAX_LEVEL,
 			main_skill_1: MAX_LEVEL,
 			main_skill_2: MAX_LEVEL,
 			ex_skill_1: MAX_LEVEL
 		}
+		for (var key in unit.bond) {
+			unit.bond[key] = 8;
+		}
 	}
 
-	// need dummy actor
-	let actor = createActor({
-		id: -1,
-		rarity: 1,
-		level: 1,
-		rank: 1,
-		bond: 0,
-		equipment: {
-			slot1: {
-				equipped: false,
-				refine: 0
-			},
-			slot2: {
-				equipped: false,
-				refine: 0
-			},
-			slot3: {
-				equipped: false,
-				refine: 0
-			},
-			slot4: {
-				equipped: false,
-				refine: 0
-			},
-			slot5: {
-				equipped: false,
-				refine: 0
-			},
-			slot6: {
-				equipped: false,
-				refine: 0
-			}
-		},
-		skills: {
-			union_burst: 1,
-			main_skill_1: 1,
-			main_skill_2: 1,
-			ex_skill_1: 1
-		},
-		bonds: []
-	});
-
-	function recalculate() {
-		let isValid = validateUnit(unit);
-
-		if (isValid) {
+	function recalculate(unit, validConfig) {
+		if (validConfig) {
 			return createActor(unit, options);
+		}
+		else if (typeof actor === "undefined") {
+			return createActor({id: -1})
 		}
 		else return actor;
 	}
 
-	function validateUnit() {
-		// Make sure shit isn't jacked up - using localstorage kinda scary
-		var isValid = true;
-		if (typeof unit !== "object" || typeof unit.equipment !== "object" || typeof unit.skills !== "object") {
-			isValid = false;
-		}
-		else {
-			["id", "rarity", "level", "rank", "bond"].forEach(function(attr) {
-				if (typeof unit[attr] !== "number") {
-					isValid = false;
-				}
-			});
-			[1, 2, 3, 4, 5, 6].forEach(function(slot) {
-				if (typeof unit.equipment["slot" + slot] !== "object") {
-					isValid = false;
-				}
-				else {
-					if (typeof unit.equipment["slot" + slot].equipped !== "boolean") isValid = false;
-					if (typeof unit.equipment["slot" + slot].refine !== "number") isValid = false;
-				}
-			});
-			["union_burst", "main_skill_1", "main_skill_2", "ex_skill_1"].forEach(function(skill) {
-				if (typeof unit.skills[skill] !== "number") isValid = false;
-			});
-		}
-		if (!isValid) {
-			// console.warn("INVALID UNIT; RESETTING");
-			// unit = {
-			// 	id: -1,
-			// 	rarity: 1,
-			// 	level: 1,
-			// 	rank: 1,
-			// 	bond: 0,
-			// 	equipment: {
-			// 		slot1: {
-			// 			equipped: false,
-			// 			refine: 0
-			// 		},
-			// 		slot2: {
-			// 			equipped: false,
-			// 			refine: 0
-			// 		},
-			// 		slot3: {
-			// 			equipped: false,
-			// 			refine: 0
-			// 		},
-			// 		slot4: {
-			// 			equipped: false,
-			// 			refine: 0
-			// 		},
-			// 		slot5: {
-			// 			equipped: false,
-			// 			refine: 0
-			// 		},
-			// 		slot6: {
-			// 			equipped: false,
-			// 			refine: 0
-			// 		}
-			// 	},
-			// 	skills: {
-			// 		union_burst: 1,
-			// 		main_skill_1: 1,
-			// 		main_skill_2: 1,
-			// 		ex_skill_1: 1
-			// 	},
-			// 	bonds: []
-			// }
-		}
-
+	function constrainUnitConfig() {
 		if (typeof unit.rarity === "number" && $hideImpossibleRarities && unit.id > -1) {
-			// TODO: Fix this mess
 			var unitData = lookupRows("unit_data", { unit_id: unit.id })[0];
 			if (unitData && unitData.rarity > unit.rarity) {
 				unit.rarity = unitData.rarity;
@@ -217,13 +108,14 @@
 			if (unit.rank > 8) unit.rank = 8;
 			else if (unit.rank < 1) unit.rank = 1;
 		}
-		if (typeof unit.bond === "number") {
-			if (unit.bond > 8) unit.bond = 8;
-			else if (unit.bond > 4 && typeof unit.rarity === "number" && unit.rarity < 3) unit.bond = 4;
-			else if (unit.bond < 0) unit.bond = 0;
+		if (typeof unit.bond === "object") {
+			let baseId = getUnitIdBase(unit.id);
+			if (typeof unit.bond[baseId] === "number") {
+				if (unit.bond[baseId] > 8) unit.bond[baseId] = 8;
+				else if (unit.bond[baseId] > 4 && typeof unit.rarity === "number" && unit.rarity < 3) unit.bond[baseId] = 4;
+				else if (unit.bond[baseId] < 0) unit.bond[baseId] = 0;
+			}
 		}
-
-		return isValid;
 	}
 
 	function resetEquipment() {
@@ -255,10 +147,36 @@
 		}
 	}
 
-	$: actor = recalculate(unit);
+	function resetAll() {
+		unit = {
+			id: -1,
+			rarity: 1,
+			level: 1,
+			rank: 1,
+			skills: {
+				union_burst: 1,
+				main_skill_1: 1,
+				main_skill_2: 1,
+				ex_skill_1: 1
+			},
+			bond: []
+		}
+		resetEquipment();
+	}
+
+	$: validConfig = validateConfig(unit);
+	$: actor = recalculate(unit, validConfig);
 	$: unitComments = getUnitComments(actor);
 
+	function validateConfig(unit) {
+		constrainUnitConfig();
+		return isValidUnitConfiguration(unit);
+	}
+
 	function getUnitComments(actor) {
+		if (!validConfig) {
+			return "Invalid unit configuration"
+		}
 		if (actor.unitData) {
 			if (typeof actor.unitData.comment === "string") {
 				return actor.unitData.comment.replace(/\\n/g, "<br />");
@@ -267,9 +185,11 @@
 				return "No description"
 			}
 		}
+		else if (unit.id === -1) {
+			return "";
+		}
 		else {
-			//console.log(actor)
-			return "???";
+			return "???"
 		}
 	}
 </script>
@@ -280,12 +200,24 @@
 			<UnitSelect bind:unitId={unit.id} rarity={unit.rarity} />
 			<div class="unit-card-parameters">
 				<div><strong>{actor.name ? actor.name: "Select a character..."}</strong></div>
-				{#if unitType === "character" || unitType === "summon"}
+				{#if unitType === "character"}
+				<table><tr>
+					<td>
+						<table>
+							<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
+							<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>
+							<tr><td>Rank:</td><td><input type="number" min=1 max=8 bind:value={unit.rank} on:change={resetEquipment} /></td></tr>
+						</table>
+					</td>
+					<td class="bond-cell">
+						<UnitCard_Bond unitId={unit.id} bind:bond={unit.bond} />
+					</td>
+				</tr></table>
+				{/if}
+				{#if unitType === "summon"}
 				<table>
 					<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
 					<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>
-					<tr><td>Rank:</td><td><input type="number" min=1 max=8 bind:value={unit.rank} on:change={resetEquipment} /></td></tr>
-					<tr><td>Bond:</td><td><input type="number" min=0 max=8 bind:value={unit.bond} /></td></tr>
 				</table>
 				{/if}
 				{#if unitType === "boss" || unitType === "enemy" || unitType === "shadow"}
@@ -310,10 +242,12 @@
 				{/if}
 				<div class="unit-card-description">
 					{@html unitComments}
+					{#if !validConfig}
+					<a on:click={resetAll}>(reset)</a>
+					{/if}
 				</div>
 			</div>
 		</div>
-<!-- 		<UnitCard_Bond /> -->
 	</div>
 	{#if unitType !== "???"}
 	<div class="card-section-wrap">
@@ -380,6 +314,10 @@ div.max-all-button {
 div.unit-card-description {
 	display: table-cell;
 	vertical-align: top;
+}
+
+td.bond-cell {
+	padding-left: 20px;
 }
 
 img.char-image {

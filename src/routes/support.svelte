@@ -1,0 +1,1 @@
+Donate - allow display of name, character, and short message - random in footer, all displayed on this page

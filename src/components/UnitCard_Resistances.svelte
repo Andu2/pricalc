@@ -9,14 +9,16 @@
 
 	function getStatusData(resistanceData) {
 		let statusData = [];
-		ailmentData.forEach(function(ailment) {
-			if (resistanceData["ailment_" + ailment.ailment_id] > 0) {
-				statusData.push({
-					status: ailment.ailment_name,
-					resistance: (resistanceData["ailment_" + ailment.ailment_id] === 100 ? "Immune" : resistanceData["ailment_" + ailment.ailment_id] + "%")
-				});
-			}
-		});
+		if (resistanceData) {
+			ailmentData.forEach(function(ailment) {
+				if (resistanceData["ailment_" + ailment.ailment_id] > 0) {
+					statusData.push({
+						status: ailment.ailment_name,
+						resistance: (resistanceData["ailment_" + ailment.ailment_id] === 100 ? "Immune" : resistanceData["ailment_" + ailment.ailment_id] + "%")
+					});
+				}
+			});
+		}
 		return statusData;
 	}
 </script>

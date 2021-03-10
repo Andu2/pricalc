@@ -24,6 +24,10 @@ import quest_data from "@src/data/quest_data.csv";
 import wave_group_data from "@src/data/wave_group_data.csv";
 import enemy_reward_data from "@src/data/enemy_reward_data.csv";
 import item_data from "@src/data/item_data.csv";
+import clan_battle_boss_group from "@src/data/clan_battle_boss_group.csv";
+import clan_battle_map_data from "@src/data/clan_battle_map_data.csv";
+import clan_battle_period from "@src/data/clan_battle_period.csv";
+import clan_battle_boss_fix_reward from "@src/data/clan_battle_boss_fix_reward.csv";
 
 const tables = {
 	equipment_data,
@@ -51,7 +55,11 @@ const tables = {
 	quest_data,
 	wave_group_data,
 	enemy_reward_data,
-	item_data
+	item_data,
+	clan_battle_boss_group,
+	clan_battle_map_data,
+	clan_battle_period,
+	clan_battle_boss_fix_reward
 }
 
 export const MAX_LEVEL = experience_team.slice(-1)[0].team_level - 1; // Database has one more than current max level
@@ -73,7 +81,8 @@ export const MAX_RANK_EQUIPMENT = maxEquipmentFound;
 
 
 export const UNLOCKED_UNITS = (unit_data.filter(function(unit) {
-	if (Math.floor(unit.unit_id / 100000) === 4) {// summon
+	// Summons: manual...there are copies of sylph that I don't want to include
+	if (unit.unit_id === 404201 || unit.unit_id === 403101) {// summon
 		return true;
 	}
 	return unit.guild_id !== 0 && unit.cutin_1 !== 0;

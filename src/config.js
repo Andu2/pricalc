@@ -1,6 +1,12 @@
 export default {
-	version: "0.2",
+	version: "0.3",
 	changeLog: [{
+		version: "0.3",
+		date: "???",
+		notes: [
+			"Guides: Clan battle laps"
+		]
+	}, {
 		version: "0.2",
 		date: "2021-03-04",
 		notes: [

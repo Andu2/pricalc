@@ -90,7 +90,7 @@
 				id: unitData.unit_id,
 				rarity: rarity,
 				level: 1, // doesn't matter
-				bond: 0,
+				bond: {},
 				rank: RANK_OPTIONS[rank1].rank,
 				equipment: {
 					slot1: {
@@ -131,7 +131,7 @@
 				id: unitData.unit_id,
 				rarity: rarity,
 				level: 1,
-				bond: 0,
+				bond: {},
 				rank: RANK_OPTIONS[rank2].rank,
 				equipment: {
 					slot1: {
@@ -168,7 +168,7 @@
 				includeExSkillStats: false
 			});
 
-			var unitIdString = actor1.id + "";
+			var unitIdString = actor1.config.id + "";
 			var unitIdWithRarity = unitIdString.slice(0, 4) + "3" + unitIdString.slice(-1); 
 			var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
 

@@ -9,7 +9,7 @@
 	export let level;
 	export let rarity;
 
-	$: unitSkills = getUnitSkillsEx(unitId);
+	$: unitSkills = getUnitSkillsEx(unitId, rarity);
 	$: attackPattern = lookupRows("unit_attack_pattern", { unit_id: unitId })[0];
 	$: skillImages = getSkillImages(unitSkills);
 	$: unlockedSkills = getUnlockedSkills(rank, unitId, unitSkills);
