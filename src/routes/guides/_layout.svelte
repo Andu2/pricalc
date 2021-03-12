@@ -15,6 +15,9 @@
 	}, {
 		path: "clan-battle-laps",
 		displayName: "Clan Battle Laps"
+	}, {
+		path: "position",
+		displayName: "Unit Positions"
 	}].sort(sortByAttr("displayName"));
 
 	export let segment;

@@ -96,6 +96,7 @@ function getLaps(clanBattleId) {
 					<div><strong>{boss.enemyData.name}</strong></div>
 					<div>Level {boss.enemyData.level}</div>
 					<div>{boss.enemyData.hp} HP</div>
+					<div>{boss.enemyData.def} Def / {boss.enemyData.magic_def} MDef</div>
 					<div>Score multiplier: {boss.bossGroup.score_coefficient}</div>
 					<p>{@html boss.fixedRewards}</p>
 				</div>

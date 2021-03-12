@@ -1,5 +1,5 @@
 <script>
-import { UNLOCKED_UNITS, lookupRows } from "@src/data/priconnedb"
+import { UNLOCKED_UNITS, SUMMON_UNITS, lookupRows } from "@src/data/priconnedb"
 import { getUnitIdBase } from "@src/logic/unit"
 import { sortByAttr } from "@src/utils"
 export let unitId;
@@ -41,7 +41,7 @@ let options = {
 			name: enemy.name
 		}
 	}),
-	characters: UNLOCKED_UNITS.map(function(character) {
+	characters: UNLOCKED_UNITS.concat(SUMMON_UNITS).map(function(character) {
 		return {
 			id: character.unit_id,
 			name: character.unit_name

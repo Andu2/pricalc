@@ -4,7 +4,9 @@ export default {
 		version: "0.3",
 		date: "???",
 		notes: [
-			"Guides: Clan battle laps"
+			"Guides: Clan battle laps, unit positioning",
+			"Added summons to unit viewer, under \"characters\"",
+			"Worked on action descriptions"
 		]
 	}, {
 		version: "0.2",

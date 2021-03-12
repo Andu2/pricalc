@@ -13,7 +13,7 @@
 		slots: [1,2,3,4,5,6]
 	}, {
 		rank: 8,
-		slots: [2,4,6]
+		slots: [2,4,6] // TODO: do automatically isntead of manual
 	}]
 	let rank1 = 1;
 	let rank2 = 0;
@@ -169,7 +169,8 @@
 			});
 
 			var unitIdString = actor1.config.id + "";
-			var unitIdWithRarity = unitIdString.slice(0, 4) + "3" + unitIdString.slice(-1); 
+			let rarityString = (rarity >= 3) ? "3" : "1";
+			var unitIdWithRarity = unitIdString.slice(0, 4) + rarityString + unitIdString.slice(-1); 
 			var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
 
 			let diff = {
@@ -242,7 +243,7 @@
 	</tr>
 </table>
 <p>
-	All equipment assumed to be max refined. Effective physical HP takes dodge chance into account. Numbers may be off by one because of rounding errors.
+	All equipment assumed to be max refined.
 </p>
 
 <style>

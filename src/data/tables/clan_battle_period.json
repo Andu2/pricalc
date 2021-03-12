@@ -1,0 +1,34 @@
+[
+	{
+		"clan_battle_id": 1001,
+		"period": 1,
+		"period_detail": "Begin Clan Battle!\\nWork with clan members to defeat monsters!",
+		"period_detail_bg": 101011,
+		"period_detail_bg_position": 0,
+		"period_detail_boss_position_x": 0,
+		"period_detail_boss_position_y": 0,
+		"start_time": "2021/02/10 13:00:00",
+		"end_time": "2021/02/15 7:59:59",
+		"interval_start": "2021/02/15 8:00:00",
+		"interval_end": "2021/03/06 12:59:59",
+		"calc_start": "2021/02/15 8:00:00",
+		"result_start": "2021/02/15 12:00:00",
+		"result_end": "2021/03/06 12:59:59"
+	},
+	{
+		"clan_battle_id": 1002,
+		"period": 1,
+		"period_detail": "Work with clan members\\nto defeat the stronger monsters!",
+		"period_detail_bg": 101021,
+		"period_detail_bg_position": 0,
+		"period_detail_boss_position_x": 0,
+		"period_detail_boss_position_y": 0,
+		"start_time": "2021/03/07 13:00:00",
+		"end_time": "2021/03/12 7:59:59",
+		"interval_start": "2021/03/12 8:00:00",
+		"interval_end": "2021/04/01 12:59:59",
+		"calc_start": "2021/03/12 8:00:00",
+		"result_start": "2021/03/16 23:00:00",
+		"result_end": "2021/04/01 12:59:59"
+	}
+]

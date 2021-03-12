@@ -15,7 +15,7 @@ client.all("SELECT name FROM sqlite_master WHERE type='table'", function (err, r
 		if (dumpTables.indexOf(row.name) > -1) {
 			client.all("SELECT * FROM " + row.name, function(err, result) {
 				if (result.length > 0) {
-					var filePath = "./src/data/" + row.name + ".csv"
+					var filePath = "./src/data/tables/" + row.name + ".csv"
 					var headers = Object.keys(result[0]);
 					var fileData = headers.join(",") + "\n";
 					result.forEach(function(row) {

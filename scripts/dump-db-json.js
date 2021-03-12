@@ -86,5 +86,5 @@ var exporter = new sqliteJson({
 });
 
 dumpTables.forEach(function(table) {
-	exporter.save(table, "./src/data/" + table + ".json", function(){});
+	exporter.save(table, "./src/data/tables/" + table + ".json", function(){});
 });

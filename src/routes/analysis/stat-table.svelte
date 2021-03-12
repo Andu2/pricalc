@@ -177,7 +177,7 @@
 	</tr>
 </table>
 <p>
-	Effective physical HP takes dodge chance into account. Numbers may be a bit off because of rounding errors. (If you have an example of some numbers that are off, I would like to know, because I would like to figure out exactly where and how the game decides to round values.)
+
 </p>
 
 <style>

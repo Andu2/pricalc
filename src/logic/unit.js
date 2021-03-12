@@ -104,6 +104,7 @@ function trimConfig(unitConfig) {
 // }
 // 1 = top left, 2 = top right, 3 = middle left, etc
 export function createActor(unitConfig, options = {}) {
+	//let startTime = Date.now();	
 	if (!isValidUnitConfiguration(unitConfig)) {
 		throw Error("Invalid unit configuration");
 	}
@@ -151,9 +152,9 @@ export function createActor(unitConfig, options = {}) {
 
 	let statsBreakdown = {};
 	if (unitType === "character") {
-		let unitRarityData = lookupRows("unit_rarity", { unit_id: config.id, rarity: config.rarity })[0];
-		let unitRankData = lookupRows("unit_promotion_status", { unit_id: config.id, promotion_level: config.rank })[0];
-		let equipmentSet = lookupRows("unit_promotion", { unit_id: config.id, promotion_level: config.rank })[0];
+		let unitRarityData = lookupRows("unit_rarity", { unit_id: config.id, rarity: config.rarity }, {}, { cache: true })[0];
+		let unitRankData = lookupRows("unit_promotion_status", { unit_id: config.id, promotion_level: config.rank }, {}, { cache: true })[0];
+		let equipmentSet = lookupRows("unit_promotion", { unit_id: config.id, promotion_level: config.rank }, {}, { cache: true })[0];
 		actor.rarityData = unitRarityData;
 		actor.rankData = unitRankData;
 		actor.equipmentSet = equipmentSet;
@@ -167,7 +168,6 @@ export function createActor(unitConfig, options = {}) {
 	else if (unitType === "summon") {
 		let unitRarityData = lookupRows("unit_rarity", { unit_id: config.id, rarity: config.rarity })[0];
 		statsBreakdown.base = getBaseStats(unitRarityData, config);
-		console.log(statsBreakdown.base)
 	}
 	else if (unitType === "enemy" || unitType === "boss" || unitType === "shadow") {
 		statsBreakdown.enemyStats = getEnemyStats(enemyData);
@@ -183,6 +183,7 @@ export function createActor(unitConfig, options = {}) {
 	if (process.env.NODE_ENV === 'development') {
 		console.log(actor);
 	}
+	//console.log((Date.now() - startTime) + " ms")
 	return actor;
 }
 
@@ -201,7 +202,7 @@ function getRankStats(rankData) {
 	let stats = {};
 	if (rankData) {
 		STAT_NAMES.forEach(function(stat) {
-			stats[stat] = Math.ceil(rankData[stat]);
+			stats[stat] = rankData[stat];
 		});
 	}
 	return stats;
@@ -212,7 +213,7 @@ function getEquipmentStats(equipmentSet, config) {
 	for (var i = 1; i <= 6; i++) {
 		var slot = config.equipment["slot" + i];
 		if (slot.equipped && equipmentSet["equip_slot_" + i] !== 999999) {
-			var equipmentData = lookupRows("equipment_data", { equipment_id: equipmentSet["equip_slot_" + i] })[0];
+			var equipmentData = lookupRows("equipment_data", { equipment_id: equipmentSet["equip_slot_" + i] }, {}, { cache: true })[0];
 			if (equipmentData === undefined) {
 				console.warn("Unable to find equipment data for equipment " + equipmentSet["equip_slot_" + i]);
 			}
@@ -224,7 +225,7 @@ function getEquipmentStats(equipmentSet, config) {
 					stats[stat] += Math.ceil(equipmentData[stat]);
 				});
 				if (slot.refine > 0) {
-					var refineData = lookupRows("equipment_enhance_rate", { equipment_id: equipmentSet["equip_slot_" + i] })[0];
+					var refineData = lookupRows("equipment_enhance_rate", { equipment_id: equipmentSet["equip_slot_" + i] }, {}, { cache: true })[0];
 					if (refineData === undefined) {
 						console.warn("Unable to find refine data for equipment " + equipmentSet["equip_slot_" + i]);
 					}
@@ -369,10 +370,10 @@ export function calculatePower(actor) {
 	}
 
 	if (actor.config.rarity) {
-		if (actor.rarity >= 5) {
+		if (actor.config.rarity >= 5) {
 			power += 150;
 		}
-		if (actor.rarity >= 6) {
+		if (actor.config.rarity >= 6) {
 			power += 2000;
 			power += 5 * actor.union_burst;
 		}

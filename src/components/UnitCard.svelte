@@ -17,28 +17,127 @@
 	$: options.includeExSkillStats = $includeExSkillStats;
 
 	$: unitType = getUnitType(unit.id);
+	let unitVariant;
 	$: unitVariants = getUnitVariants(unit.id);
+	$: setUnitVariant(unitVariant);
 
 	function getUnitVariants(unitId) {
-		let unitVariants = [];
-		if (getUnitType(unitId) !== "boss" && getUnitType(unitId) !== "enemy" && getUnitType(unitId) !== "shadow") return unitVariants;
+		if (getUnitType(unitId) !== "boss" && getUnitType(unitId) !== "enemy" && getUnitType(unitId) !== "shadow") return [];
 
 		let unitBaseId = getUnitIdBase(unitId);
+		// If we switched to a different ID of the same unit, don't recalculate
+		if (unitVariants && unitVariants.length && getUnitIdBase(unitVariants[0].unitId) === unitBaseId) {
+			return unitVariants;
+		}
+
 		let allVariants = lookupRows("enemy_parameter", { baseId: unitBaseId }, { 
 			baseId: function(row) {
 				return getUnitIdBase(row.unit_id);
 			}
 		});
 		let variantOptions = allVariants.map(function(variant) {
+			// let's try to get more info on this guy
+			let additionalContext = "";
+			if (getUnitType(unitId) === "boss") {
+				let clanBattleBossInfo = lookupRows("clan_battle_boss_group", {});
+				let clanBattles = [];
+				clanBattleBossInfo.forEach(function(bossInfo) {
+					let bossWave = lookupRows("wave_group_data", { wave_group_id: bossInfo.wave_group_id, enemy_id_1: variant.enemy_id });
+					if (bossWave.length === 1) {
+						// Assume boss group IDs are in order and 2nd-4th digit are clan battle number
+						let clanBattleNum = Math.floor(bossInfo.clan_battle_boss_group_id / 1000) - 1000;
+						if (clanBattles.indexOf(clanBattleNum) === -1) {
+							clanBattles.push(clanBattleNum);
+						}
+					}
+				});
+				if (clanBattles.length > 0) {
+					additionalContext = "Clan battle " + clanBattles.join(", ");
+				}
+
+				if (!additionalContext.length) {
+					// dungeon boss: 501010101
+					// 3rd to last digit is dungeon number
+					// Could get from dungeon_area_data but this is easier
+					if (Math.floor(variant.enemy_id / 100000000) === 5) {
+						let dungeonNum = Math.floor((variant.enemy_id % 10000) / 100);
+						additionalContext = "Dungeon " + dungeonNum
+					}
+				}
+			}
+			if (!additionalContext.length) {
+				let waves = lookupRows("wave_group_data", {});
+				let wavesIn = [];
+				waves.forEach(function(wave) {
+					for (var i = 1; i <= 5; i++) {
+						if (wave["enemy_id_" + i] === variant.enemy_id && wavesIn.indexOf(wave.wave_group_id) === -1) {
+							wavesIn.push(wave.wave_group_id);
+							return;
+						}
+					}
+				});
+
+				let quests = lookupRows("quest_data", {});
+				let questsIn = [];
+				quests.forEach(function(quest) {
+					for (var i = 1; i <= 3; i++) {
+						if (wavesIn.indexOf(quest["wave_group_id_" + i]) > -1) {
+							let questName = quest.quest_name.split(" ").slice(-1)[0] + (quest.stamina_start == 2 ? " Hard" : " Normal");
+							if (questsIn.indexOf(questName) === -1) {
+								questsIn.push(questName);
+							}
+						}
+					}
+				});
+				let grottoQuests = lookupRows("training_quest_data", {});
+				grottoQuests.forEach(function(quest) {
+					for (var i = 1; i <= 3; i++) {
+						if (wavesIn.indexOf(quest["wave_group_id_" + i]) > -1) {
+							let questName = quest.quest_name;
+							if (questsIn.indexOf(questName) === -1) {
+								questsIn.push(questName);
+							}
+						}
+					}
+				});
+
+				if (questsIn.length > 0) {
+					additionalContext = questsIn.join(", ");
+				}
+			}
+
+			let displayName = variant.name + " Level " + variant.level;
+			if (additionalContext.length > 0) {
+				displayName = additionalContext + " - " + displayName;
+			}
+
 			return {
 				enemyId: variant.enemy_id,
 				unitId: variant.unit_id,
 				level: variant.level,
-				displayName: variant.name + " - Level " + variant.level
+				displayName: displayName
 			}
 		});
 		variantOptions.sort(sortByAttr("level"));
+
+		// default to the first variant with this unit ID
+		unitVariant = 0;
+		for (var i = 0; i < variantOptions.length; i++) {
+			if (variantOptions[i].unitId === unitId) {
+				unitVariant = i;
+				break;
+			}
+		}
+		unit.enemyId = variantOptions[unitVariant].enemyId;
+
 		return variantOptions;
+	}
+
+	function setUnitVariant(unitVariant) {
+		if (typeof unitVariant === "number" && unitVariants[unitVariant] !== undefined) {
+			unit.id = unitVariants[unitVariant].unitId;
+			unit.enemyId = unitVariants[unitVariant].enemyId;
+		}
 	}
 
 	function maxAll() {
@@ -167,6 +266,11 @@
 	$: validConfig = validateConfig(unit);
 	$: actor = recalculate(unit, validConfig);
 	$: unitComments = getUnitComments(actor);
+	$: unitName = getName(actor);
+
+	function getName(actor) {
+		return actor.name || "Select a character...";
+	}
 
 	function validateConfig(unit) {
 		constrainUnitConfig();
@@ -199,7 +303,7 @@
 		<div class="unit-card-image">
 			<UnitSelect bind:unitId={unit.id} rarity={unit.rarity} />
 			<div class="unit-card-parameters">
-				<div><strong>{actor.name ? actor.name: "Select a character..."}</strong></div>
+				<div><strong>{unitName}</strong></div>
 				{#if unitType === "character"}
 				<table><tr>
 					<td>
@@ -223,9 +327,9 @@
 				{#if unitType === "boss" || unitType === "enemy" || unitType === "shadow"}
 				<table>
 					<tr><td>Variant:</td><td>
-						<select bind:value={unit.enemyId}>
-							{#each unitVariants as variant}
-							<option value={variant.enemyId}>{variant.displayName}</option>
+						<select bind:value={unitVariant}>
+							{#each unitVariants as variant, i}
+							<option value={i}>{variant.displayName}</option>
 							{/each}
 						</select>
 					</td></tr>
@@ -257,12 +361,12 @@
 			<UnitCard_EquipSet unitId={unit.id} rank={unit.rank} bind:equipment={unit.equipment} />
 			{/if}
 			{#if unitType === "boss" || unitType === "enemy"}
-			<UnitCard_Resistances resistanceData={actor.resistData} />
+			<UnitCard_Resistances resistanceData={actor.resist} />
 			{/if}
 			{#if false && (unitType === "enemy" || unitType === "shadow")}
 			<UnitCard_Drops enemyId={unit.enemyId} />
 			{/if}
-			{#if unitType === "character" || unitType === "boss" || unitType === "shadow"}
+			{#if unitType === "character" || unitType === "boss" || unitType === "shadow" || unitType === "enemy"}
 			<UnitCard_Skills unitId={unit.id} rank={unit.rank} level={unit.level} rarity={unit.rarity} actor={actor} bind:skillLevels={unit.skills} />
 			{/if}
 		</div>

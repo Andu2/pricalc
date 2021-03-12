@@ -1,4 +1,5 @@
 <script>
+import Tooltip from "@src/components/Tooltip.svelte";
 import { lookupRows } from "@src/data/priconnedb";
 import { getUnitIdBase, storyAffectsUnit } from "@src/logic/unit";
 
@@ -50,10 +51,12 @@ function setBondIds(storyGroups) {
 function getCharImg(storyGroup) {
 	return "images/unit/unit_icon_unit_" + storyGroup + "11.png";
 }
+
+let bondTooltip = "Reading bond stories boosts stats for every version of that character. In Priconne Global, we currently do not have any alternate outfits, so this is irrelevant. But, when our first limited character, Summer Pecorine, arrives, she will be affected by regular Pecorine's bond boosts, and regular Pecorine will be affected by Summer Pecorine's bond boosts."
 </script>
 
 <div>
-	<div class="heading">Bond Levels</div>
+	<div class="heading">Bond Levels <Tooltip header={"Bond characters"} text={bondTooltip} /></div>
 	<div class="bond-row">
 		{#each Object.keys(bond) as storyGroup}
 		<div class="bond-cell">

@@ -1,4 +1,5 @@
 <script>
+	import Tooltip from "@src/components/Tooltip.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
 	import { calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/unit";
 	export let actor;
@@ -6,6 +7,9 @@
 	$: power = calculatePower(actor);
 	$: effectivePhysicalHp = calculateEffectivePhysicalHp(actor);
 	$: effectiveMagicHp = calculateEffectiveMagicHp(actor);
+
+	let effectivePhysHpTooltip = "Effective physical HP represents the average amount of raw damage a unit can expect to take before dying, after accounting for defense and dodge. It does NOT account for HP drain or skills.";
+	let effectiveMagHpTooltip = "Effective magic HP represents the average amount of raw damage a unit can expect to take before dying, after accounting for magic defense. It does NOT account for HP drain or skills.";
 </script>
 
 <div class="card-section">
@@ -15,8 +19,8 @@
 		{#each STAT_NAMES as stat}
 		<tr><td class="stat-label">{STAT_DISPLAY_NAMES[stat]}</td><td class="stat-value">{Math.round(actor[stat])}</td></tr>
 		{/each}
-		<tr><td class="stat-label">Effective Physical HP</td><td class="stat-value">{Math.round(effectivePhysicalHp)}</td></tr>
-		<tr><td class="stat-label">Effective Magic HP</td><td class="stat-value">{Math.round(effectiveMagicHp)}</td></tr>
+		<tr><td class="stat-label">Eff. Physical HP <Tooltip header={"Effective Physical HP"} text={effectivePhysHpTooltip} /></td><td class="stat-value">{Math.round(effectivePhysicalHp)}</td></tr>
+		<tr><td class="stat-label">Eff. Magic HP <Tooltip header={"Effective Magic HP"} text={effectivePhysHpTooltip} /></td><td class="stat-value">{Math.round(effectiveMagicHp)}</td></tr>
 	</table>
 </div>
 
@@ -30,7 +34,7 @@ td {
 }
 
 td.stat-label {
-	padding-right: 10px;
+	padding-right: 6px;
 }
 
 td.stat-value {

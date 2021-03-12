@@ -1,33 +1,36 @@
-import equipment_data from "@src/data/equipment_data.csv";
-import equipment_enhance_rate from "@src/data/equipment_enhance_rate.csv";
-import unit_attack_pattern from "@src/data/unit_attack_pattern.csv";
-import unit_data from "@src/data/unit_data.csv";
-import unit_promotion from "@src/data/unit_promotion.csv";
-import unit_promotion_status from "@src/data/unit_promotion_status.csv";
-import unit_rarity from "@src/data/unit_rarity.csv";
-import unit_skill_data from "@src/data/unit_skill_data.csv";
-import skill_data from "@src/data/skill_data.csv";
-import skill_action from "@src/data/skill_action.csv";
-import chara_story_status from "@src/data/chara_story_status.csv";
-import story_detail from "@src/data/story_detail.csv";
-import unit_status_coefficient from "@src/data/unit_status_coefficient.csv";
-import experience_team from "@src/data/experience_team.csv";
-import arena_max_rank_reward from "@src/data/arena_max_rank_reward.csv";
-import arena_max_season_rank_reward from "@src/data/arena_max_season_rank_reward.csv";
-import arena_daily_rank_reward from "@src/data/arena_daily_rank_reward.csv";
-import unit_profile from "@src/data/unit_profile.csv";
-import enemy_parameter from "@src/data/enemy_parameter.csv";
-import unit_enemy_data from "@src/data/unit_enemy_data.csv";
-import resist_data from "@src/data/resist_data.csv";
-import ailment_data from "@src/data/ailment_data.csv";
-import quest_data from "@src/data/quest_data.csv";
-import wave_group_data from "@src/data/wave_group_data.csv";
-import enemy_reward_data from "@src/data/enemy_reward_data.csv";
-import item_data from "@src/data/item_data.csv";
-import clan_battle_boss_group from "@src/data/clan_battle_boss_group.csv";
-import clan_battle_map_data from "@src/data/clan_battle_map_data.csv";
-import clan_battle_period from "@src/data/clan_battle_period.csv";
-import clan_battle_boss_fix_reward from "@src/data/clan_battle_boss_fix_reward.csv";
+import equipment_data from "@src/data/tables/equipment_data.csv";
+import equipment_enhance_rate from "@src/data/tables/equipment_enhance_rate.csv";
+import unit_attack_pattern from "@src/data/tables/unit_attack_pattern.csv";
+import unit_data from "@src/data/tables/unit_data.csv";
+import unit_promotion from "@src/data/tables/unit_promotion.csv";
+import unit_promotion_status from "@src/data/tables/unit_promotion_status.csv";
+import unit_rarity from "@src/data/tables/unit_rarity.csv";
+import unit_skill_data from "@src/data/tables/unit_skill_data.csv";
+import skill_data from "@src/data/tables/skill_data.csv";
+import skill_action from "@src/data/tables/skill_action.csv";
+import chara_story_status from "@src/data/tables/chara_story_status.csv";
+import story_detail from "@src/data/tables/story_detail.csv";
+import unit_status_coefficient from "@src/data/tables/unit_status_coefficient.csv";
+import experience_team from "@src/data/tables/experience_team.csv";
+import arena_max_rank_reward from "@src/data/tables/arena_max_rank_reward.csv";
+import arena_max_season_rank_reward from "@src/data/tables/arena_max_season_rank_reward.csv";
+import arena_daily_rank_reward from "@src/data/tables/arena_daily_rank_reward.csv";
+import unit_profile from "@src/data/tables/unit_profile.csv";
+import enemy_parameter from "@src/data/tables/enemy_parameter.csv";
+import unit_enemy_data from "@src/data/tables/unit_enemy_data.csv";
+import resist_data from "@src/data/tables/resist_data.csv";
+import ailment_data from "@src/data/tables/ailment_data.csv";
+import quest_data from "@src/data/tables/quest_data.csv";
+import wave_group_data from "@src/data/tables/wave_group_data.csv";
+import enemy_reward_data from "@src/data/tables/enemy_reward_data.csv";
+import item_data from "@src/data/tables/item_data.csv";
+import clan_battle_boss_group from "@src/data/tables/clan_battle_boss_group.csv";
+import clan_battle_map_data from "@src/data/tables/clan_battle_map_data.csv";
+import clan_battle_period from "@src/data/tables/clan_battle_period.csv";
+import clan_battle_boss_fix_reward from "@src/data/tables/clan_battle_boss_fix_reward.csv";
+import training_quest_data from "@src/data/tables/training_quest_data.csv";
+
+import { sortByAttr } from "@src/utils";
 
 const tables = {
 	equipment_data,
@@ -59,7 +62,8 @@ const tables = {
 	clan_battle_boss_group,
 	clan_battle_map_data,
 	clan_battle_period,
-	clan_battle_boss_fix_reward
+	clan_battle_boss_fix_reward,
+	training_quest_data
 }
 
 export const MAX_LEVEL = experience_team.slice(-1)[0].team_level - 1; // Database has one more than current max level
@@ -81,16 +85,15 @@ export const MAX_RANK_EQUIPMENT = maxEquipmentFound;
 
 
 export const UNLOCKED_UNITS = (unit_data.filter(function(unit) {
+	return unit.guild_id !== 0 && unit.cutin_1 !== 0;
+}).sort(sortByAttr("unit_name")));
+
+export const SUMMON_UNITS = (unit_data.filter(function(unit) {
 	// Summons: manual...there are copies of sylph that I don't want to include
 	if (unit.unit_id === 404201 || unit.unit_id === 403101) {// summon
 		return true;
 	}
-	return unit.guild_id !== 0 && unit.cutin_1 !== 0;
-}).sort(function(a, b) {
-	if (a.unit_name > b.unit_name) return 1;
-	else if (a.unit_name < b.unit_name) return -1;
-	else return 0;
-}));
+}).sort(sortByAttr("unit_name")));
 
 export const DROPPABLE_ITEMS = getDroppableItems();
 
@@ -134,13 +137,25 @@ export const NUMBER_TO_STAT = {
 	14: "don't know" // TODO. Christina has it.
 }
 
-// TODO: Cache lookups if performance becomes an issue
-export function lookupRows(tableName, constraints, calculated = {}) {
+let lookupCache = {};
+export function lookupRows(tableName, constraints, calculated = {}, options = {}) {
 	if (tables[tableName] === undefined) {
 		console.warn("Invalid table name for lookup: " + tableName);
 		return [];
 	}
-	return tables[tableName].filter(function(row) {
+	let serializedInputs = tableName + JSON.stringify(constraints);
+	if (options.cache) {
+		if (Object.keys(calculated).length > 0) {
+			console.warn("Cache does not work with calculated");
+			options.cache = false;
+		}
+		else {
+			if (lookupCache[serializedInputs] !== undefined) {
+				return lookupCache[serializedInputs];
+			}
+		}	
+	}
+	let returnRows = tables[tableName].filter(function(row) {
 		for (var column in constraints) {
 			if (typeof calculated[column] === "function") {
 				if (constraints[column] !== calculated[column](row)) return false;
@@ -154,10 +169,19 @@ export function lookupRows(tableName, constraints, calculated = {}) {
 		}
 		return true;
 	});
+	if (options.cache) {
+		lookupCache[serializedInputs] = returnRows;
+	}
+	return returnRows;
 }
 
 // Shorthand for complex skills/actions lookup
+let cachedUnitSkills = {}
 export function getUnitSkills(unitId) {
+	if (cachedUnitSkills[unitId] !== undefined) {
+		return cachedUnitSkills[unitId];
+	}
+
 	let unitSkills = {};
 	let skillsToLookup = SKILL_NAMES.concat(["ex_skill_evolution_1"]);
 	skillsToLookup.forEach(function(skillName) {
@@ -168,7 +192,7 @@ export function getUnitSkills(unitId) {
 		}
 	});
 
-	let unitSkillData = lookupRows("unit_skill_data", { unit_id: unitId })[0];
+	let unitSkillData = lookupRows("unit_skill_data", { unit_id: unitId }, {}, { cache: true })[0];
 	if (unitSkillData === undefined) {
 		console.warn("Unable to get skill data for unit id " + unitId);
 		return unitSkills;
@@ -203,6 +227,8 @@ export function getUnitSkills(unitId) {
 			}
 		}
 	});
+
+	cachedUnitSkills[unitId] = unitSkills;
 
 	return unitSkills;
 }

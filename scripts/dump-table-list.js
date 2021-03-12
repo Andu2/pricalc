@@ -30,5 +30,8 @@ module.exports = [
 	"clan_battle_map_data",
 	"clan_battle_schedule",
 	"clan_battle_period",
-	"clan_battle_boss_fix_reward"
+	"clan_battle_boss_fix_reward",
+	"training_quest_data"
 ]
+
+// christ, might as well import the entire database at this point
