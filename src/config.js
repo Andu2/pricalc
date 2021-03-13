@@ -2,7 +2,7 @@ export default {
 	version: "0.3",
 	changeLog: [{
 		version: "0.3",
-		date: "???",
+		date: "2021-03-13",
 		notes: [
 			"Guides: Clan battle laps, unit positioning",
 			"Added summons to unit viewer, under \"characters\"",
