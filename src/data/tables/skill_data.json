@@ -157,7 +157,7 @@
 		"depend_action_5": 0,
 		"depend_action_6": 0,
 		"depend_action_7": 0,
-		"description": "Inflicts a moderate amount of magical damage to one enemy directly in front.",
+		"description": "Deals moderate magical damage to an enemy directly in front.",
 		"icon_type": 2002
 	},
 	{
@@ -502,7 +502,7 @@
 		"depend_action_5": 0,
 		"depend_action_6": 0,
 		"depend_action_7": 0,
-		"description": "Inflicts a moderate amount of magical damage to one enemy directly in front.",
+		"description": "Deals moderate magical damage to an enemy directly in front.",
 		"icon_type": 2002
 	},
 	{
@@ -847,7 +847,7 @@
 		"depend_action_5": 0,
 		"depend_action_6": 0,
 		"depend_action_7": 0,
-		"description": "Inflicts a moderate amount of magical damage to one enemy directly in front.",
+		"description": "Deals moderate magical damage to an enemy directly in front.",
 		"icon_type": 2002
 	},
 	{
@@ -5217,7 +5217,7 @@
 		"depend_action_5": 0,
 		"depend_action_6": 0,
 		"depend_action_7": 0,
-		"description": "Inflicts a moderate amount of magical damage to one enemy directly in front.",
+		"description": "Deals moderate magical damage to an enemy directly in front.",
 		"icon_type": 2002
 	},
 	{

@@ -13,7 +13,7 @@
 		slots: [1,2,3,4,5,6]
 	}, {
 		rank: 8,
-		slots: [2,4,6] // TODO: do automatically isntead of manual
+		slots: [2,3,4,5,6] // TODO: do automatically isntead of manual
 	}]
 	let rank1 = 1;
 	let rank2 = 0;
