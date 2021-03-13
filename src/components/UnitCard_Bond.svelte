@@ -52,7 +52,7 @@ function getCharImg(storyGroup) {
 	return "images/unit/unit_icon_unit_" + storyGroup + "11.png";
 }
 
-let bondTooltip = "Reading bond stories boosts stats for every version of that character. In Priconne Global, we currently do not have any alternate outfits, so this is irrelevant. But, when our first limited character, Summer Pecorine, arrives, she will be affected by regular Pecorine's bond boosts, and regular Pecorine will be affected by Summer Pecorine's bond boosts."
+let bondTooltip = "Bond stories boost stats for every version of that character. In Priconne Global, we currently do not have any alternate outfits, so this is currently irrelevant. We will first see this in action when the summer cards arrive. Summer Pecorine, for example, will be affected by regular Pecorine's bond boosts, and regular Pecorine will be affected by Summer Pecorine's bond boosts."
 </script>
 
 <div>

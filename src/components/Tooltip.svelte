@@ -91,6 +91,7 @@ div.tooltip-box {
 	font-weight: normal;
 	position: absolute;
 	width: 400px;
+	text-align: left;
 }
 
 h2.tooltip-control {

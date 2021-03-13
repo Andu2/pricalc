@@ -122,3 +122,15 @@ img.inline-icon {
 	height: 20px;
 	vertical-align: text-bottom;
 }
+
+span.skill-technical-description {
+	color: #636c86;
+}
+
+span.skill-game-description {
+	font-style: normal;
+}
+
+span.skill-game-description + span.skill-technical-description {
+	margin-left: 5px;
+}

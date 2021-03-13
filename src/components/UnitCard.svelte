@@ -366,7 +366,7 @@
 			{#if false && (unitType === "enemy" || unitType === "shadow")}
 			<UnitCard_Drops enemyId={unit.enemyId} />
 			{/if}
-			{#if unitType === "character" || unitType === "boss" || unitType === "shadow" || unitType === "enemy"}
+			{#if unitType === "character" || unitType === "boss" || unitType === "shadow" || unitType === "enemy" || unitType === "summon"}
 			<UnitCard_Skills unitId={unit.id} rank={unit.rank} level={unit.level} rarity={unit.rarity} actor={actor} bind:skillLevels={unit.skills} />
 			{/if}
 		</div>

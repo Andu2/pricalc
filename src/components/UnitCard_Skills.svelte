@@ -89,15 +89,29 @@
 			}
 		}
 		let description = describeEffect(action, actor, level);
-
+		let htmlDescription = "";
 		if (description.length) {
+			let descriptionSplit = description.split("\n");
+			
+			if (descriptionSplit.length > 1) {
+				htmlDescription = "<span class='skill-game-description'>" + descriptionSplit[0] + "</span>";
+			}
+			htmlDescription += "<span class='skill-technical-description'>" + descriptionSplit.slice(-1)[0];
 			let targetInfo = describeTarget(action);
 			if (targetInfo) {
-				description += " Target: " + targetInfo;
+				// get rid of Hiyori's knockback that affects nobody
+				if (targetInfo.indexOf("within range -1") > -1) {
+					if (process.env.NODE_ENV === 'development') {
+						console.warn("Removed action with range -1", action);
+					}
+					return "";
+				}
+				htmlDescription += " Target: " + targetInfo;
 			}
+			htmlDescription += "</span>"
 		}
 
-		return description;
+		return htmlDescription;
 	}
 
 	function getAttackPattern(unitId) {
@@ -152,12 +166,12 @@
 	function getBasicAttackDescription(actor) {
 		let damageType = "physical"
 		let damageAmount = actor.atk;
-		if (actor.atk_type === 2) {
+		if (actor.unitData.atk_type === 2) {
 			damageType = "magic";
 			damageAmount = actor.magic_str;
 		}
 		if (damageAmount <= 0) return "";
-		return "Deal " + damageAmount + " " + damageType + " damage. Target: 1st enemy."
+		return "Deal " + damageAmount + " " + damageType + " damage. Target: closest enemy."
 		//return "Deal " + damageAmount + " " + damageType + " damage. Target: 1st enemy. Charge time: " + actor.unitData.normal_atk_cast_time + " seconds";
 	}
 
@@ -189,7 +203,7 @@
 				{unitSkills[skill].data.description}<br />
 				{/if}
 				{#each unitSkills[skill].actions as action}
-					<em>{getActionDescription(action, skill, actor)}</em>
+					<em>{@html getActionDescription(action, skill, actor)}</em>
 				{/each}
 				<!-- <em>Skill cast time {unitSkills[skill].data.skill_cast_time}</em> -->
 			</div>
@@ -198,6 +212,9 @@
 	<div class="attack-pattern">
 		<strong>Attack sequence:</strong> {describeAttackPattern(unitId, rank)}
 	</div>
+	{#if unitType === "boss" || unitType === "enemy"}
+	<p><em>Technical skill descriptions are still being worked on, especially for bosses and enemies, as I have not had the chance to go through them all yet.</em></p>
+	{/if}
 </div>
 
 <style>

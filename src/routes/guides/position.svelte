@@ -68,8 +68,4 @@ let columns = [
 	Each unit has a certain distance they need to be from the first enemy before they can attack or use skills. If they are out of range, they will walk forward until they reach their range. If they are closer than this range, they will not walk backward.
 </p>
 
-<p>
-	I still need to do some research regarding positioning. If any knowledgeable people out there ahve some insights, they would be appreciated :)
-</p>
-
 <DopeAssTable data={positionData} columns={columns} />

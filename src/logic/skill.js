@@ -1,4 +1,4 @@
-import { NUMBER_TO_STAT, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
+import { NUMBER_TO_STAT, STAT_DISPLAY_NAMES, lookupRows } from "@src/data/priconnedb";
 
 // action 8 is speed manip
 const action8Detail = {
@@ -63,7 +63,11 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 3) {
 		// knockback
-		description = "Knockback " + action.action_value_1 + "."
+		if (action.action_detail_1 === 3) {
+			if (action.action_value_3 > 250) { // I have no idea why this is. But Lima's UB does NOT have knockback despite having this action
+				description = "Knockback " + action.action_value_1 + "."
+			}
+		}
 	}
 	else if (action.action_type === 4) {
 		// heal
@@ -80,11 +84,18 @@ export function describeEffect(action, actor, level) {
 	else if (action.action_type === 6) {
 		// barrier
 		let describeStat = "physical"
-		if (actionStat === "magic_str") {
+		let mechanism = "blocks";
+		if (action.action_detail_1 === 2 || action.action_detail_1 === 4) {
 			describeStat = "magic";
 		}
+		else if (action.action_detail_1 === 6) {
+			describeStat = "physical and magic";
+		}
+		if (action.action_detail_1 === 3 || action.action_detail_1 === 4 || action.action_detail_1 === 6) {
+			mechanism = "absorbs"
+		}
 		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level);
-		description = "Deploy barrier blocking up to {0} " + describeStat + " damage for " + action.action_value_3 + " seconds.";
+		description = "Deploy barrier that " + mechanism + " up to {0} " + describeStat + " damage for " + action.action_value_3 + " seconds.";
 	}
 	else if (action.action_type === 7) {
 		description = "Change target."
@@ -98,7 +109,7 @@ export function describeEffect(action, actor, level) {
 		else {
 			description = action8Detail[action.action_detail_1];
 		}
-		description += " for " + action.action_value_3 + " seconds.";
+		description += " for " + Math.round((action.action_value_3 + action.action_value_4 * level) * 100) / 100 + " seconds.";
 	}
 	else if (action.action_type === 9) {
 		// poison, val 1 = base, val 2 = per level, val 3 = time
@@ -110,6 +121,9 @@ export function describeEffect(action, actor, level) {
 		let isDebuff = (action.action_detail_1 % 2 === 1);
 		let stat = NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10) + 1];
 		description = (isDebuff ? "Lowers " : "Raises ") + STAT_DISPLAY_NAMES[stat] + " by {0}"
+		if (action.action_value_1 === 2) {
+			description += "%" 
+		}
 		description += " for " + Math.round((action.action_value_4 + action.action_value_5 * level) * 100) / 100 + " seconds.";
 		replaceVal = Math.round(action.action_value_2 + action.action_value_3 * level);
 	}
@@ -126,11 +140,21 @@ export function describeEffect(action, actor, level) {
 		description = "Silence for " + action.action_value_1 + " seconds."
 	}
 	else if (action.action_type === 15) {
-		description = "Summon.";
+		let summonData = lookupRows("unit_data", { unit_id: action.action_detail_2 })[0];
+		if (summonData) {
+			description = "Summon " + summonData.unit_name + ".";
+		}
+		else {
+			description = "Summon.";
+		}
 	}
 	else if (action.action_type === 16) {
 		// TP
-		description = "Boost TP by {0}.";
+		let direction = "Boost";
+		if (action.action_detail_1 === 2) {
+			direction = "Reduce";
+		}
+		description = direction + " TP by {0}.";
 		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level);
 	}
 	else if (action.action_type === 17) {
@@ -166,6 +190,10 @@ export function describeEffect(action, actor, level) {
 			}
 		}
 	}
+	else if (action.action_type === 23) {
+		// Mesarthim
+		description = "(Trigger an action if target is bound)"
+	}
 	else if (action.action_type === 26) {
 		// Saren's berserk
 		description = "Deal damage equal to " + action.action_value_2 + " times missing HP."
@@ -176,7 +204,10 @@ export function describeEffect(action, actor, level) {
 	else if (action.action_type === 28) {
 		// Suzume's chance-based action branching
 		if (action.action_detail_2 === 102500103) {
-			description = action.action_detail_1 + "% chance to succeed.";
+			description = "Choose action based on " + action.action_detail_1 + "% chance to \"succeed\".";
+		}
+		else if (action.action_detail_1 === 1211) {
+			description = "(Choose an action depending on whether a Union Burst has been used.)"
 		}
 	}
 	else if (action.action_type === 30) {
@@ -213,12 +244,14 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 42) {
 		// Akino
+		description = "(Queue an action if attacked)"
 	}
 	else if (action.action_type === 44) {
 		// Lima
 	}
 	else if (action.action_type === 45) {
-		// Arisa
+		// Arisa - noting that UB has been used
+		//description = "(Trigger changes to actions based on UB having been used)"
 	}
 	else if (action.action_type === 46) {
 		// Ziz percent HP based damage
@@ -234,7 +267,8 @@ export function describeEffect(action, actor, level) {
 			describeStat = "magic";
 		}
 
-		description = "{0} " + describeStat + " damage";
+		// ???????
+		description = "Move to the frontline or the backline and deal {0} " + describeStat + " damage.";
 
 		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level + action.action_value_3 * actor[stat]);
 	}
@@ -248,7 +282,7 @@ export function describeEffect(action, actor, level) {
 
 	// Differentiate between our description and the given description
 	if (action.description) {
-		description = "\"" + action.description + "\"\n" + description;
+		description = action.description + "\n" + description;
 	}
 	description = description.replace(/\{0\}/g, replaceVal);
 	return description;
@@ -289,7 +323,7 @@ export function describeTarget(action) {
 		targetType = "random";
 	}
 	else if (action.target_type === 3) {
-		targetType = "switch target";
+		targetType = "closest";
 	}
 	else if (action.target_type === 4) {
 		targetType = "furthest";
@@ -304,7 +338,7 @@ export function describeTarget(action) {
 		targetType = "random"; // why two randoms?
 	}
 	else if (action.target_type === 10) {
-		targetType = "summon"; // ?? spirit but not skull
+		targetType = "foremost";
 	}
 	else if (action.target_type === 11) {
 		targetType = "location"; // Mitsuki field
@@ -325,18 +359,10 @@ export function describeTarget(action) {
 		targetType = "physical";
 	}
 
-	let rankWords = {
-		0: "1st",
-		1: "2nd",
-		2: "3rd",
-		3: "4th",
-		4: "5th"
-	}
-	let targetNumber = rankWords[action.target_number];
-
 	if (targetType === "ex skill") return "";
 
 	let isPlural = (action.target_count > 1);
+	let isRange = (action.target_range > 0 || targetCenter === "all");
 
 	let targetPhrase;
 	let pluralTargetPhrase;
@@ -346,24 +372,45 @@ export function describeTarget(action) {
 			targetPhrase = targetType;
 			pluralTargetPhrase = pluralize(targetPhrase);
 			break;
-		case "switch target":
-			targetPhrase = targetNumber + " " + targetSide;
+		case "closest":
+			let rankWord;
+			let rankWords = {
+				0: "closest",
+				1: "2nd closest",
+				2: "3rd closest",
+				3: "4th closest",
+				4: "5th closest"
+			}
+			if (targetSide === "enemy") {
+				rankWord = rankWords[action.target_number];
+			}
+			else {
+				if (action.target_number === 0) {
+					targetPhrase = "self";
+					pluralTargetPhrase = "allies";
+					break;
+				}
+				else {
+					rankWord = rankWords[action.target_number - 1];
+				}
+			}
+			targetPhrase = rankWord + " " + targetSide;
 			pluralTargetPhrase = pluralize(targetSide);
 			break;
 		case "random":
-			if (action.target_range < 0) {
+			if (action.target_range < 0 || action.target_range >= 2160) {
 				// Io? I guess?
 				targetPhrase = "random " + targetSide;
 				pluralTargetPhrase = "random " + pluralize(targetSide);
 			} 
-			else if (action.target_range >= 2160) {
+			else if (action.action_id === 104000202) {
 				// I guess? I mean what the fuck are you doing here Aoi
 				targetPhrase = "current target"
 				pluralTargetPhrase = pluralize(targetSide);
 			}
 			else {
-				targetPhrase = "random " + targetSide + " within " + action.target_range;
-				pluralTargetPhrase = "random " + pluralize(targetSide) + " within " + action.target_range;
+				targetPhrase = "random " + targetSide + " within range " + action.target_range;
+				pluralTargetPhrase = "random " + pluralize(targetSide) + " within range " + action.target_range;
 			}
 			break;
 		case "lowest HP":
@@ -373,6 +420,8 @@ export function describeTarget(action) {
 		case "highest magic attack":
 		case "physical":
 		case "furthest":
+		case "foremost":
+		case "an":
 			targetPhrase = targetType + " " + targetSide;
 			pluralTargetPhrase = pluralize(targetPhrase);
 			break;
@@ -413,11 +462,11 @@ export function describeTarget(action) {
 				}
 			}
 
-			return countPhrase + " " + pluralTargetPhrase + " " + rangePhrase;
+			return countPhrase + " " + pluralize(targetSide) + " " + rangePhrase;
 		}
 	}
 	else {
-		if (action.target_range > 0 && action.target_range < 2160 && targetCenter === "self") {
+		if (action.target_range > 0 && action.target_range < 2160) {
 			return targetPhrase + " within range " + action.target_range
 		}
 		else {
