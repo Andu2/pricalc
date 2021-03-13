@@ -13,9 +13,12 @@
 		slots: [1,2,3,4,5,6]
 	}, {
 		rank: 8,
+		slots: [2,4,6] // TODO: do automatically isntead of manual
+	}, {
+		rank: 8,
 		slots: [2,3,4,5,6] // TODO: do automatically isntead of manual
 	}]
-	let rank1 = 1;
+	let rank1 = 2;
 	let rank2 = 0;
 	let rarity = 3;
 
@@ -62,8 +65,8 @@
 		"def": true,
 		"magic_str": true, 
 		"magic_def": true,
-		"physical_critical": false,
-		"magic_critical": false, 
+		"physical_critical": true,
+		"magic_critical": true, 
 		"wave_hp_recovery": false,
 		"wave_energy_recovery": false,
 		"dodge": true,

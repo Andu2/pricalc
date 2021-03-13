@@ -25,10 +25,14 @@
 	function getUnitSkillsEx(unitId) {
 		let unitType = getUnitType(unitId);
 		let unitSkills = getUnitSkills(unitId);
-		if (unitType === "character" && rarity >= 5) {
-			unitSkills.ex_skill_1 = unitSkills.ex_skill_evolution_1;
+		let unitSkillsCopy = {};
+		for (var key in unitSkills) {
+			unitSkillsCopy[key] = unitSkills[key];
 		}
-		return unitSkills
+		if (unitType === "character" && rarity >= 5) {
+			unitSkillsCopy.ex_skill_1 = unitSkillsCopy.ex_skill_evolution_1;
+		}
+		return unitSkillsCopy
 	}
 
 	function getUnlockedSkills(rank, unitId, unitSkills) {
