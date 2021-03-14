@@ -46,6 +46,10 @@
 	<li><a href="https://www.priconneglobal.info/">Priconne Global Info</a> by YoYoPop is an informational site focused on the Global server</li>
 	<li>Massive shoutout to esterTion for making the original datamining tools and S'pugn for making an <a href="https://github.com/Expugn/priconne-en_db-fetch">English version</a></li>
 </ul>
+<h2>Random Stuff</h2>
+<ul>
+	<li><a href="notification-quiz">Notification Quiz</a> - guess which character says the notification</li>
+</ul>
 <p><a href="https://github.com/Andu2/pricalc">PriCalc Source code</a></p>
 
 <style>
