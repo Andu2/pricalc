@@ -29,6 +29,7 @@ import clan_battle_map_data from "@src/data/tables/clan_battle_map_data.csv";
 import clan_battle_period from "@src/data/tables/clan_battle_period.csv";
 import clan_battle_boss_fix_reward from "@src/data/tables/clan_battle_boss_fix_reward.csv";
 import training_quest_data from "@src/data/tables/training_quest_data.csv";
+import notif_data from "@src/data/tables/notif_data.csv";
 
 import { sortByAttr } from "@src/utils";
 
@@ -63,7 +64,8 @@ const tables = {
 	clan_battle_map_data,
 	clan_battle_period,
 	clan_battle_boss_fix_reward,
-	training_quest_data
+	training_quest_data,
+	notif_data
 }
 
 export const MAX_LEVEL = experience_team.slice(-1)[0].team_level - 1; // Database has one more than current max level

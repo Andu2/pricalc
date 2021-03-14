@@ -22,7 +22,7 @@ export const localStorageStore = (key, initial) => {
 				try {
 				localStorage.setItem(key, JSON.stringify(value));
 				} catch (error) {
-						console.error(`the \`${key}\` store's new value \`${value}\` could not be persisted to localStorage because of ${error}`);
+						//console.error(`the \`${key}\` store's new value \`${value}\` could not be persisted to localStorage because of ${error}`);
 				}
 		};
 
@@ -32,7 +32,7 @@ export const localStorageStore = (key, initial) => {
 				try {
 				localValue = localStorage.getItem(key);
 				} catch (error) {
-						console.error(`the \`${key}\` store's value could not be restored from localStorage because of ${error}`);
+						//console.error(`the \`${key}\` store's value could not be restored from localStorage because of ${error}`);
 				}
 
 		if (localValue === null) set(initial);
