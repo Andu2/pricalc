@@ -1,5 +1,6 @@
 import equipment_data from "@src/data/tables/equipment_data.csv";
 import equipment_enhance_rate from "@src/data/tables/equipment_enhance_rate.csv";
+import equipment_craft from "@src/data/tables/equipment_craft.csv";
 import unit_attack_pattern from "@src/data/tables/unit_attack_pattern.csv";
 import unit_data from "@src/data/tables/unit_data.csv";
 import unit_promotion from "@src/data/tables/unit_promotion.csv";
@@ -36,6 +37,7 @@ import { sortByAttr } from "@src/utils";
 const tables = {
 	equipment_data,
 	equipment_enhance_rate,
+	equipment_craft,
 	unit_attack_pattern,
 	unit_data,
 	unit_promotion,

@@ -18,6 +18,9 @@
 	}, {
 		path: "position",
 		displayName: "Unit Positions"
+	}, {
+		path: "equipment",
+		displayName: "Equipment Stats"
 	}].sort(sortByAttr("displayName"));
 
 	export let segment;

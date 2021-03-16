@@ -3,6 +3,8 @@
 	export let columns;
 	export let options = {};
 
+	import Tooltip from "@src/components/Tooltip.svelte";
+
 	// {
 	// 	attr: "hp",
 	// 	displayName: "HP",
@@ -69,7 +71,12 @@
 	<table>
 		<tr>
 		{#each columns as column}
-			<th class="heading" on:click={changeSort(column)}>{column.displayName}</th>
+			<th class="heading" class:top={!!column.helpText} on:click={changeSort(column)}>
+				{column.displayName}
+				{#if column.helpText}
+				<Tooltip header={column.displayName} text={column.helpText} />
+				{/if}
+			</th>
 		{/each}
 		</tr>
 		{#each data as row, i}
@@ -122,5 +129,10 @@ td.positive {
 
 td.negative {
 	color: red;
+}
+
+/* This is a dumb temporary solution that only works if one column has help text */
+th.top {
+	z-index: 1;
 }
 </style>

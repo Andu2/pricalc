@@ -15,6 +15,9 @@
 	}, {
 		path: "drops",
 		displayName: "Drops Per Stamina"
+	}, {
+		path: "equipment-demand",
+		displayName: "Equipment Demand"
 	}].sort(sortByAttr("displayName"));
 
 	export let segment;

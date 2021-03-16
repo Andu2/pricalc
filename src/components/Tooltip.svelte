@@ -32,10 +32,12 @@ function showTooltip(event) {
 	}
 
 	display = true;
+	event.stopPropagation()
 }
 
-function hideTooltip() {
+function hideTooltip(event) {
 	display = false;
+	event.stopPropagation()
 }
 </script>
 

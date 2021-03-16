@@ -3,6 +3,7 @@ module.exports = [
 	"enemy_parameter",
 	"equipment_data",
 	"equipment_enhance_rate",
+	"equipment_craft",
 	"unit_attack_pattern",
 	"unit_data",
 	"unit_promotion",

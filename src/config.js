@@ -1,6 +1,15 @@
 export default {
-	version: "0.3",
+	version: "0.3.1",
 	changeLog: [{
+		version: "0.3.1",
+		date: "2021-03-16",
+		notes: [
+			"Notification quiz",
+			"Add 2x drops option to drops per stamina table",
+			"Analysis: Equipment demand",
+			"Guide: Equipment stats"
+		]
+	}, {
 		version: "0.3",
 		date: "2021-03-13",
 		notes: [
