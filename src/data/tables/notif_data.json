@@ -840,6 +840,36 @@
 		"comment": "Um, your items at the guildhouse are all full. I-I wish someone would give me gifts, too..."
 	},
 	{
+		"unit_id": 103601,
+		"notif_type": 1,
+		"comment": "It looks like your stamina's all recovered. Honestly, can you not remember anything without me reminding you?"
+	},
+	{
+		"unit_id": 103601,
+		"notif_type": 2,
+		"comment": "The skip ticket supply in your guildhouse is full, you know. I just finished my homework, so shall we go out somewhere?"
+	},
+	{
+		"unit_id": 103601,
+		"notif_type": 3,
+		"comment": "The extra stamina in your guildhouse seems to be full. What do you need all that stamina for? A gymnastics test?"
+	},
+	{
+		"unit_id": 103601,
+		"notif_type": 4,
+		"comment": "Your guildhouse supply is filled up with EXP potions. Heheh... I'm going to grow up and catch you in no time!"
+	},
+	{
+		"unit_id": 103601,
+		"notif_type": 5,
+		"comment": "Your guildhouse seems to be full of Mana. Huh? You'll buy something for me? That's a very suspicious offer..."
+	},
+	{
+		"unit_id": 103601,
+		"notif_type": 6,
+		"comment": "All the supplies in your guildhouse are full to bursting. You'd forgotten all about them, hadn't you?"
+	},
+	{
 		"unit_id": 103801,
 		"notif_type": 1,
 		"comment": "Our stamina seems to be full again. Maybe we can go checking out bookstores a bit further afield."

@@ -532,6 +532,20 @@
 		"comment": "[Physical] Short-ranged attack.\\nA fashionista among lizards with vibrant leaves on its collar."
 	},
 	{
+		"unit_id": 202903,
+		"unit_name": "Rock Lizard",
+		"prefab_id": 202903,
+		"motion_type": 0,
+		"se_type": 14,
+		"move_speed": 270,
+		"search_area_width": 2050,
+		"atk_type": 1,
+		"normal_atk_cast_time": 3,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] Short-ranged attack.\\nA rock lizard-like monster\\nwhose head is as tough as\\nan armor."
+	},
+	{
 		"unit_id": 203000,
 		"unit_name": "Gellatina",
 		"prefab_id": 203000,
@@ -1162,6 +1176,34 @@
 		"comment": "[Physical] The most glamorous diva of the snowy lands. Descends amidst a raging blizzard with a flock of minions in tow to assault any who dare invade her territory.\\n\\n- Deals moderate magic damage to 4 characters in front and lowers their physical attack.\\n\\n- Deals small magic damage to 2 random characters and inflicts Freeze."
 	},
 	{
+		"unit_id": 303800,
+		"unit_name": "Alma",
+		"prefab_id": 303800,
+		"motion_type": 0,
+		"se_type": 16,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 2,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] A defensive weapon that has guarded the labyrinth since long ago. It waits silently for intruders to reach the furthest point, beyond all traps.\\n- Deals moderate magical damage to all enemies, based on each character's maximum HP.\\n- Deals moderate physical damage to enemies in range."
+	},
+	{
+		"unit_id": 303801,
+		"unit_name": "Alma",
+		"prefab_id": 303800,
+		"motion_type": 0,
+		"se_type": 16,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 2,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] A defensive weapon that has guarded the labyrinth since long ago. It waits silently for intruders to reach the furthest point, beyond all traps.\\n- Deals massive magical damage to all enemies, based on each character's maximum HP.\\n- Deals moderate physical damage to enemies in range.\\n- Deals moderate magical damage to the enemy with the highest remaining HP, based on their maximum HP, and inflicts Stun.\\n- When Alma's own HP falls below 50%, its attacks become even more intense."
+	},
+	{
 		"unit_id": 390100,
 		"unit_name": "Omniscient Kaiser",
 		"prefab_id": 390100,
@@ -1568,6 +1610,20 @@
 		"comment": "A peculiar monster bearing a striking resemblance to Yukari."
 	},
 	{
+		"unit_id": 603601,
+		"unit_name": "Kyoka's Shadow",
+		"prefab_id": 103601,
+		"motion_type": 7,
+		"se_type": 7,
+		"move_speed": 450,
+		"search_area_width": 810,
+		"atk_type": 2,
+		"normal_atk_cast_time": 2.07,
+		"cutin": 0,
+		"visual_change_flag": 1,
+		"comment": "A peculiar monster bearing a striking resemblance to Kyoka."
+	},
+	{
 		"unit_id": 603801,
 		"unit_name": "Shiori's Shadow",
 		"prefab_id": 103801,
@@ -1832,5 +1888,19 @@
 		"cutin": 0,
 		"visual_change_flag": 1,
 		"comment": "A peculiar monster bearing a striking resemblance to Saren."
+	},
+	{
+		"unit_id": 912401,
+		"unit_name": "Rock Lizard",
+		"prefab_id": 912401,
+		"motion_type": 0,
+		"se_type": 14,
+		"move_speed": 270,
+		"search_area_width": 200,
+		"atk_type": 1,
+		"normal_atk_cast_time": 3,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] Short-ranged attack.\\nA rock lizard-like monster\\nwhose head is as tough as\\nan armor."
 	}
 ]
