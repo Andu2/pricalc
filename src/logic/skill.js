@@ -255,7 +255,11 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 46) {
 		// Ziz percent HP based damage
-		description = "Damage {0}% of max HP";
+		let describeStat = "physical"
+		if (action.action_detail_2 === 2) {
+			describeStat = "magic";
+		}
+		description = "Deal " + describeStat + " damage equal to {0}% of max HP.";
 		replaceVal = action.action_value_1;
 	}
 	else if (action.action_type === 47) {
@@ -330,6 +334,9 @@ export function describeTarget(action) {
 	}
 	else if (action.target_type === 5) {
 		targetType = "lowest HP";
+	}
+	else if (action.target_type === 6) {
+		targetType = "highest HP";
 	}
 	else if (action.target_type === 7) {
 		targetType = "self";
@@ -414,6 +421,7 @@ export function describeTarget(action) {
 			}
 			break;
 		case "lowest HP":
+		case "highest HP":
 		case "highest TP":
 		case "lowest TP":
 		case "highest attack":
