@@ -1,0 +1,51 @@
+[
+	{
+		"id": 1,
+		"odds_file": "box_rank_1-3",
+		"name": "Random Equipment Box",
+		"icon_type": 99002,
+		"description": "Various random equipment can be obtained."
+	},
+	{
+		"id": 2,
+		"odds_file": "eq_rank_3-6",
+		"name": "Rank 3~6 Equipment",
+		"icon_type": 99002,
+		"description": "Equipment required for characters at ranks 3~6."
+	},
+	{
+		"id": 3,
+		"odds_file": "eq_rank_4-7",
+		"name": "Rank 4~7 Equipment",
+		"icon_type": 99002,
+		"description": "Equipment required for characters at ranks 4~7."
+	},
+	{
+		"id": 4,
+		"odds_file": "1000120101",
+		"name": "Hatsune's Memory Shard",
+		"icon_type": 99002,
+		"description": ""
+	},
+	{
+		"id": 5,
+		"odds_file": "1000120102",
+		"name": "Shiori's Memory Shard",
+		"icon_type": 99002,
+		"description": ""
+	},
+	{
+		"id": 6,
+		"odds_file": "1000220101",
+		"name": "Misogi's Memory Shard",
+		"icon_type": 99002,
+		"description": ""
+	},
+	{
+		"id": 7,
+		"odds_file": "1000220102",
+		"name": "Mimi's Memory Shard",
+		"icon_type": 99002,
+		"description": ""
+	}
+]

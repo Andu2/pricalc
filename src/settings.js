@@ -1,5 +1,5 @@
 import { localStorageStore } from "@src/local-store.js";
-import config from "@src/config.js";
+import { version } from "@src/config";
 
 export const includeExSkillStats = localStorageStore("includeExSkillStats", true);
 export const hideImpossibleRarities = localStorageStore("hideImpossibleRarities", false);
@@ -48,4 +48,4 @@ export const baseUnitConfig = {
 };
 export const savedUnit = localStorageStore("savedUnit", baseUnitConfig);
 
-export const lastVersion = localStorageStore("lastVersion", config.version);
+export const lastVersion = localStorageStore("lastVersion", version);

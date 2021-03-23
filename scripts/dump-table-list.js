@@ -33,7 +33,17 @@ module.exports = [
 	"clan_battle_period",
 	"clan_battle_boss_fix_reward",
 	"training_quest_data",
-	"notif_data"
+	"notif_data",
+	"hatsune_quest",
+	"hatsune_mission_reward_data",
+	"hatsune_boss",
+	"event_wave_group_data",
+	"event_story_detail",
+	"event_enemy_reward_group",
+	"event_enemy_parameter",
+	"event_boss_treasure_box",
+	"event_boss_treasure_content",
+	"odds_name_data"
 ]
 
 // christ, might as well import the entire database at this point

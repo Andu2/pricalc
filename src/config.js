@@ -1,6 +1,69 @@
-export default {
-	version: "0.3.1",
-	changeLog: [{
+import { sortByAttr } from "@src/utils";
+
+export const version = "0.3.1";
+
+export const pages = [
+	{
+		path: "units",
+		displayName: "Units"
+	}, {
+		path: "analysis",
+		displayName: "Analysis"
+	}, {
+		path: "guides",
+		displayName: "Guides"
+	}, {
+		path: "settings",
+		displayName: "Settings"
+	}
+];
+
+export const guidePages = [
+	{
+		path: "formulas",
+		displayName: "Formulas"
+	}, {
+		path: "arena-jewels",
+		displayName: "Arena Jewels"
+	}, {
+		path: "chara-profiles",
+		displayName: "Character Profiles"
+	}, {
+		path: "clan-battle-laps",
+		displayName: "Clan Battle Laps"
+	}, {
+		path: "position",
+		displayName: "Unit Positions"
+	}, {
+		path: "equipment",
+		displayName: "Equipment Stats"
+	}, {
+		path: "event-drops",
+		displayName: "Event Drops"
+	}
+].sort(sortByAttr("displayName"));
+
+export const analysisPages = [
+	{
+		path: "stat-table",
+		displayName: "Max Stat Table"
+	}, {
+		path: "rank-comparison",
+		displayName: "Rank Comparison"
+	}, {
+		path: "damage-scaling",
+		displayName: "Skill Damage Scaling"
+	}, {
+		path: "drops",
+		displayName: "Drops Per Stamina"
+	}, {
+		path: "equipment-demand",
+		displayName: "Equipment Demand"
+	}
+].sort(sortByAttr("displayName"));
+
+export const changeLog = [
+	{
 		version: "0.3.1",
 		date: "2021-03-16",
 		notes: [
@@ -33,5 +96,5 @@ export default {
 			"Analysis: Rank comparison, max stats comparison, skill damage scaling", 
 			"Guides: Formulas"
 		]
-	}]
-}
+	}
+];

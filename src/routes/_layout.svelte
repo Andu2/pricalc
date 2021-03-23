@@ -2,7 +2,7 @@
 	import Nav from '@src/components/Nav.svelte';
 	import Loading from '@src/components/Loading.svelte';
 	import { lastVersion } from "@src/settings.js";
-	import config from "@src/config.js";
+	import { version } from "@src/config";
 	import { stores } from "@sapper/app";
 	import { derived } from "svelte/store";
 	const { preloading } = stores();
@@ -12,11 +12,11 @@
 		}, 250)
 	});
 
-	let isNewVersion = ($lastVersion !== config.version);
+	let isNewVersion = ($lastVersion !== version);
 	if (isNewVersion) {
-		console.log("NEW VERSION DETECTED (" + $lastVersion + " -> " + config.version + ")");
+		console.log("NEW VERSION DETECTED (" + $lastVersion + " -> " + version + ")");
 	}
-	lastVersion.set(config.version);
+	lastVersion.set(version);
 
 	export let segment;
 </script>

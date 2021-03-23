@@ -111,9 +111,9 @@
 					}
 				},
 				skills: {
-					union_burst: 1,
-					main_skill_1: 1,
-					main_skill_2: 1,
+					union_burst: MAX_LEVEL,
+					main_skill_1: MAX_LEVEL,
+					main_skill_2: MAX_LEVEL,
 					ex_skill_1: MAX_LEVEL
 				}
 			}, {

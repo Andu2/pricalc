@@ -263,7 +263,7 @@ export function describeEffect(action, actor, level) {
 		replaceVal = action.action_value_1;
 	}
 	else if (action.action_type === 47) {
-		// Ziz random area damage
+		// Ziz/Alma random area damage
 		var stat = "atk";
 		let describeStat = "physical"
 		if (action.action_detail_1 === 2) {
@@ -272,7 +272,7 @@ export function describeEffect(action, actor, level) {
 		}
 
 		// ???????
-		description = "Move to the frontline or the backline and deal {0} " + describeStat + " damage.";
+		description = "Deal {0} " + describeStat + " damage.";
 
 		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level + action.action_value_3 * actor[stat]);
 	}
@@ -333,10 +333,10 @@ export function describeTarget(action) {
 		targetType = "furthest";
 	}
 	else if (action.target_type === 5) {
-		targetType = "lowest HP";
+		targetType = "lowest %HP";
 	}
 	else if (action.target_type === 6) {
-		targetType = "highest HP";
+		targetType = "highest %HP";
 	}
 	else if (action.target_type === 7) {
 		targetType = "self";

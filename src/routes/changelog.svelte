@@ -1,11 +1,11 @@
 <script>
-	import config from "@src/config.js";
+	import { changeLog } from "@src/config";
 </script>
 
 <h2>Changelog</h2>
 <table>
 <tr><th>Version</th><th>Date</th><th>Notes</th></tr>
-{#each config.changeLog as changeData}
+{#each changeLog as changeData}
 <tr><td>{changeData.version}</td><td>{changeData.date}</td><td>{@html changeData.notes.join("<br />")}</td></tr>
 {/each}
 </table>

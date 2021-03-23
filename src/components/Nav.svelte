@@ -1,22 +1,8 @@
 <script>
 	export let segment;
 
-	import config from "@src/config.js";
-	import { lastAnalysis, lastGuide } from "@src/settings.js";
-
-	const pages = [{
-		path: "units",
-		displayName: "Units"
-	}, {
-		path: "analysis",
-		displayName: "Analysis"
-	}, {
-		path: "guides",
-		displayName: "Guides"
-	}, {
-		path: "settings",
-		displayName: "Settings"
-	}];
+	import { version, pages } from "@src/config";
+	import { lastAnalysis, lastGuide } from "@src/settings";
 
 	$: if ($lastAnalysis) {
 		pages[1].path = "analysis/" + $lastAnalysis;
@@ -120,6 +106,6 @@
 			<a href={navData.path}><li aria-selected="{segment === navData.path.split('/')[0] ? "true" : undefined}">{navData.displayName}</li></a>
 			{/each}
 		</ul>
-		<a href="changelog"><div id="version">Version {config.version}</div></a>
+		<a href="changelog"><div id="version">Version {version}</div></a>
 	</div>
 </nav>
