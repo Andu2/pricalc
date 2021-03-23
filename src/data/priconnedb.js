@@ -136,7 +136,7 @@ export const NUMBER_TO_STAT = {
 	7: "magic_critical",
 	8: "dodge",
 	9: "life_steal", // TODO: confirm ("HP absorption" in the wiki???)
-	10: "hp", // 1 and 10 both hp???
+	10: "wave_hp_recovery", // Thank you Loppolutte for pointing out what this stat is
 	11: "wave_energy_recovery",
 	14: "don't know" // TODO. Christina has it.
 }
