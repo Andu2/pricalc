@@ -77,11 +77,13 @@
 	}
 </script>
 
+<h2>Arena Rewards</h2>
+
 <p>There are three types of jewel rewards for arenas: Daily, max season rank, and max all-time rank. Max season rank jewels are only obtained <em>if you have already acquired the max all-time rank jewels for the same rank.</em> Since the global server has not yet had a season reset, we cannot currently obtain max season rank jewels.</p>
 
 <p>The reward amounts for both arena types are the same.</p>
 
-<h2>Quick Calculations</h2>
+<h3>Quick Calculations</h3>
 
 <p>If your current maximum all-time rank achieved is <input type="number" bind:value={currentMaxRank} min=1 max=15001 /> <br/>
 	and your maximum achieved rank this season is <input type="number" bind:value={seasonMaxRank} min=1 max=15001 /> <br/>
@@ -96,7 +98,7 @@
 	for <input type="number" bind:value={holdDays} min=1 max=10000 /> days <br />
 	you will earn <strong>{holdJewels}</strong> <img class="inline-icon" src="images/item/icon_icon_item_91001.png" /> jewels.</p>
 
-<h2>Reward Tables</h2>
+<h3>Reward Tables</h3>
 
 <table class="wrap-table"><tr>
 	{#each rewardTables as rewardTable}

@@ -3,6 +3,8 @@ import DopeAssTable from "@src/components/DopeAssTable.svelte";
 import { lookupRows, UNLOCKED_UNITS, SUMMON_UNITS, getUnitSkills } from "@src/data/priconnedb";
 import { sortByAttr } from "@src/utils"
 
+let sarenData = lookupRows("unit_data", { unit_id: 102801 })[0];
+
 let positionData = UNLOCKED_UNITS.map(function(unitData) {
 	let unitIdImg = (unitData.unit_id + "").slice(0, 4) + "11";
 	let classification = "Front";
@@ -31,6 +33,7 @@ let positionData = UNLOCKED_UNITS.map(function(unitData) {
 
 	return {
 		position: unitData.search_area_width,
+		sarenDistance: Math.abs(unitData.search_area_width - sarenData.search_area_width),
 		classification: classification,
 		name: unitData.unit_name,
 		icon: "<img class='table-icon' src='images/unit/unit_icon_unit_" + unitIdImg + ".png' />",
@@ -53,6 +56,10 @@ let columns = [
 		displayName: "Range",
 		sort: "numeric"
 	}, {
+		attr: "sarenDistance",
+		displayName: "Distance from Saren",
+		sort: "numeric"
+	}, {
 		attr: "classification",
 		displayName: "Classification",
 		sort: "default"
@@ -64,8 +71,14 @@ let columns = [
 ]
 </script>
 
+<h2>Unit Positioning</h2>
+
 <p>
 	Each unit has a certain distance they need to be from the first enemy before they can attack or use skills. If they are out of range, they will walk forward until they reach their range. If they are closer than this range, they will not walk backward.
+</p>
+
+<p>
+	Distance from Saren is provided as a quick way to see which unit takes priority for Saren's TP boosting skill, which boosts the nearest allied unit.
 </p>
 
 <DopeAssTable data={positionData} columns={columns} />

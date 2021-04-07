@@ -1,6 +1,6 @@
 <script>
 import { stores } from "@sapper/app";
-import LZString from "lz-string";
+// import LZString from "lz-string";
 const { page } = stores();
 import { savedUnit, baseUnitConfig } from "@src/settings.js"
 import { isValidUnitConfiguration } from "@src/logic/unit";

@@ -1,3 +1,5 @@
+// The amount of data is getting large. Perhaps dynamically load only the tables needed for the page
+
 import equipment_data from "@src/data/tables/equipment_data.csv";
 import equipment_enhance_rate from "@src/data/tables/equipment_enhance_rate.csv";
 import equipment_craft from "@src/data/tables/equipment_craft.csv";
@@ -31,16 +33,22 @@ import clan_battle_period from "@src/data/tables/clan_battle_period.csv";
 import clan_battle_boss_fix_reward from "@src/data/tables/clan_battle_boss_fix_reward.csv";
 import training_quest_data from "@src/data/tables/training_quest_data.csv";
 import notif_data from "@src/data/tables/notif_data.csv";
-import hatsune_quest from "@src/data/tables/hatsune_quest.csv";
-import hatsune_mission_reward_data from "@src/data/tables/hatsune_mission_reward_data.csv";
-import hatsune_boss from "@src/data/tables/hatsune_boss.csv";
-import event_wave_group_data from "@src/data/tables/event_wave_group_data.csv";
-import event_story_detail from "@src/data/tables/event_story_detail.csv";
-import event_enemy_reward_group from "@src/data/tables/event_enemy_reward_group.csv";
-import event_enemy_parameter from "@src/data/tables/event_enemy_parameter.csv";
-import event_boss_treasure_box from "@src/data/tables/event_boss_treasure_box.csv";
-import event_boss_treasure_content from "@src/data/tables/event_boss_treasure_content.csv";
-import odds_name_data from "@src/data/tables/odds_name_data.csv";
+// import hatsune_quest from "@src/data/tables/hatsune_quest.csv";
+// import hatsune_mission_reward_data from "@src/data/tables/hatsune_mission_reward_data.csv";
+// import hatsune_boss from "@src/data/tables/hatsune_boss.csv";
+// import event_wave_group_data from "@src/data/tables/event_wave_group_data.csv";
+// import event_story_detail from "@src/data/tables/event_story_detail.csv";
+// import event_enemy_reward_group from "@src/data/tables/event_enemy_reward_group.csv";
+// import event_enemy_parameter from "@src/data/tables/event_enemy_parameter.csv";
+// import event_boss_treasure_box from "@src/data/tables/event_boss_treasure_box.csv";
+// import event_boss_treasure_content from "@src/data/tables/event_boss_treasure_content.csv";
+// import odds_name_data from "@src/data/tables/odds_name_data.csv";
+// import hatsune_stationary_mission_data from "@src/data/tables/hatsune_stationary_mission_data.csv";
+// import hatsune_daily_mission_data from "@src/data/tables/hatsune_daily_mission_data.csv";
+import quest_reward_data from "@src/data/tables/quest_reward_data.csv";
+// import hatsune_schedule from "@src/data/tables/hatsune_schedule.csv";
+// import event_story_data from "@src/data/tables/event_story_data.csv";
+import quest_area_data from "@src/data/tables/quest_area_data.csv";
 
 import { sortByAttr } from "@src/utils";
 
@@ -78,16 +86,22 @@ const tables = {
 	clan_battle_boss_fix_reward,
 	training_quest_data,
 	notif_data,
-	hatsune_quest,
-	hatsune_mission_reward_data,
-	hatsune_boss,
-	event_wave_group_data,
-	event_story_detail,
-	event_enemy_reward_group,
-	event_enemy_parameter,
-	event_boss_treasure_box,
-	event_boss_treasure_content,
-	odds_name_data
+	// hatsune_quest,
+	// hatsune_mission_reward_data,
+	// hatsune_boss,
+	// event_wave_group_data,
+	// event_story_detail,
+	// event_enemy_reward_group,
+	// event_enemy_parameter,
+	// event_boss_treasure_box,
+	// event_boss_treasure_content,
+	// odds_name_data,
+	// hatsune_stationary_mission_data,
+	// hatsune_daily_mission_data,
+	quest_reward_data,
+	// hatsune_schedule,
+	// event_story_data,
+	quest_area_data
 }
 
 export const MAX_LEVEL = experience_team.slice(-1)[0].team_level - 1; // Database has one more than current max level
@@ -278,5 +292,37 @@ function getDroppableItems() {
 		}
 	});
 
+	// Mana is special - make a dummy row for it
+	// Also stamina, player exp, jewels
+	// items.push({
+	// 	"dummy_row": true,
+	// 	"item_id": 94001,
+	// 	"item_name": "Mana",
+	// 	"description": "Mana",
+	// 	"promotion_level": 1,
+	// 	"item_type": 12,
+	// 	"value": 1,
+	// 	"price": 0,
+	// 	"limit_num": 999999999,
+	// 	"start_time": "2015/12/17 15:00:00",
+	// 	"end_time": "2030/08/01 14:59:59"
+	// });
+	items.push(94001);
+
 	return items;
 }
+
+// mana be special
+item_data.push({
+	"dummy_row": true,
+	"item_id": 94001,
+	"item_name": "Mana",
+	"description": "Mana",
+	"promotion_level": 1,
+	"item_type": 12,
+	"value": 1,
+	"price": 0,
+	"limit_num": 999999999,
+	"start_time": "2015/12/17 15:00:00",
+	"end_time": "2030/08/01 14:59:59"
+});

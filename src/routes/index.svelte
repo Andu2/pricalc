@@ -30,11 +30,11 @@
 	</div></td>
 </tr></table>
 
-<h2>Latest changes - version {version} ({changeLog[0].date})</h2>
+<!-- <h2>Latest changes - version {version} ({changeLog[0].date})</h2>
 <p>
 {@html changeLog[0].notes.join("<br />")}
 </p>
-<hr />
+<hr /> -->
 <h2>Bug reports and ideas</h2>
 <p>If you notice an issue, have a good idea for an analysis tool, or just want to talk, your input is very welcome! You may message me on reddit: u/AnduCrandu or on Discord: Andu#4916. Bugs may also be reported on <a href="https://github.com/Andu2/pricalc/issues">GitHub</a>.</p>
 <h2>Other Useful Tools</h2>

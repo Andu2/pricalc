@@ -7,7 +7,7 @@
 </script>
 
 <TabbedLayout 
-	tabHeader="Guides"
+	tabHeader="Guides and Reference"
 	basePath="guides/"
 	savedTabStore={lastGuide}
 	tabs={guidePages}

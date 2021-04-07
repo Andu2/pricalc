@@ -3,6 +3,8 @@
 
 	import { version, pages } from "@src/config";
 	import { lastAnalysis, lastGuide } from "@src/settings";
+	import { showModal, closeModal, component } from "@src/components/Modal.svelte";
+	import Settings from "@src/components/Settings.svelte";
 
 	$: if ($lastAnalysis) {
 		pages[1].path = "analysis/" + $lastAnalysis;
@@ -11,7 +13,30 @@
 		pages[2].path = "guides/" + $lastGuide;
 	}
 	
+	function showSettings() {
+		if ($component === Settings) {
+			closeModal();
+		}
+		else {
+			showModal(Settings);
+		}
+	}
 </script>
+
+<nav>
+	<div id="nav-wrap">
+		<a href="."><h1>PriCalc</h1></a>
+		<ul>
+			{#each pages as navData}
+			<a href={navData.path}><li aria-selected="{segment === navData.path.split('/')[0] ? "true" : undefined}">{navData.displayName}</li></a>
+			{/each}
+		</ul>
+		<div class="nav-right">
+			<div id="settings" class="icon-cog" on:click={showSettings} ></div>
+			<a href="changelog"><span id="version">Version {version}</span></a>
+		</div>
+	</div>
+</nav>
 
 <style>
 	nav {
@@ -82,12 +107,24 @@
 		color: #ef7485;
 	}
 
-	div#version {
+	div.nav-right {
 		position: absolute;
 		right: 20px;
 		line-height: 45px;
 		top: 0;
 		bottom: 0;
+	}
+
+	div#settings {
+		display: inline-block;
+		cursor: pointer;
+		font-size:  25px;
+		height: 45px;
+		line-height: 45px;
+	}
+
+	div#settings:hover {
+		color: #ef7485;
 	}
 
 	div#nav-wrap {
@@ -96,16 +133,11 @@
 		width: 80%;
 		left: 0; right: 0;
 	}
-</style>
 
-<nav>
-	<div id="nav-wrap">
-		<a href="."><h1>PriCalc</h1></a>
-		<ul>
-			{#each pages as navData}
-			<a href={navData.path}><li aria-selected="{segment === navData.path.split('/')[0] ? "true" : undefined}">{navData.displayName}</li></a>
-			{/each}
-		</ul>
-		<a href="changelog"><div id="version">Version {version}</div></a>
-	</div>
-</nav>
+	span#version {
+		display: inline-block;
+		height: 45px;
+		vertical-align: top;
+		margin-left: 15px;
+	}
+</style>

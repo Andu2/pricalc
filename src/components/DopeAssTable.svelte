@@ -1,4 +1,5 @@
 <script>
+	// TODO: make more dope and less ass
 	export let data;
 	export let columns;
 	export let options = {};

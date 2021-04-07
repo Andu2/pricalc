@@ -1,10 +1,11 @@
 <script>
 import { UNLOCKED_UNITS, SUMMON_UNITS, lookupRows } from "@src/data/priconnedb"
-import { getUnitIdBase } from "@src/logic/unit"
+import { getUnitIdBase, getUnitType } from "@src/logic/unit";
+import { getUnitImg } from "@src/logic/ui"
 import { sortByAttr } from "@src/utils"
-export let unitId;
-export let enemyId;
-export let rarity;
+
+export let unitId = -1;
+export let selectCallback;
 
 let bossBaseIds = [];
 let enemyBaseIds = []
@@ -49,23 +50,6 @@ let options = {
 	})
 }
 
-function getUnitType(unitId) {
-	let unitTypeNum = Math.floor(unitId / 100000);
-	if (unitTypeNum === 1) {
-		return "character";
-	}
-	else if(unitTypeNum === 2) {
-		return "enemy";
-	}
-	else if (unitTypeNum === 3) {
-		return "boss";
-	}
-	else if (unitTypeNum === 6) {
-		return "shadow";
-	}
-	return "???";
-}
-
 let isSelecting = false;
 let selectTab = getInitialSelectTab(unitId);
 
@@ -77,8 +61,6 @@ function getInitialSelectTab(unitId) {
 }
 
 $: selectRows = getUnitSelectionRows(selectTab);
-
-$: charImg = getCharImg(unitId, rarity, enemyId);
 
 function getUnitSelectionRows(selectTab) {
 	let rows = [];
@@ -93,91 +75,43 @@ function getUnitSelectionRows(selectTab) {
 	return rows;
 }
 
-function getCharImg(unitId, rarity, enemyId) {
-	rarity = rarity || 1;
-	if (unitId > -1) {
-		let unitType = getUnitType(unitId);
-		if (unitType === "character") {
-			var unitIdString = unitId + "";
-			var unitIdWithRarity = unitIdString.slice(0, 4) + (rarity >= 3 ? "3" : "1") + unitIdString.slice(-1); 
-			return "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
-		}
-		else if (unitType === "shadow") {
-			return "images/unit/unit_icon_shadow_" + (unitId - 500000 + 10) + ".png";
-		}
-		else {
-			return "images/unit/unit_icon_unit_" + unitId + ".png";
-		}
-	}
-	else {
-		return "images/unit/unit_icon_unit_unknown.png";
-	}
-}
-
-function getRarityId(unitId) {
-	let unitType = getUnitType(unitId);
-	if (unitType === "character") {
-		var unitIdString = unitId + "";
-		return unitIdString.slice(0, 4) + "1" + unitIdString.slice(-1);
-	}
-	else return unitId;
-}
-
-function selectUnit(id) {
-	return function() {
-		unitId = id;
-		if (getUnitType(unitId) !== "character") {
-			let enemies = lookupRows("enemy_parameter", { unit_id: id });
-			if (enemies.length) {
-				enemyId = enemies[0].enemy_id;
-			}
-		}
-		isSelecting = false;
-	}
-}
-
-function startSelect() {
-	isSelecting = true;
-}
-
 function switchTab(tabName) {
 	return function() {
 		selectTab = tabName;
 	}
 }
+
+function createSelectHandler(id) {
+	return function() {
+		selectCallback(id);
+	}
+}
 </script>
 
-<img class="char-image" src={charImg} on:click={startSelect} />
-
-<div class="unit-select" class:is-selecting={isSelecting}>
-	<div class="fade-background" on:click={selectUnit(unitId)}></div>
-	<div class="unit-list-wrap">
-		<div class="unit-list-header">
-			<h2>Select a unit</h2>
-			<div class="unit-tabs-wrap">
-				<table class="unit-tabs"><tr>
-					<td><div class="tab" class:selected={selectTab === "characters"} on:click={switchTab("characters")}>Characters</div></td>
-					<td><div class="tab" class:selected={selectTab === "enemies"} on:click={switchTab("enemies")}>Enemies</div></td>
-					<td><div class="tab" class:selected={selectTab === "bosses"} on:click={switchTab("bosses")}>Bosses</div></td>
-				</tr></table>
-			</div>
-			<!-- <div class="tabs-shadow"></div> -->
-		</div>
-		<div class="unit-list">
-			<table class="units">
-				{#each selectRows as selectRow}
-				<tr>
-					{#each selectRow as unit}
-					<td class="select-unit" class:large-icon={selectTab==="bosses"} on:click={selectUnit(unit.id)}>
-						<img class="select-icon" class:large-icon={selectTab==="bosses"} src={getCharImg(unit.id)} /><br />
-						<span class="select-unit-name">{unit.name}</span>
-					</td>
-					{/each}
-				</tr>
-				{/each}
-			</table>
-		</div>
+<div class="unit-list-header">
+	<h2>Select a unit</h2>
+	<div class="unit-tabs-wrap">
+		<table class="unit-tabs"><tr>
+			<td><div class="tab" class:selected={selectTab === "characters"} on:click={switchTab("characters")}>Characters</div></td>
+			<td><div class="tab" class:selected={selectTab === "enemies"} on:click={switchTab("enemies")}>Enemies</div></td>
+			<td><div class="tab" class:selected={selectTab === "bosses"} on:click={switchTab("bosses")}>Bosses</div></td>
+		</tr></table>
 	</div>
+	<!-- <div class="tabs-shadow"></div> -->
+</div>
+<div class="unit-list">
+	<table class="units">
+		{#each selectRows as selectRow}
+		<tr>
+			{#each selectRow as unit}
+			<td class="select-unit" class:large-icon={selectTab==="bosses"} on:click={createSelectHandler(unit.id)}>
+				<img class="select-icon" class:large-icon={selectTab==="bosses"} src={getUnitImg(unit.id)} /><br />
+				<span class="select-unit-name">{unit.name}</span>
+			</td>
+			{/each}
+		</tr>
+		{/each}
+	</table>
 </div>
 
 <style>
@@ -246,15 +180,6 @@ div.tab:hover {
 	border-bottom-color: #ef7485;
 }
 
-img.char-image {
-	cursor: pointer;
-	width: 128px;
-	height: 128px;
-}
-img.char-image:hover {
-	opacity: 0.8;
-}
-
 img.select-icon {
 	width: 76px;
 	height: 76px;
@@ -264,36 +189,9 @@ img.select-icon.large-icon {
 	height: 115px;
 }
 
-div.unit-select {
-	display: none;
-	position: fixed;
-	z-index: 50;
-}
-div.is-selecting {
-	display: block;
-	top: 45px;
-	left: 0; right: 0; bottom: 0;
-}
-div.fade-background {
-	background-color: black;
-	opacity: 0.5;
-	position: absolute;
-	left:0; right: 0; top: 0; bottom: 0;
-}
-
-div.unit-list-wrap {
-	position: absolute;
-	margin: 0 auto;
-	top: 0; left: 0; right: 0; bottom :0;
-	background-color: white;
-	width: 550px;
-	padding: 20px;
-	text-align: center;
-	overflow: hidden;
-}
-
 div.unit-list-header {
 	position: absolute;
+	text-align: center;
 	top: 0;	left: 0; right: 0;
 	height: 113px;
 }

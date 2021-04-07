@@ -43,7 +43,13 @@ module.exports = [
 	"event_enemy_parameter",
 	"event_boss_treasure_box",
 	"event_boss_treasure_content",
-	"odds_name_data"
+	"odds_name_data",
+	"hatsune_stationary_mission_data",
+	"hatsune_daily_mission_data",
+	"quest_reward_data",
+	"hatsune_schedule",
+	"event_story_data",
+	"quest_area_data"
 ]
 
 // christ, might as well import the entire database at this point

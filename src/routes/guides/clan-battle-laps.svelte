@@ -1,8 +1,9 @@
 <script>
 import { lookupRows } from "@src/data/priconnedb";
+import { commaNumber, shortNumber } from "@src/utils";
 
 let clanBattleOptions = getClanBattles();
-let clanBattleSelect = 0;
+let clanBattleSelect = clanBattleOptions.length - 1;
 $: clanBattleId = clanBattleOptions[clanBattleSelect].clanBattleId;
 $: lapData = getLaps(clanBattleId)
 
@@ -29,9 +30,13 @@ function getClanBattles() {
 		return {
 			clanBattleId: schedule.clan_battle_id,
 			displayName: "Clan battle " + (i + 1) + " (" + displayDate + ")",
-			timeDisplay: schedule.start_time + " to " + schedule.end_time
+			timeDisplay: getScheduleText(schedule)
 		}
 	});
+}
+
+function getScheduleText(schedule) {
+	return schedule.start_time.split(" ")[0] + " to " + schedule.end_time.split(" ")[0];
 }
 
 function getLaps(clanBattleId) {
@@ -55,8 +60,9 @@ function getLaps(clanBattleId) {
 			let fixedRewardItemHtml = [];
 			for (var i = 1; i <= 5; i++) {
 				if (fixedReward["reward_id_" + i] > 0) {
-					fixedRewardItemHtml.push(fixedReward["reward_num_" + i]	
-						+ " <img class='inline-icon' src='images/item/icon_icon_item_" + fixedReward["reward_id_" + i] + ".png' />");
+					fixedRewardItemHtml.push("<div class='inline-icon-wrap'><div>"
+						+ "<img class='inline-icon-big' src='images/item/icon_icon_item_" + fixedReward["reward_id_" + i] + ".png' /></div>"
+			 			+ "<div class='inline-icon-label'>" + fixedReward["reward_num_" + i] + "</div></div>");
 				}
 			}
 			if (fixedRewardItemHtml.length === 0) {
@@ -66,15 +72,17 @@ function getLaps(clanBattleId) {
 				enemyData: enemyData,
 				bossGroup: bossGroup,
 				imgSrc: "images/unit/unit_icon_unit_" + enemyData.unit_id + ".png",
-				fixedRewards: fixedRewardItemHtml.join(", ")
+				fixedRewards: fixedRewardItemHtml.join(" ")
 			}
 		});
 		return lap;
 	});
-	console.log(lapData)
+	// console.log(lapData)
 	return lapData;
 }
 </script>
+
+<h2>Clan Battle Reference</h2>
 
 <p>Lap data for clan battle: 
 <select bind:value={clanBattleSelect}>
@@ -83,7 +91,7 @@ function getLaps(clanBattleId) {
 	{/each}
 </select>
 </p>
-<p>Date: {clanBattleOptions[clanBattleSelect].timeDisplay}</p>
+<p><strong>Date:</strong> {clanBattleOptions[clanBattleSelect].timeDisplay}</p>
 <div>
 	{#each lapData as lap}
 	<div>
@@ -95,7 +103,7 @@ function getLaps(clanBattleId) {
 				<div class="boss-info">
 					<div><strong>{boss.enemyData.name}</strong></div>
 					<div>Level {boss.enemyData.level}</div>
-					<div>{boss.enemyData.hp} HP</div>
+					<div>{shortNumber(boss.enemyData.hp)} HP</div>
 					<div>{boss.enemyData.def} Def / {boss.enemyData.magic_def} MDef</div>
 					<div>Score multiplier: {boss.bossGroup.score_coefficient}</div>
 					<p>{@html boss.fixedRewards}</p>

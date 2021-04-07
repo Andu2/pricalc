@@ -1,6 +1,7 @@
 <script>
 	import Nav from '@src/components/Nav.svelte';
 	import Loading from '@src/components/Loading.svelte';
+	import Modal from "@src/components/Modal.svelte";
 	import { lastVersion } from "@src/settings.js";
 	import { version } from "@src/config";
 	import { stores } from "@sapper/app";
@@ -50,6 +51,8 @@
 </style>
 
 <Nav {segment}/>
+
+<Modal />
 
 <main>
 	{#if $preloading && $isLongLoad}

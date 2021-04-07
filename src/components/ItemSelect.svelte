@@ -1,20 +1,19 @@
 <script>
-import { lookupRows, DROPPABLE_ITEMS } from "@src/data/priconnedb"
-import { sortByAttr } from "@src/utils"
+import { lookupRows, DROPPABLE_ITEMS } from "@src/data/priconnedb";
+import { sortByAttr } from "@src/utils";
+import { getItemType } from "@src/logic/item";
+import { getItemImg } from "@src/logic/ui";
 
 export let itemId;
+export let selectCallback;
 
 $: itemType = getItemType(itemId);
-
-function getItemType(itemId) {
-	if (itemId / 100000 < 1) return "item";
-	else return "equipment";
-}
 
 // TODO: If this component is used in a context other than drops, move this filter out of this component
 let items = lookupRows("item_data", {}).filter(function(item) {
 	return (DROPPABLE_ITEMS.indexOf(item.item_id) > -1)
 }).sort(sortByAttr("item_type"));
+
 let equipment = lookupRows("equipment_data", {}).filter(function(equipment) {
 	return (DROPPABLE_ITEMS.indexOf(equipment.equipment_id) > -1)
 }).sort(sortByAttr("promotion_level"));
@@ -34,7 +33,6 @@ let options = {
 	})
 }
 
-let isSelecting = false;
 let selectTab = getInitialSelectTab(itemId);
 
 function getInitialSelectTab(itemId) {
@@ -44,8 +42,6 @@ function getInitialSelectTab(itemId) {
 }
 
 $: selectRows = getItemSelectionRows(selectTab);
-
-$: itemImg = getItemImg(itemId);
 
 function getItemSelectionRows(selectTab) {
 	let rows = [];
@@ -59,29 +55,10 @@ function getItemSelectionRows(selectTab) {
 	return rows;
 }
 
-function getItemImg(itemId) {
-	if (itemId > -1) {
-		let itemType = getItemType(itemId);
-		if (itemType === "item") {
-			return "images/item/icon_icon_item_" + itemId + ".png";
-		}
-		else if (itemType === "equipment") {
-			return "images/equipment/icon_icon_equipment_" + itemId + ".png";
-		}
-	}
-		
-	return "images/unit/unit_icon_unit_unknown.png";
-}
-
-function selectItem(id) {
+function createSelectHandler(id) {
 	return function() {
-		itemId = id;
-		isSelecting = false;
+		selectCallback(id);
 	}
-}
-
-function startSelect() {
-	isSelecting = true;
 }
 
 function switchTab(tabName) {
@@ -91,36 +68,29 @@ function switchTab(tabName) {
 }
 </script>
 
-<img class="item-image" src={itemImg} on:click={startSelect} />
-
-<div class="item-select" class:is-selecting={isSelecting}>
-	<div class="fade-background" on:click={selectItem(itemId)}></div>
-	<div class="item-list-wrap">
-		<div class="item-list-header">
-			<h2>Select an item</h2>
-			<div class="item-tabs-wrap">
-				<table class="item-tabs"><tr>
-					<td><div class="tab" class:selected={selectTab === "items"} on:click={switchTab("items")}>Items</div></td>
-					<td><div class="tab" class:selected={selectTab === "equipment"} on:click={switchTab("equipment")}>Equipment</div></td>
-				</tr></table>
-			</div>
-			<!-- <div class="tabs-shadow"></div> -->
-		</div>
-		<div class="item-list">
-			<table class="items">
-				{#each selectRows as selectRow}
-				<tr>
-					{#each selectRow as item}
-					<td class="select-item" on:click={selectItem(item.id)}>
-						<img class="select-icon" src={getItemImg(item.id)} /><br />
-						<!-- <span class="select-item-name">{item.name}</span> -->
-					</td>
-					{/each}
-				</tr>
-				{/each}
-			</table>
-		</div>
+<div class="item-list-header">
+	<h2>Select an item</h2>
+	<div class="item-tabs-wrap">
+		<table class="item-tabs"><tr>
+			<td><div class="tab" class:selected={selectTab === "items"} on:click={switchTab("items")}>Items</div></td>
+			<td><div class="tab" class:selected={selectTab === "equipment"} on:click={switchTab("equipment")}>Equipment</div></td>
+		</tr></table>
 	</div>
+	<!-- <div class="tabs-shadow"></div> -->
+</div>
+<div class="item-list">
+	<table class="items">
+		{#each selectRows as selectRow}
+		<tr>
+			{#each selectRow as item}
+			<td class="select-item" on:click={createSelectHandler(item.id)}>
+				<img class="select-icon" src={getItemImg(item.id)} /><br />
+				<!-- <span class="select-item-name">{item.name}</span> -->
+			</td>
+			{/each}
+		</tr>
+		{/each}
+	</table>
 </div>
 
 <style>
@@ -212,33 +182,12 @@ div.item-select {
 	position: fixed;
 	z-index: 50;
 }
-div.is-selecting {
-	display: block;
-	top: 45px;
-	left: 0; right: 0; bottom: 0;
-}
-div.fade-background {
-	background-color: black;
-	opacity: 0.5;
-	position: absolute;
-	left:0; right: 0; top: 0; bottom: 0;
-}
-
-div.item-list-wrap {
-	position: absolute;
-	margin: 0 auto;
-	top: 0; left: 0; right: 0; bottom :0;
-	background-color: white;
-	width: 550px;
-	padding: 20px;
-	text-align: center;
-	overflow: hidden;
-}
 
 div.item-list-header {
 	position: absolute;
 	top: 0;	left: 0; right: 0;
 	height: 113px;
+	text-align: center;
 }
 
 div.item-list-header h2 {

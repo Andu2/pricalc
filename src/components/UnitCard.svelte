@@ -6,7 +6,7 @@
 	import UnitCard_Resistances from "@src/components/UnitCard_Resistances.svelte";
 	import UnitCard_Drops from "@src/components/UnitCard_Drops.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
-	import UnitSelect from "@src/components/UnitSelect.svelte";
+	import UnitInput from "@src/components/UnitInput.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, lookupRows } from "@src/data/priconnedb";
 	import { createActor, calculatePower, getUnitType, getUnitIdBase, isValidUnitConfiguration } from "@src/logic/unit";
 	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
@@ -264,7 +264,7 @@
 	}
 
 	$: validConfig = validateConfig(unit);
-	$: actor = recalculate(unit, validConfig);
+	$: actor = recalculate(unit, validConfig, options);
 	$: unitComments = getUnitComments(actor);
 	$: unitName = getName(actor);
 
@@ -301,7 +301,7 @@
 <div>
 	<div class="unit-card-header">
 		<div class="unit-card-image">
-			<UnitSelect bind:unitId={unit.id} rarity={unit.rarity} />
+			<UnitInput bind:unitId={unit.id} rarity={unit.rarity} enemyId={unit.enemyId} />
 			<div class="unit-card-parameters">
 				<div><strong>{unitName}</strong></div>
 				{#if unitType === "character"}

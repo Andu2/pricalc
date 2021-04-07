@@ -405,16 +405,16 @@ export function describeTarget(action) {
 			pluralTargetPhrase = pluralize(targetSide);
 			break;
 		case "random":
-			if (action.target_range < 0 || action.target_range >= 2160) {
+			if (action.action_id === 104000202) {
+				// I guess? I mean what the fuck are you doing here Aoi
+				targetPhrase = "current target*"
+				pluralTargetPhrase = pluralize(targetSide);
+			}
+			else if (action.target_range < 0 || action.target_range >= 2160) {
 				// Io? I guess?
 				targetPhrase = "random " + targetSide;
 				pluralTargetPhrase = "random " + pluralize(targetSide);
 			} 
-			else if (action.action_id === 104000202) {
-				// I guess? I mean what the fuck are you doing here Aoi
-				targetPhrase = "current target"
-				pluralTargetPhrase = pluralize(targetSide);
-			}
 			else {
 				targetPhrase = "random " + targetSide + " within range " + action.target_range;
 				pluralTargetPhrase = "random " + pluralize(targetSide) + " within range " + action.target_range;

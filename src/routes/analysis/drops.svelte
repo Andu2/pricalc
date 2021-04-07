@@ -1,6 +1,6 @@
 <script>
 import { lookupRows } from "@src/data/priconnedb"
-import ItemSelect from "@src/components/ItemSelect.svelte"
+import ItemInput from "@src/components/ItemInput.svelte"
 import DopeAssTable from "@src/components/DopeAssTable.svelte"
 
 let itemId = -1;
@@ -34,29 +34,40 @@ function getQuestDrops(itemId, doubleNormal, doubleHard) {
 		for (var waveNum = 1; waveNum <= 3; waveNum++) {
 			let wave = lookupRows("wave_group_data", { wave_group_id: quest["wave_group_id_" + waveNum]})[0];
 			for (var enemyNum = 1; enemyNum <= 5; enemyNum++) {
-				let rewardId = wave["drop_reward_id_" + enemyNum];
-				if (rewardId > 0) {
-					let rewardData = lookupRows("enemy_reward_data", { drop_reward_id: rewardId })[0];
-					for (var rewardNum = 1; rewardNum <= 5; rewardNum++) {
-						if (rewardData["reward_id_" + rewardNum] === itemId) {
-							let questType = getQuestType(quest);
-							let drops = (rewardData["odds_" + rewardNum] / 100) * rewardData["reward_num_" + rewardNum];
-							if (doubleNormal && questType === "Normal") {
-								drops *= 2;
+				let drops = 0;
+				if (itemId === 94001) {
+					drops = wave["drop_gold_" + enemyNum];
+				}
+				else {
+					let rewardId = wave["drop_reward_id_" + enemyNum];
+					if (rewardId > 0) {
+						let rewardData = lookupRows("enemy_reward_data", { drop_reward_id: rewardId })[0];
+						for (var rewardNum = 1; rewardNum <= 5; rewardNum++) {
+							if (rewardData["reward_id_" + rewardNum] === itemId) {
+								drops = (rewardData["odds_" + rewardNum] / 100) * rewardData["reward_num_" + rewardNum];
 							}
-							else if (doubleHard && questType === "Hard") {
-								drops *= 2;
-							}
-							if (!questDrops[quest.quest_id]) {
-								questDrops[quest.quest_id] = {
-									quest: quest.quest_name + " " + questType,
-									drops: 0,
-									stamina: quest.stamina
-								}
-							}
-							questDrops[quest.quest_id].drops += drops;
 						}
 					}
+				}
+
+				if (drops > 0) {
+					let questType = getQuestType(quest);
+
+					if (doubleNormal && questType === "Normal") {
+						drops *= 2;
+					}
+					else if (doubleHard && questType === "Hard") {
+						drops *= 2;
+					}
+
+					if (!questDrops[quest.quest_id]) {
+						questDrops[quest.quest_id] = {
+							quest: quest.quest_name + " " + questType,
+							drops: 0,
+							stamina: quest.stamina
+						}
+					}
+					questDrops[quest.quest_id].drops += drops;
 				}
 			}
 		}
@@ -114,7 +125,7 @@ $: itemName = getItemName(itemId)
 <table id="drop-table-table">
 	<tr>
 		<td id="drop-table-config">
-			<ItemSelect bind:itemId={itemId} />
+			<ItemInput bind:itemId={itemId} />
 			<p>{itemName}</p>
 			<input type="checkbox" bind:checked={doubleNormal} /> 2x normal drops<br />
 			<input type="checkbox" bind:checked={doubleHard} /> 2x hard drops

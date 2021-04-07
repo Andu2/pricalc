@@ -117,10 +117,25 @@ hr.hr {
 	color: red;
 }
 
+div.inline-icon-wrap {
+	display: inline-block;
+	vertical-align: middle; /*Not ideal to have this inline though*/
+}
+
 img.inline-icon {
 	width: 20px;
 	height: 20px;
 	vertical-align: text-bottom;
+}
+
+img.inline-icon-big {
+	width: 40px;
+	height: 40px;
+	vertical-align: text-bottom;
+}
+
+div.inline-icon-label {
+	text-align: center;
 }
 
 span.skill-technical-description {

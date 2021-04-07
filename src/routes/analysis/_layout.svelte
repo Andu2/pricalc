@@ -7,7 +7,7 @@
 </script>
 
 <TabbedLayout 
-	tabHeader="Analysis Tols"
+	tabHeader="Analysis Tools"
 	basePath="analysis/"
 	savedTabStore={lastAnalysis}
 	tabs={analysisPages}

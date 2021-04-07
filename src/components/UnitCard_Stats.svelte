@@ -2,6 +2,8 @@
 	import Tooltip from "@src/components/Tooltip.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
 	import { calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/unit";
+	import { shortNumber } from "@src/utils";
+
 	export let actor;
 
 	$: power = calculatePower(actor);
@@ -15,12 +17,16 @@
 <div class="card-section">
 	<div class="card-section-header">Stats</div>
 	<table>
-		<tr><td class="stat-label">Power</td><td class="stat-value">{Math.round(power)}</td></tr>
+		<tr><td class="stat-label">Power</td><td class="stat-value">{shortNumber(Math.round(power))}</td></tr>
 		{#each STAT_NAMES as stat}
-		<tr><td class="stat-label">{STAT_DISPLAY_NAMES[stat]}</td><td class="stat-value">{Math.round(actor[stat])}</td></tr>
+		<tr><td class="stat-label">{STAT_DISPLAY_NAMES[stat]}</td><td class="stat-value">{shortNumber(Math.round(actor[stat]))}</td></tr>
 		{/each}
-		<tr><td class="stat-label">Eff. Physical HP <Tooltip header={"Effective Physical HP"} text={effectivePhysHpTooltip} /></td><td class="stat-value">{Math.round(effectivePhysicalHp)}</td></tr>
-		<tr><td class="stat-label">Eff. Magic HP <Tooltip header={"Effective Magic HP"} text={effectivePhysHpTooltip} /></td><td class="stat-value">{Math.round(effectiveMagicHp)}</td></tr>
+		<tr><td class="stat-label">Eff. Physical HP <Tooltip header={"Effective Physical HP"} text={effectivePhysHpTooltip} /></td><td class="stat-value">
+			{shortNumber(Math.round(effectivePhysicalHp))}
+		</td></tr>
+		<tr><td class="stat-label">Eff. Magic HP <Tooltip header={"Effective Magic HP"} text={effectivePhysHpTooltip} /></td><td class="stat-value">
+			{shortNumber(Math.round(effectiveMagicHp))}
+		</td></tr>
 	</table>
 </div>
 

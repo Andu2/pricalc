@@ -1,6 +1,6 @@
 import { sortByAttr } from "@src/utils";
 
-export const version = "0.3.1";
+export const version = "0.3.2";
 
 export const pages = [
 	{
@@ -11,10 +11,7 @@ export const pages = [
 		displayName: "Analysis"
 	}, {
 		path: "guides",
-		displayName: "Guides"
-	}, {
-		path: "settings",
-		displayName: "Settings"
+		displayName: "Guides / Reference"
 	}
 ];
 
@@ -30,16 +27,19 @@ export const guidePages = [
 		displayName: "Character Profiles"
 	}, {
 		path: "clan-battle-laps",
-		displayName: "Clan Battle Laps"
+		displayName: "Clan Battle Data"
 	}, {
 		path: "position",
 		displayName: "Unit Positions"
 	}, {
 		path: "equipment",
-		displayName: "Equipment Stats"
+		displayName: "Equipment Data"
 	}, {
-		path: "event-drops",
-		displayName: "Event Drops"
+		path: "cute",
+		displayName: "Cuteness"
+	}, {
+		path: "quests",
+		displayName: "Quest Data"
 	}
 ].sort(sortByAttr("displayName"));
 
@@ -62,8 +62,15 @@ export const analysisPages = [
 	}
 ].sort(sortByAttr("displayName"));
 
-export const changeLog = [
-	{
+export const changeLog = [{
+		version: "0.3.2",
+		date: "2021-04-06",
+		notes: [
+			"Guides: Quest data, cuteness",
+			"Added Saren distance to unit position guide",
+			"Deleted settings as a separate page"
+		]
+	}, {
 		version: "0.3.1",
 		date: "2021-03-16",
 		notes: [

@@ -80,7 +80,7 @@
 		"power": false // calculated value
 	}
 
-	$: tableData = calculateStatDifferences(rank1, rank2, rarity);
+	$: tableData = calculateStatDifferences(rank1, rank2, rarity, $hideImpossibleRarities);
 	$: tableColumns = calculateTableColumns(toggleDisplayCols);
 
 	function calculateStatDifferences(rank1, rank2, rarity) {
@@ -237,6 +237,9 @@
 			{#each Object.keys(toggleDisplayCols) as attr}
 			<input type="checkbox" bind:checked={toggleDisplayCols[attr]} /> {columnConfig[attr].displayName}<br />
 			{/each}
+			<p>
+				All equipment assumed to be max refined.
+			</p>
 		</td>
 		<td id="stats-table">
 			<div class="table-wrap">
@@ -245,9 +248,6 @@
 		</td>
 	</tr>
 </table>
-<p>
-	All equipment assumed to be max refined.
-</p>
 
 <style>
 td#stats-table-config {

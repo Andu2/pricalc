@@ -171,9 +171,9 @@
 					{#each [1,2,3,4,5] as refineNum}
 						{#if equipmentMaxRefine["slot" + slot] >= refineNum}
 							{#if equipment["slot" + slot].refine >= refineNum}
-								<img class="rarity-star" src="images/star_filled.svg" on:click={setRefine(slot, refineNum)} />
+								<div class="icon-star-full" on:click={setRefine(slot, refineNum)} ></div>
 							{:else}
-								<img class="rarity-star" src="images/star_empty.svg" on:click={setRefine(slot, refineNum)} />
+								<div class="icon-star-full unfull" on:click={setRefine(slot, refineNum)} ></div>
 							{/if}
 						{/if}
 					{/each}
@@ -212,18 +212,21 @@ img.equipment {
 	cursor: pointer;
 }
 
-img.rarity-star {
-	opacity: 0.7;
-	width: 15px;
+div.icon-star-full {
+	display: inline-block;
+	padding-right: 1px;
+	font-size: 17px;
 	cursor: pointer;
+	color: #ffd049;
 }
 
-img.rarity-star:hover {
-	opacity: 1;
+div.unfull {
+	color: #ccd7e2;
 }
 
 div.rarity-toggle {
-	height: 15px;
+	height: 17px;
+	padding-bottom: 5px;
 }
 
 div.button {
