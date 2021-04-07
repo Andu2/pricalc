@@ -17,9 +17,15 @@
 	}, {
 		rank: 8,
 		slots: [2,3,4,5,6] // TODO: do automatically isntead of manual
+	}, {
+		rank: 8,
+		slots: [1,2,3,4,5,6]
+	}, {
+		rank: 9,
+		slots: [2,4,6]
 	}]
-	let rank1 = 2;
-	let rank2 = 0;
+	let rank1 = 4;
+	let rank2 = 3;
 	let rarity = 3;
 
 	const alwaysDisplayCols = ["icon", "name"];
