@@ -169,10 +169,26 @@ export const NUMBER_TO_STAT = {
 	6: "physical_critical",
 	7: "magic_critical",
 	8: "dodge",
-	9: "life_steal", // TODO: confirm ("HP absorption" in the wiki???)
+	9: "life_steal",
 	10: "wave_hp_recovery", // Thank you Loppolutte for pointing out what this stat is
 	11: "wave_energy_recovery",
 	14: "don't know" // TODO. Christina has it.
+}
+
+// Slightly different numbers for skills because why not
+export const BUFF_NUMBER_TO_STAT = {
+	1: "hp",
+	2: "atk",
+	3: "def",
+	4: "magic_str",
+	5: "magic_def",
+	6: "magic_critical",
+	7: "physical_critical",
+	8: "dodge",
+	9: "life_steal",
+	10: "wave_hp_recovery",
+	11: "wave_energy_recovery",
+	14: "don't know"
 }
 
 let lookupCache = {};

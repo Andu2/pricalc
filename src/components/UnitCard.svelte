@@ -7,7 +7,7 @@
 	import UnitCard_Drops from "@src/components/UnitCard_Drops.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import UnitInput from "@src/components/UnitInput.svelte";
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, lookupRows } from "@src/data/priconnedb";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, MAX_RANK, lookupRows } from "@src/data/priconnedb";
 	import { createActor, calculatePower, getUnitType, getUnitIdBase, isValidUnitConfiguration } from "@src/logic/unit";
 	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
 	import { sortByAttr } from "@src/utils"
@@ -143,7 +143,7 @@
 	function maxAll() {
 		unit.rarity = 5;
 		unit.level = MAX_LEVEL;
-		unit.rank = 8;
+		unit.rank = MAX_RANK;
 		unit.equipment = {
 			slot1: {
 				equipped: true,
@@ -204,7 +204,7 @@
 			else if (unit.level < 1) unit.level = 1;
 		}
 		if (typeof unit.rank === "number") {
-			if (unit.rank > 8) unit.rank = 8;
+			if (unit.rank > MAX_RANK) unit.rank = MAX_RANK;
 			else if (unit.rank < 1) unit.rank = 1;
 		}
 		if (typeof unit.bond === "object") {
@@ -310,7 +310,7 @@
 						<table>
 							<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
 							<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>
-							<tr><td>Rank:</td><td><input type="number" min=1 max=8 bind:value={unit.rank} on:change={resetEquipment} /></td></tr>
+							<tr><td>Rank:</td><td><input type="number" min=1 max={MAX_RANK} bind:value={unit.rank} on:change={resetEquipment} /></td></tr>
 						</table>
 					</td>
 					<td class="bond-cell">

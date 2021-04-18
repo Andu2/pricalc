@@ -1,4 +1,4 @@
-import { NUMBER_TO_STAT, STAT_DISPLAY_NAMES, lookupRows } from "@src/data/priconnedb";
+import { NUMBER_TO_STAT, BUFF_NUMBER_TO_STAT, STAT_DISPLAY_NAMES, lookupRows } from "@src/data/priconnedb";
 
 // action 8 is speed manip
 const action8Detail = {
@@ -119,7 +119,7 @@ export function describeEffect(action, actor, level) {
 	else if (action.action_type === 10) {
 		// buff. val 2 = base, val 3 = per level, val 4 = time
 		let isDebuff = (action.action_detail_1 % 2 === 1);
-		let stat = NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10) + 1];
+		let stat = BUFF_NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10) + 1];
 		description = (isDebuff ? "Lowers " : "Raises ") + STAT_DISPLAY_NAMES[stat] + " by {0}"
 		if (action.action_value_1 === 2) {
 			description += "%" 
@@ -191,8 +191,14 @@ export function describeEffect(action, actor, level) {
 		}
 	}
 	else if (action.action_type === 23) {
-		// Mesarthim
-		description = "(Trigger an action if target is bound)"
+		if (action.action_detail_1 === 999) {
+			// Cyclops
+			description = "(Trigger an action if target has full HP)"	
+		}
+		else if (action.action_detail_1 === 100) {
+			// Mesarthim
+			description = "(Trigger an action if target is bound)"	
+		}
 	}
 	else if (action.action_type === 26) {
 		// Saren's berserk
@@ -275,6 +281,11 @@ export function describeEffect(action, actor, level) {
 		description = "Deal {0} " + describeStat + " damage.";
 
 		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level + action.action_value_3 * actor[stat]);
+	}
+	else if (action.action_type === 48) {
+		// Misato HP regen
+		description = "Grant {0} HP regen per second for " + action.action_value_5 + " seconds.";
+		replaceVal = Math.round((action.action_value_1 + action.action_value_2 * level + action.action_value_3 * actor[actionStat]));
 	}
 	else if (action.action_type === 90) {
 		// skill boost. val 2 = base, val 3 = per level
@@ -452,7 +463,7 @@ export function describeTarget(action) {
 		let countPhrase = "all";
 		if (action.target_count > 1) {
 			if (action.target_count < 5) {
-				countPhrase = "at most " + action.target_count;
+				countPhrase = action.target_count;
 			}
 		}
 
@@ -470,7 +481,7 @@ export function describeTarget(action) {
 				}
 			}
 
-			return countPhrase + " " + pluralize(targetSide) + " " + rangePhrase;
+			return countPhrase + " " + pluralTargetPhrase + " " + rangePhrase;
 		}
 	}
 	else {
