@@ -59,6 +59,9 @@ export const analysisPages = [
 	}, {
 		path: "equipment-demand",
 		displayName: "Equipment Demand"
+	}, {
+		path: "arena-distance",
+		displayName: "Arena Distance"
 	}
 ].sort(sortByAttr("displayName"));
 
