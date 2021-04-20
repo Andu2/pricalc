@@ -21,13 +21,13 @@ export const nav = [
 export const pages = [
 	{
 		path: "guides/formulas",
-		category: "Guides",
-		displayName: "Formulas",
+		category: "Calculators",
+		displayName: "Combat Formulas",
 		description: "An interactive guide to how some of the combat formulas work.",
 		icon: "images/skill/icon_icon_skill_2024.png"
 	}, {
 		path: "guides/arena-jewels",
-		category: "Reference",
+		category: "Calculators",
 		displayName: "Arena Jewels",
 		description: "An interactive reference on how many jewels can be acquired in the battle arena and princess arena.",
 		icon: "images/unit/unit_icon_unit_103011.png"
@@ -67,7 +67,7 @@ export const pages = [
 		icon: "images/map/icon_icon_map_100020.png"
 	}, {
 		path: "analysis/stat-table",
-		category: "Analysis",
+		category: "Reference",
 		displayName: "Max Stat Table",
 		description: "Stats for each character at maximum level.",
 		icon: "images/skill/icon_icon_skill_2016.png"
@@ -75,7 +75,7 @@ export const pages = [
 		path: "analysis/rank-comparison",
 		category: "Analysis",
 		displayName: "Rank Comparison",
-		description: "Stat difference between equipment ranks.",
+		description: "Stat differences between equipment ranks. Useful for determining whether to rank a character up.",
 		icon: "images/equipment/icon_icon_equipment_104551.png"
 	}, {
 		path: "analysis/damage-scaling",
@@ -105,7 +105,7 @@ export const pages = [
 		path: "simulator",
 		category: "Analysis",
 		displayName: "Simulator",
-		description: "Select a lineup of units and simulate the positions each unit will end up in. More simulation features coming!",
+		description: "Select a lineup of units and simulate the positions each unit will end up in. More simulation features coming soon™!",
 		icon: "images/skill/icon_icon_skill_1001.png"
 	}, {
 		path: "notification-quiz",
@@ -115,7 +115,7 @@ export const pages = [
 		icon: "images/unit/unit_icon_unit_100611.png"
 	}, {
 		path: "guides/divine-amulets",
-		category: "Reference",
+		category: "Calculators",
 		displayName: "Shard Amulet Costs",
 		description: "Calculate how many divine amulets you'll need to get a character starred up.",
 		icon: "images/item/icon_icon_item_90005.png"

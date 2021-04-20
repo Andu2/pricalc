@@ -44,4 +44,8 @@ img.char-image {
 img.char-image:hover {
 	opacity: 0.8;
 }
+img.small {
+	width: 64px;
+	height: 64px;
+}
 </style>

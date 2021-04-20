@@ -192,7 +192,7 @@ let columns = [
 		attr: "totalFragmentDemand",
 		sort: "default",
 		displayName: "Total Item Demand",
-		helpText: "For equipment that is crafted with fragments, this is the total number of fragments that must be collected to fully equip all current characters. For equipment that is not crafted with fragments, this is the amount of equipment that must be collected."
+		helpText: "For equipment that is crafted with fragments, this is the total number of fragments that must be collected to fully equip all selected characters. For equipment that is not crafted with fragments, this is the amount of equipment that must be collected."
 	}, {
 		attr: "normalQuests",
 		sort: "numeric",

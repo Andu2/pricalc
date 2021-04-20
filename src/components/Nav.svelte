@@ -58,6 +58,7 @@
 		top: 0; left: 0; right: 0;
 		height: 45px;
 		width: 100%;
+		min-width: 850px;
 		user-select: none
 	}
 
@@ -172,12 +173,6 @@
 	@media only screen and (max-width: 1260px) {
 		div#nav-wrap {
 			width: 100%;
-		}
-	}
-
-	@media only screen and (max-width: 900px) {
-		ul {
-			display: none;
 		}
 	}
 </style>

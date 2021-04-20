@@ -50,23 +50,24 @@
 
 	function showWindow() {
 		if ($windowed && $event) {
-			let bufferTop = 60; // avoid going under the nav
-			let bufferHorizontal = 10;
-			let bufferBottom = 10;
+			let bufferTop = 75; // avoid going under the nav
+			let bufferHorizontal = 15;
+			let bufferBottom = 15;
+			let navHeight = 45;
 			let leftIfCentered = $event.clientX - modalWindow.offsetWidth / 2;
 			if (leftIfCentered <= bufferHorizontal) {
 				modalWindow.style.left = bufferHorizontal + "px";
 			}
-			else if (leftIfCentered + modalWindow.offsetWidth >= document.documentElement.clientWidth - bufferHorizontal) {
+			else if (leftIfCentered + modalWindow.offsetWidth >= document.documentElement.clientWidth + bufferHorizontal) {
 				modalWindow.style.left = (document.documentElement.clientWidth - bufferHorizontal - modalWindow.offsetWidth) + "px";
 			}
 			else {
 				modalWindow.style.left = leftIfCentered + "px";
 			}
 
-			let topIfBelow = $event.clientY + 30;
-			if (topIfBelow + modalWindow.offsetHeight >= document.documentElement.clientHeight - bufferBottom) {
-				modalWindow.style.top = ($event.clientY - 30 - modalWindow.offsetHeight) + "px";
+			let topIfBelow = $event.clientY - navHeight - 15;
+			if (topIfBelow + modalWindow.offsetHeight + navHeight >= document.documentElement.clientHeight - bufferBottom) {
+				modalWindow.style.top = (document.documentElement.clientHeight - bufferBottom - modalWindow.offsetHeight - navHeight) + "px";
 			}
 			else {
 				modalWindow.style.top = topIfBelow + "px";

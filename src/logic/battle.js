@@ -1,3 +1,6 @@
+import { UNLOCKED_UNITS } from "@src/data/priconnedb";
+import { createActor } from "@src/logic/unit";
+
 function initUnitForBattle(unit) {
 	unit.currentHp = unit.hp;
 	unit.currentEnergy = 0;
@@ -85,4 +88,82 @@ function simpleBattle(attacker, defender) {
 	else {
 		return "win"
 	}
+}
+
+export function createBattlefield(offense, defense) {
+	let offenseActors = getSortedActors(offense);
+	let defenseActors = getSortedActors(defense);
+
+	setStartPositions(offenseActors, defenseActors);
+
+	return {
+		offense: offenseActors,
+		defense: defenseActors
+	}
+}
+
+function getSortedActors(unitConfigs) {
+	let actors = [];
+	for (var slot in unitConfigs) {
+		if (unitConfigs[slot] && unitConfigs[slot].id > -1) {
+			actors.push(createActor(unitConfigs[slot]));
+		}
+	}
+	actors.sort(function(a, b) {
+		if (a.unitData.search_area_width > b.unitData.search_area_width) return 1;
+		else if (a.unitData.search_area_width < b.unitData.search_area_width) return -1;
+		else return 0;
+	});
+	return actors;
+}
+
+const LIMA_ID = 105201;
+
+function setStartPositions(offenseActors, defenseActors) {
+	offenseActors.forEach(function(actor, i) {
+		actor.position = 1000 + 200 * i;
+	});
+	defenseActors.forEach(function(actor, i) {
+		actor.position = 1000 + 200 * i;
+	});
+
+	var canCalculate = true;
+	if (defenseActors.length === 0 || defenseActors.length === 1 && defenseActors[0].config.id === LIMA_ID) {
+		canCalculate = false;
+	}
+	if (offenseActors.length === 0 || offenseActors.length === 1 && offenseActors[0].config.id === LIMA_ID) {
+		canCalculate = false;
+	}
+
+	if (!canCalculate) {
+		return false;
+	}
+
+	let someoneMoved = false;
+	do {
+		someoneMoved = false;
+		if (advancePositions(defenseActors, offenseActors)) someoneMoved = true;
+		if (advancePositions(offenseActors, defenseActors)) someoneMoved = true;
+	} while (someoneMoved);
+}
+
+// returns true if someone moved
+function advancePositions(movingActors, opposingActors) {
+	let closestOpposingActor = 2160;
+	opposingActors.forEach(function(actor) {
+		if (actor.position < closestOpposingActor) {
+			closestOpposingActor = actor.position;
+		}
+	});
+
+	let moved = false;
+	movingActors.forEach(function(actor) {
+		if (actor.config.id === LIMA_ID) return;
+		if (actor.position + closestOpposingActor > actor.unitData.search_area_width) {
+			actor.position -= 12;
+			moved = true;
+		}
+	});
+
+	return moved;
 }

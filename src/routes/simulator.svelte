@@ -1,143 +1,117 @@
 <script>
-import DistanceMatrix from "@src/components/DistanceMatrix.svelte";
-import UnitInput from "@src/components/UnitInput.svelte";
-import { UNLOCKED_UNITS } from "@src/data/priconnedb";
+	import Team from "@src/components/Team.svelte";
+	import UnitConfig from "@src/components/UnitConfig.svelte";
+	import DistanceMatrix from "@src/components/DistanceMatrix.svelte";
+	import { setContext } from "svelte";
+	import { writable } from "svelte/store";
+	import { baseUnitConfig } from "@src/settings.js"
+	import { isValidUnitConfiguration } from "@src/logic/unit";
+	import { createBattlefield } from "@src/logic/battle";
 
-const LIMA_ID = 105201;
-
-let positionData = UNLOCKED_UNITS.reduce(function(accumulator, unitData) {
-    accumulator[unitData.unit_id] = unitData.search_area_width;
-	return accumulator;
-}, {});
-
-class Unit {
-	constructor(slot) {
-		this.slot = slot;
-		this.resetPosition();
-	}
-
-	resetPosition() {
-		this.position = 800 + (this.slot * 200);
-		this.range = positionData[this.id] || 2000;
-		this.inPosition = (this.id == LIMA_ID);
-	}
-
-	checkEnemyInRange(team) {
-		if (this.inPosition) {
-			return true;
-		}
-
-		for (var i = 0; i < team.length; i++) {
-			if ((this.position + team[i].position) <= this.range) {
-				this.inPosition = true;
-
-				return true;
-			}
-		}
-
-		this.inPosition = false;
-
-		return false;
-	}
-
-	approach() {
-		this.position -= 12;
-	}
-}
-
-let slots = [5, 4, 3, 2, 1];
-
-let defenseUnits = slots.map(function(i) { return new Unit(i) });
-let offenseUnits = slots.map(function(i) { return new Unit(i) });
-
-function advanceFrame() {
-	var defenseApproach = defenseUnits.map((x) => x.checkEnemyInRange(offenseUnits));
-
-	for (var i = 0; i < defenseApproach.length; i++) {
-		if (!defenseApproach[i]) {
-			defenseUnits[i].approach();
+	let unitConfigs = {
+		offense: {
+			unit1: baseUnitConfig,
+			unit2: baseUnitConfig,
+			unit3: baseUnitConfig,
+			unit4: baseUnitConfig,
+			unit5: baseUnitConfig
+		},
+		defense: {
+			unit1: baseUnitConfig,
+			unit2: baseUnitConfig,
+			unit3: baseUnitConfig,
+			unit4: baseUnitConfig,
+			unit5: baseUnitConfig
 		}
 	}
 
-	var attackApproach = offenseUnits.map((x) => x.checkEnemyInRange(defenseUnits));
+	let slotEditing = writable(null);
+	$: configEditing = getConfigEditing($slotEditing);
+	$: setConfig(configEditing);
 
-	for (var i = 0; i < attackApproach.length; i++) {
-		if (!attackApproach[i]) {
-			offenseUnits[i].approach();
+	setContext("unitSlot", slotEditing)
+
+	$: battlefield = createBattlefield(unitConfigs.offense, unitConfigs.defense);
+	$: console.log(battlefield);
+
+	function getConfigEditing(slotId) {
+		if (slotId === null) return null;
+		let slotSplit = slotId.split(".");
+		return {...unitConfigs[slotSplit[0]][slotSplit[1]]};
+	}
+
+	function setConfig(configEditing) {
+		if ($slotEditing) {
+			let slotSplit = $slotEditing.split(".");
+			unitConfigs[slotSplit[0]][slotSplit[1]] = {...configEditing};
 		}
 	}
 
-	return !(defenseApproach.every(x => x) && attackApproach.every(x => x));
-}
-
-function runSimulation() {
-	for (var i = 4; i >= 0; i--) {
-		defenseUnits[i].resetPosition();
-	}
-
-	for (var i = 4; i >= 0; i--) {
-		offenseUnits[i].resetPosition();
-	}
-
-	var canCalculate = false;
-
-	for (var i = 4; i >= 0 && !canCalculate; i--) {
-		if (defenseUnits[i].id && (defenseUnits[i].id != LIMA_ID)) {
-			canCalculate = true;
+	function swapTeams() {
+		let temp = unitConfigs.defense;
+		unitConfigs.defense = unitConfigs.offense;
+		unitConfigs.offense = temp;
+		if ($slotEditing.indexOf("offense") > -1) {
+			slotEditing.set($slotEditing.replace("offense", "defense"));
+		}
+		else {
+			slotEditing.set($slotEditing.replace("defense", "offense"));
 		}
 	}
 
-	if (!canCalculate) {
-		return false;
-	}
-
-	for (var i = 4; i >= 0 && !canCalculate; i--) {
-		if (offenseUnits[i].id && (offenseUnits[i].id != LIMA_ID)) {
-			canCalculate = true;
+	function deselect(event) {
+		return;
+		if (event.target.id === "teams") {
+			slotEditing.set(null);
 		}
 	}
-
-	if (!canCalculate) {
-		return false;
-	}
-
-	while (advanceFrame()) {
-	}
-
-	defenseUnits = defenseUnits;
-	offenseUnits = offenseUnits;
-
-	return true;
-}
 </script>
 
-todo
+<h2>Team Configuration</h2>
+<div id="teams" on:click={deselect}>
+	<div class="team-wrap">
+		<h3>Offense</h3>
+		<Team team={unitConfigs.offense} />
+	</div>
+	<div class="icon-swap" on:click={swapTeams}></div>
+	<div class="team-wrap">
+		<h3>Defense</h3>
+		<Team team={unitConfigs.defense} isDefense={true} />
+	</div>
+</div>
 
-<!-- <h2>Team on Defense</h2>
+<div id="unit-config">
+	<UnitConfig bind:unitConfig={configEditing} />
+</div>
 
-{#each defenseUnits as unit}
-  <UnitInput bind:unitId={unit.id} rarity={0} enemyId={-1} on:change={runSimulation} />
-{/each}
+<h2>Simulation</h2>
+<div id="simulation">
+	<DistanceMatrix battlefield={battlefield} />
+</div>
 
-<h2>Team on Offense</h2>
+<style>
+	div#teams {
+		display: flex;
+		align-items: center;
+	}
 
-{#each offenseUnits as unit}
-  <UnitInput bind:unitId={unit.id} rarity={0} enemyId={-1} on:change={runSimulation} />
-{/each}
+	div.team-wrap {
+		text-align: center;
+	}
 
-<h2>Predicted Initial Between-Opponent Distance</h2>
+	div.team-wrap h3 {
+		margin: 4px 0;
+	}
 
-<DistanceMatrix bind:team1={defenseUnits} bind:team2={offenseUnits} />
+	div.icon-swap {
+		font-size: 30px;
+		padding: 10px;
+		cursor: pointer;
+		color: #ef7485;
+	}
 
-<h2>Predicted Initial Between-Member Distance</h2>
-
-<div style="display: flex;">
-
-	<DistanceMatrix bind:team1={defenseUnits} bind:team2={defenseUnits} />
-
-	<div style="width: 10em;" />
-
-	<DistanceMatrix bind:team1={offenseUnits} bind:team2={offenseUnits} />
-
-</div> -->
+	div.icon-swap:hover {
+		color: #566590;
+	}
+</style>
 

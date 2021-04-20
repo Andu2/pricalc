@@ -3,7 +3,7 @@
 	import { pages } from "@src/config";
 
 	let guidePages = pages.filter(function(pageConfig) {
-		return (pageConfig.category === "Guides" || pageConfig.category === "Reference")
+		return (pageConfig.category === "Calculators" || pageConfig.category === "Reference")
 	});
 </script>
 

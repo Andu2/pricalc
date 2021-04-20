@@ -1,62 +1,124 @@
 <script>
-	export let team1;
-	export let team2;
+	export let battlefield = {};
+
+	import { getUnitImg } from "@src/logic/ui";
+	import { sortByAttr } from "@src/utils"
 
 	const LIMA_ID = 105201;
 
-	$: distance = computeDistance(team1, team2);
+	$: distances = computeDistance(battlefield);
 
-	var isEnemy = team1 != team2;
+	function computeDistance(battlefield) {
+		let distance = [];
 
-	function computeDistance() {
-		var distance = [
-			['', '', '', '', ''],
-			['', '', '', '', ''],
-			['', '', '', '', ''],
-			['', '', '', '', ''],
-			['', '', '', '', '']
-		];
+		for (var i = battlefield.offense.length - 1; i >= 0; i--) {
+			let actor = battlefield.offense[i];
+			let allyDistances = getAllyDistances(actor, battlefield.offense);
+			let enemyDistances = getEnemyDistances(actor, battlefield.defense);
+			distance.push({
+				img: getUnitImg(actor.config.id, actor.config.rarity),
+				name: actor.name,
+				allyDistances: allyDistances,
+				enemyDistances: enemyDistances
+			});
+		}
 
-		for (var i = 0; i < team1.length; i++) {
-			var unit1 = team1[i];
-			for (var j = 0; j < team2.length; j++) {
-				var unit2 = team2[j];
-
-				var separation = '';
-
-				if (unit1.id && unit2.id && unit1.id != unit2.id && unit1.inPosition && unit2.inPosition && unit1.id != LIMA_ID && unit2.id != LIMA_ID) {
-					separation = isEnemy ? Math.abs(unit1.position + unit2.position) : Math.abs(unit1.position - unit2.position);
-				}
-
-				distance[5 - unit1.slot][5 - unit2.slot] = separation;
-			}
+		for (var i = 0; i < battlefield.defense.length; i++) {
+			let actor = battlefield.defense[i];
+			let allyDistances = getAllyDistances(actor, battlefield.defense);
+			let enemyDistances = getEnemyDistances(actor, battlefield.offense);
+			distance.push({
+				img: getUnitImg(actor.config.id, actor.config.rarity),
+				name: actor.name,
+				allyDistances: allyDistances,
+				enemyDistances: enemyDistances
+			});
 		}
 
 		return distance;
 	}
+
+	function getAllyDistances(actor, allyActors) {
+		let allyDistances = [];
+		allyActors.forEach(function(ally) {
+			if (ally === actor) return;
+			allyDistances.push({
+				img: getUnitImg(ally.config.id, ally.config.rarity),
+				name: ally.name,
+				distance: Math.abs(ally.position - actor.position)
+			});
+		});
+		allyDistances.sort(sortByAttr("distance"))
+		return allyDistances;
+	}
+
+	function getEnemyDistances(actor, enemyActors) {
+		let enemyDistances = [];
+		enemyActors.forEach(function(enemy) {
+			enemyDistances.push({
+				img: getUnitImg(enemy.config.id, enemy.config.rarity),
+				name: enemy.name,
+				distance: Math.abs(enemy.position + actor.position)
+			});
+		});
+		enemyDistances.sort(sortByAttr("distance"))
+		return enemyDistances;
+	}
 </script>
 
+<h3>Initial distances</h3>
 <table>
-	<tr>
-		<td>&nbsp;</td>
-
-		{#each team2 as unit2}
-			<td>
-				<img alt="{unit2.id}" class='table-icon' src='images/unit/unit_icon_unit_{unit2.id ? ((unit2.id + "").slice(0, 4) + "11") : "unknown"}.png' />
-			</td>
-		{/each}
-	</tr>
-
-	{#each team1 as unit1}
+	<tr><th>Unit</th><th>Distance to enemies</th><th>Distance to allies</th></tr>
+	{#each distances as distanceSet}
 	<tr>
 		<td>
-			<img alt="{unit1.id}" class='table-icon' src='images/unit/unit_icon_unit_{unit1.id ? ((unit1.id + "").slice(0, 4) + "11") : "unknown"}.png' />
+			<div class="distance-icon">
+				<div class="distance-icon-name">{distanceSet.name}</div>
+				<img src={distanceSet.img} />
+			</div>
 		</td>
-		{#each team2 as unit2}
-			<td>
-				{distance[5 - unit1.slot][5 - unit2.slot]}
-			</td>
-		{/each}
+		<td>
+			{#each distanceSet.enemyDistances as enemyDistance}
+			<div class="distance-icon">
+				<div class="distance-icon-name">{enemyDistance.name}</div>
+				<img src={enemyDistance.img} />
+				<div class="distance-icon-distance">{enemyDistance.distance}</div>
+			</div>
+			{/each}
+		</td>
+		<td>
+			{#each distanceSet.allyDistances as allyDistance}
+			<div class="distance-icon">
+				<div class="distance-icon-name">{allyDistance.name}</div>
+				<img src={allyDistance.img} />
+				<div class="distance-icon-distance">{allyDistance.distance}</div>
+			</div>
+			{/each}
+		</td>
 	</tr>
 	{/each}
 </table>
+
+<style>
+	table {
+		border-spacing: 20px;
+	}
+
+	img {
+		width: 64px;
+		height: 64px;
+	}
+
+	div.distance-icon {
+		display: inline-block;
+		margin:0 2px;
+	}
+
+	div.distance-icon-name {
+		text-align: center;
+	}
+
+	div.distance-icon-distance {
+		text-align: center;
+	}
+</style>
