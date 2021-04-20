@@ -122,6 +122,8 @@ $: itemName = getItemName(itemId)
 
 </script>
 
+<h2>Item and Equipment Drops</h2>
+
 <table id="drop-table-table">
 	<tr>
 		<td id="drop-table-config">
@@ -141,7 +143,7 @@ $: itemName = getItemName(itemId)
 <style>
 td#drop-table-config {
 	width: 180px;
-	border-right: 2px solid #cfe4ff;
+	border-right: 3px solid #cfe4ff;
 }
 
 table#drop-table-table {

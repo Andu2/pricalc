@@ -207,6 +207,8 @@
 	};
 </script>
 
+<h2>Character Profiles</h2>
+
 <div class="table-wrap">
 	<DopeAssTable data={profiles} columns={columns} />
 </div>

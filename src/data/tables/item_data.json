@@ -252,6 +252,18 @@
 		"end_time": "2030/08/01 14:59:59"
 	},
 	{
+		"item_id": 31015,
+		"item_name": "Misato's Memory Shard",
+		"description": "A shard of Misato's sealed memories. Collect these items to unleash your characters' hidden power.",
+		"promotion_level": 1,
+		"item_type": 11,
+		"value": 31015,
+		"price": 0,
+		"limit_num": 9999,
+		"start_time": "2015/12/17 15:00:00",
+		"end_time": "2030/08/01 14:59:59"
+	},
+	{
 		"item_id": 31016,
 		"item_name": "Suzuna's Memory Shard",
 		"description": "A shard of Suzuna's sealed memories. Collect these items to unleash your characters' hidden power. ",

@@ -49,6 +49,7 @@ import quest_reward_data from "@src/data/tables/quest_reward_data.csv";
 // import hatsune_schedule from "@src/data/tables/hatsune_schedule.csv";
 // import event_story_data from "@src/data/tables/event_story_data.csv";
 import quest_area_data from "@src/data/tables/quest_area_data.csv";
+import shop_static_price_group from "@src/data/tables/shop_static_price_group.csv";
 
 import { sortByAttr } from "@src/utils";
 
@@ -101,7 +102,8 @@ const tables = {
 	quest_reward_data,
 	// hatsune_schedule,
 	// event_story_data,
-	quest_area_data
+	quest_area_data,
+	shop_static_price_group
 }
 
 export const MAX_LEVEL = experience_team.slice(-1)[0].team_level - 1; // Database has one more than current max level

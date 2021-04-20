@@ -48,9 +48,7 @@
 
 <p>{error.message}</p>
 
-<p>If you were just switching pages and got this error page, try refreshing the page. 
-I've been having an issue where the site will break when I release a new version until the user refreshes.
-Sorry for the inconvenience!</p>
+<p>If you were just switching pages and got this error page, try refreshing the page. There might have been an update to the site.</p>
 {#if dev}
 <p>{JSON.stringify(status)}</p>
 <p>{JSON.stringify(error)}</p>

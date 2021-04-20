@@ -3,11 +3,16 @@ import DopeAssTable from "@src/components/DopeAssTable.svelte";
 import { lookupRows, STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
 import { getMaxRefine } from "@src/logic/unit";
 import { sortByAttr } from "@src/utils";
+import { isFragment } from "@src/logic/item";
 
 let equipment = lookupRows("equipment_data", {});
 let maxRefine = false;
 
 $: data = getEquipmentTableData(maxRefine);
+
+function isNotFragment(data) {
+	return !isFragment(data);
+}
 
 function getEquipmentTableData(maxRefine) {
 	return equipment.filter(isNotFragment).map(function(equipData) {
@@ -47,10 +52,6 @@ function getEquipmentTableData(maxRefine) {
 
 		return rowData;
 	}).sort(sortByAttr("level"));
-}
-
-function isNotFragment(equipData) {
-	return (equipData.enable_donation === 0 || equipData.promotion_level <= 1);
 }
 
 function calculatePowerSimple(stats) {
@@ -178,6 +179,8 @@ function showStats() {
 }
 </script>
 
+<h2>Equipment Data</h2>
+
 <table id="equip-table-table">
 	<tr>
 		<td id="equip-table-config">
@@ -198,10 +201,12 @@ function showStats() {
 	</tr>
 </table>
 
+<p>There are {data.length} different pieces of equipment.</p>
+
 <style>
 td#equip-table-config {
 	width: 180px;
-	border-right: 2px solid #cfe4ff;
+	border-right: 3px solid #cfe4ff;
 }
 
 table#equip-table-table {

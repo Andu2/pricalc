@@ -49,7 +49,8 @@ module.exports = [
 	"quest_reward_data",
 	"hatsune_schedule",
 	"event_story_data",
-	"quest_area_data"
+	"quest_area_data",
+	"shop_static_price_group" // divine amulets
 ]
 
 // christ, might as well import the entire database at this point

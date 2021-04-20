@@ -159,6 +159,8 @@
 	}
 
 </script>
+<h2>Max Stat Table</h2>
+
 <table id="stats-table-table">
 	<tr>
 		<td id="stats-table-config">
@@ -183,7 +185,7 @@
 <style>
 td#stats-table-config {
 	width: 180px;
-	border-right: 2px solid #cfe4ff;
+	border-right: 3px solid #cfe4ff;
 }
 
 table#stats-table-table {

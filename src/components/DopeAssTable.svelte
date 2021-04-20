@@ -120,8 +120,28 @@ tr.even {
 }
 
 div.table-wrap {
-	max-height: 800px;
+	max-height: 750px;
 	overflow-x: auto;
+
+	/* Is there no good solution? CSS is so shit */
+/*	border-style: solid;
+	border-color: #cfe4ff;
+	border-width: 3px 0;*/
+
+	/* Incredibly difficult to get scroll shadows on top of content */
+/*	background:
+		linear-gradient(white 30%, rgba(255,255,255,0)),
+		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+		
+		linear-gradient(rgba(22,59,90,0.25) 0%, rgba(22,59,90,0)),
+		linear-gradient(rgba(22,59,90,0), rgba(22,59,90,0.25) 100%) 0 100%;
+	
+	background-repeat: no-repeat;
+	background-size: 100% 50px, 100% 50px, 100% 15px, 100% 15px;
+	background-attachment: local, local, scroll, scroll;
+	background-color: transparent;
+
+	position: relative;*/
 }
 
 td.positive {
@@ -132,8 +152,4 @@ td.negative {
 	color: red;
 }
 
-/* This is a dumb temporary solution that only works if one column has help text */
-th.top {
-	z-index: 1;
-}
 </style>

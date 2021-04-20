@@ -10,8 +10,8 @@
 	$: effectivePhysicalHp = calculateEffectivePhysicalHp(actor);
 	$: effectiveMagicHp = calculateEffectiveMagicHp(actor);
 
-	let effectivePhysHpTooltip = "Effective physical HP represents the average amount of raw damage a unit can expect to take before dying, after accounting for defense and dodge. It does NOT account for HP drain or skills.";
-	let effectiveMagHpTooltip = "Effective magic HP represents the average amount of raw damage a unit can expect to take before dying, after accounting for magic defense. It does NOT account for HP drain or skills.";
+	let effectivePhysHpTooltip = "Effective physical HP represents the average amount of raw physical damage a unit can expect to take before dying, after accounting for defense and dodge. It does NOT account for HP drain or skills.";
+	let effectiveMagHpTooltip = "Effective magic HP represents the average amount of raw magic damage a unit can expect to take before dying, after accounting for magic defense. It does NOT account for HP drain or skills.";
 </script>
 
 <div class="card-section">
@@ -24,7 +24,7 @@
 		<tr><td class="stat-label">Eff. Physical HP <Tooltip header={"Effective Physical HP"} text={effectivePhysHpTooltip} /></td><td class="stat-value">
 			{shortNumber(Math.round(effectivePhysicalHp))}
 		</td></tr>
-		<tr><td class="stat-label">Eff. Magic HP <Tooltip header={"Effective Magic HP"} text={effectivePhysHpTooltip} /></td><td class="stat-value">
+		<tr><td class="stat-label">Eff. Magic HP <Tooltip header={"Effective Magic HP"} text={effectiveMagHpTooltip} /></td><td class="stat-value">
 			{shortNumber(Math.round(effectiveMagicHp))}
 		</td></tr>
 	</table>

@@ -7,6 +7,8 @@ export const hideImpossibleRarities = localStorageStore("hideImpossibleRarities"
 export const lastAnalysis = localStorageStore("lastAnalysis", "");
 export const lastGuide = localStorageStore("lastGuide", "");
 
+export const showMenu = localStorageStore("showMenu", false);
+
 export const baseUnitConfig = {
 	id: -1,
 	rarity: 1,

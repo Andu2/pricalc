@@ -266,6 +266,20 @@
 		"comment": "[Physical] Mid-ranged attack.\\nThe flower on its tail gives off a\\nterrible stench, though the smell\\neventually becomes addictive."
 	},
 	{
+		"unit_id": 201302,
+		"unit_name": "Cactus Flower",
+		"prefab_id": 201302,
+		"motion_type": 0,
+		"se_type": 15,
+		"move_speed": 270,
+		"search_area_width": 800,
+		"atk_type": 1,
+		"normal_atk_cast_time": 3.5,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] Mid-ranged attack.\\nA moving cactus that shoots out\\ncountless paralyzing needles."
+	},
+	{
 		"unit_id": 201400,
 		"unit_name": "Elder Cloud",
 		"prefab_id": 201400,
@@ -488,6 +502,20 @@
 		"cutin": 0,
 		"visual_change_flag": 0,
 		"comment": "[Physical] Area attack.\\nA wandering crow that has\\ndefeated strong monsters around Astrum."
+	},
+	{
+		"unit_id": 202802,
+		"unit_name": "Wandering Kite",
+		"prefab_id": 202802,
+		"motion_type": 0,
+		"se_type": 4,
+		"move_speed": 270,
+		"search_area_width": 650,
+		"atk_type": 1,
+		"normal_atk_cast_time": 2.6,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] Area attack.\\nA black kite that longs to live and die\\nin the wilderness\\nas a lone traveler."
 	},
 	{
 		"unit_id": 202900,
@@ -812,6 +840,20 @@
 		"comment": "[Physical] Short-ranged attack.\\nA large boar enveloped by an armor of tough leaves\\that are painful to the touch. However, its armor is still just leaves. It is weak against magic."
 	},
 	{
+		"unit_id": 204701,
+		"unit_name": "Sand Boar",
+		"prefab_id": 204701,
+		"motion_type": 0,
+		"se_type": 0,
+		"move_speed": 270,
+		"search_area_width": 200,
+		"atk_type": 1,
+		"normal_atk_cast_time": 4,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] Short-ranged attack.\\nSurrounded by an armor of sand, proof of a warrior\\nthat is not afraid to throw away its life.\\nHowever, its armor is still just sand. It is weak against magic."
+	},
+	{
 		"unit_id": 205200,
 		"unit_name": "Seahorse Knight",
 		"prefab_id": 205200,
@@ -907,7 +949,21 @@
 		"normal_atk_cast_time": 1.8,
 		"cutin": 0,
 		"visual_change_flag": 0,
-		"comment": "[Physical] A Creeper transformed by a strange power. Ensnares its foes in tendrils covered in countless thorns.\\n\\n- Deals moderate physical damage to enemies in range and inflicts Restrain.\\n- Lowers the physical defense of enemies in range and inflicts Poison."
+		"comment": "[Physical] A Creeper transformed by a strange\\npower. Ensnares its foes in tendrils covered\\nin countless thorns.\\n\\n- Deals moderate physical damage to\\nenemiesin range and inflicts Restrain.\\n- Lowers the physical defense of\\nenemies in range and inflicts Poison."
+	},
+	{
+		"unit_id": 300602,
+		"unit_name": "Needle Creeper",
+		"prefab_id": 300602,
+		"motion_type": 0,
+		"se_type": 2,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 1.8,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] A Creeper transformed by a strange\\npower. Ensnares its foes in tendrils covered\\nin countless thorns.\\n\\n- Deals moderate physical damage to\\nenemiesin range and inflicts Restrain.\\n- Lowers the physical defense of\\nenemies in range and inflicts Poison."
 	},
 	{
 		"unit_id": 300700,
@@ -1103,7 +1159,21 @@
 		"normal_atk_cast_time": 1.6,
 		"cutin": 0,
 		"visual_change_flag": 0,
-		"comment": "A Mini-Gryphon that has braved its harsh environment to attain a new form. Lifts its prey from the ground with whirlwinds to hunt them in the air.\\n\\n- Deals moderate magical damage to enemies in range."
+		"comment": "A Mini-Gryphon that has braved its harsh\\nenvironment to attain a new form.\\nLifts its prey from the ground with\\nwhirlwinds to hunt them in the air.\\n\\n- Deals moderate magical damage\\nto enemies in range."
+	},
+	{
+		"unit_id": 302001,
+		"unit_name": "Wild Gryphon",
+		"prefab_id": 302001,
+		"motion_type": 0,
+		"se_type": 11,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 1.6,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "A Mini-Gryphon that has braved its harsh\\nenvironment to attain a new form.\\nLifts its prey from the ground with\\nwhirlwinds to hunt them in the air.\\n\\n- Deals moderate magical damage\\nto enemies in range."
 	},
 	{
 		"unit_id": 302100,
@@ -1117,7 +1187,21 @@
 		"normal_atk_cast_time": 1.6,
 		"cutin": 0,
 		"visual_change_flag": 0,
-		"comment": "A form of dragon that rides the wind on great leathery wings. Breathes great balls of fire to ward off intruders.\\n\\n- Deals moderate physical damage to enemies in range."
+		"comment": "A form of dragon that rides the wind on\\ngreat leathery wings. Breathes great balls\\nof fire to ward off intruders.\\n\\n- Deals moderate physical damage\\nto enemies in range."
+	},
+	{
+		"unit_id": 302101,
+		"unit_name": "Wyvern",
+		"prefab_id": 302101,
+		"motion_type": 0,
+		"se_type": 11,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 1.6,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "A form of dragon that rides the wind on\\ngreat leathery wings. Breathes great balls\\nof fire to ward off intruders.\\n\\n- Deals moderate physical damage\\nto enemies in range."
 	},
 	{
 		"unit_id": 302200,
@@ -1162,6 +1246,34 @@
 		"comment": ""
 	},
 	{
+		"unit_id": 302600,
+		"unit_name": "Twin Pigs",
+		"prefab_id": 302600,
+		"motion_type": 0,
+		"se_type": 16,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 1.6,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] The Starbeasts of Gemini, known for\\ntheir looting and banditry. Working as a perfect\\nteam, they mercilessly assault anyone who\\nintrudes upon their hideout.\\n\\n- Deals large physical damage to all enemies\\nbased on their maximum HP.\\n- Deals moderate physical damage to the\\nenemy rearguard and reduces their attack\\nspeed by a small amount.\\n- Deals small physical damage to all enemies."
+	},
+	{
+		"unit_id": 302601,
+		"unit_name": "Twin Pigs",
+		"prefab_id": 302601,
+		"motion_type": 0,
+		"se_type": 16,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 1.9,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] The Starbeasts of Gemini, known for\\ntheir looting and banditry. Working as a perfect\\nteam, they mercilessly assault anyone who\\nintrudes upon their hideout.\\n\\n- Deals large physical damage to all enemies\\nbased on their maximum HP.\\n- Deals moderate physical damage to the\\nenemy rearguard and reduces their attack\\nspeed by a small amount.\\n- Deals small physical damage to all enemies."
+	},
+	{
 		"unit_id": 303200,
 		"unit_name": "Peakie Hen",
 		"prefab_id": 303200,
@@ -1174,6 +1286,20 @@
 		"cutin": 0,
 		"visual_change_flag": 0,
 		"comment": "[Physical] The most glamorous diva of the snowy lands. Descends amidst a raging blizzard with a flock of minions in tow to assault any who dare invade her territory.\\n\\n- Deals moderate magic damage to 4 characters in front and lowers their physical attack.\\n\\n- Deals small magic damage to 2 random characters and inflicts Freeze."
+	},
+	{
+		"unit_id": 303300,
+		"unit_name": "Gargoyle",
+		"prefab_id": 303300,
+		"motion_type": 0,
+		"se_type": 13,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 2.1,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "[Physical] A mysterious bird statue, guarding the ruins of an ancient city though its master is long perished. With nothing left to protect, it indiscriminately rains flaming fury upon any who approach.\\n\\n- Deals moderate magic damage to 5 characters in front, inflicts Burn, and lowers their magic defense.\\n\\n- Deals small magic damage to 3 characters in front and inflicts Blind."
 	},
 	{
 		"unit_id": 303800,
@@ -1202,6 +1328,34 @@
 		"cutin": 0,
 		"visual_change_flag": 0,
 		"comment": "[Physical] A defensive weapon that has guarded the labyrinth since long ago. It waits silently for intruders to reach the furthest point, beyond all traps.\\n- Deals massive magical damage to all enemies, based on each character's maximum HP.\\n- Deals moderate physical damage to enemies in range.\\n- Deals moderate magical damage to the enemy with the highest remaining HP, based on their maximum HP, and inflicts Stun.\\n- When Alma's own HP falls below 50%, its attacks become even more intense."
+	},
+	{
+		"unit_id": 303900,
+		"unit_name": "Cyclops",
+		"prefab_id": 303900,
+		"motion_type": 0,
+		"se_type": 13,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 2,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "A ferocious one-eyed giant with superhuman\\nstrength. Gathers magical energy in its eye to\\nunleash as a powerful beam of destruction.\\n\\n- Deals large magical damage to all enemies.\\nDamage is boosted for enemies with full HP,\\nand their action speed is reduced.\\n- Deals moderate physical damage to the\\nenemy with the highest physical attack\\nbased on their maximum HP, and reduces their TP."
+	},
+	{
+		"unit_id": 303901,
+		"unit_name": "Cyclops",
+		"prefab_id": 303901,
+		"motion_type": 0,
+		"se_type": 13,
+		"move_speed": 270,
+		"search_area_width": 1000,
+		"atk_type": 1,
+		"normal_atk_cast_time": 2,
+		"cutin": 0,
+		"visual_change_flag": 0,
+		"comment": "A ferocious one-eyed giant with superhuman\\nstrength. Gathers magical energy in its eye to\\nunleash as a powerful beam of destruction.\\n\\n- Deals large magical damage to all enemies.\\nDamage is boosted for enemies with full HP,\\nand their action speed is reduced.\\n- Deals moderate physical damage to the\\nenemy with the highest physical attack\\nbased on their maximum HP, and reduces their TP."
 	},
 	{
 		"unit_id": 390100,
@@ -1370,6 +1524,20 @@
 		"cutin": 0,
 		"visual_change_flag": 1,
 		"comment": "A peculiar monster bearing a striking resemblance to Hatsune."
+	},
+	{
+		"unit_id": 601501,
+		"unit_name": "Misato's Shadow",
+		"prefab_id": 101501,
+		"motion_type": 9,
+		"se_type": 7,
+		"move_speed": 450,
+		"search_area_width": 735,
+		"atk_type": 2,
+		"normal_atk_cast_time": 2.27,
+		"cutin": 0,
+		"visual_change_flag": 1,
+		"comment": "A peculiar monster bearing a striking resemblance to Misato."
 	},
 	{
 		"unit_id": 601601,

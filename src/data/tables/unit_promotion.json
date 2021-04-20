@@ -72,12 +72,22 @@
 	{
 		"unit_id": 100101,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104103,
 		"equip_slot_2": 104102,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104101,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 100101,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104103,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104102,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 100201,
@@ -152,12 +162,22 @@
 	{
 		"unit_id": 100201,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104253,
 		"equip_slot_2": 104252,
 		"equip_slot_3": 104372,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104611,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 100201,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104253,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104522,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 100301,
@@ -232,12 +252,22 @@
 	{
 		"unit_id": 100301,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104312,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 100301,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 100401,
@@ -312,12 +342,22 @@
 	{
 		"unit_id": 100401,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104103,
 		"equip_slot_2": 104102,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104431,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 100401,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104103,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 100601,
@@ -392,12 +432,22 @@
 	{
 		"unit_id": 100601,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104253,
 		"equip_slot_2": 104252,
 		"equip_slot_3": 104372,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 100601,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104253,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104372,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 100701,
@@ -472,12 +522,22 @@
 	{
 		"unit_id": 100701,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104163,
 		"equip_slot_2": 104162,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104431,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 100701,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104163,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104342,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 100801,
@@ -552,12 +612,22 @@
 	{
 		"unit_id": 100801,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104253,
 		"equip_slot_2": 104252,
 		"equip_slot_3": 104372,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 100801,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104253,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104522,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 100901,
@@ -632,12 +702,22 @@
 	{
 		"unit_id": 100901,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104223,
 		"equip_slot_2": 104222,
 		"equip_slot_3": 104522,
 		"equip_slot_4": 104221,
 		"equip_slot_5": 104611,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 100901,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104223,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104222,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 101001,
@@ -712,12 +792,22 @@
 	{
 		"unit_id": 101001,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104253,
 		"equip_slot_2": 104252,
 		"equip_slot_3": 104372,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 101001,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104253,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104522,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 101101,
@@ -792,12 +882,22 @@
 	{
 		"unit_id": 101101,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104133,
 		"equip_slot_2": 104132,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104431,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 101101,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104133,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 101201,
@@ -872,12 +972,112 @@
 	{
 		"unit_id": 101201,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104223,
 		"equip_slot_2": 104222,
 		"equip_slot_3": 104522,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104611,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 101201,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104223,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104522,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 1,
+		"equip_slot_1": 101251,
+		"equip_slot_2": 101251,
+		"equip_slot_3": 101371,
+		"equip_slot_4": 101521,
+		"equip_slot_5": 101611,
+		"equip_slot_6": 101581
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 2,
+		"equip_slot_1": 102252,
+		"equip_slot_2": 102251,
+		"equip_slot_3": 102371,
+		"equip_slot_4": 102461,
+		"equip_slot_5": 101611,
+		"equip_slot_6": 101611
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 3,
+		"equip_slot_1": 103251,
+		"equip_slot_2": 102252,
+		"equip_slot_3": 102372,
+		"equip_slot_4": 102521,
+		"equip_slot_5": 102612,
+		"equip_slot_6": 102581
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 4,
+		"equip_slot_1": 103252,
+		"equip_slot_2": 103251,
+		"equip_slot_3": 103521,
+		"equip_slot_4": 103521,
+		"equip_slot_5": 102613,
+		"equip_slot_6": 102614
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 5,
+		"equip_slot_1": 103222,
+		"equip_slot_2": 103252,
+		"equip_slot_3": 103371,
+		"equip_slot_4": 103461,
+		"equip_slot_5": 103612,
+		"equip_slot_6": 103581
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 6,
+		"equip_slot_1": 104251,
+		"equip_slot_2": 103222,
+		"equip_slot_3": 103372,
+		"equip_slot_4": 103522,
+		"equip_slot_5": 103613,
+		"equip_slot_6": 103613
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 7,
+		"equip_slot_1": 104252,
+		"equip_slot_2": 104251,
+		"equip_slot_3": 104371,
+		"equip_slot_4": 103614,
+		"equip_slot_5": 103614,
+		"equip_slot_6": 103461
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 8,
+		"equip_slot_1": 104253,
+		"equip_slot_2": 104252,
+		"equip_slot_3": 104372,
+		"equip_slot_4": 104461,
+		"equip_slot_5": 104611,
+		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 101501,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104253,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104522,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 101601,
@@ -952,12 +1152,22 @@
 	{
 		"unit_id": 101601,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104133,
 		"equip_slot_2": 104132,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104131,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 101601,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104133,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104132,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 101701,
@@ -1032,12 +1242,22 @@
 	{
 		"unit_id": 101701,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104103,
 		"equip_slot_2": 104102,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104101,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 101701,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104103,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104102,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 101801,
@@ -1112,12 +1332,22 @@
 	{
 		"unit_id": 101801,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104223,
 		"equip_slot_2": 104222,
 		"equip_slot_3": 104372,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 101801,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104223,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104522,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 102001,
@@ -1192,12 +1422,22 @@
 	{
 		"unit_id": 102001,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104192,
 		"equip_slot_3": 104282,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 102001,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104193,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 102101,
@@ -1272,12 +1512,22 @@
 	{
 		"unit_id": 102101,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104193,
 		"equip_slot_2": 104192,
 		"equip_slot_3": 104282,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 102101,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104193,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 102201,
@@ -1352,12 +1602,22 @@
 	{
 		"unit_id": 102201,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104223,
 		"equip_slot_2": 104222,
 		"equip_slot_3": 104522,
 		"equip_slot_4": 104221,
 		"equip_slot_5": 104611,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 102201,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104223,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104222,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 102301,
@@ -1432,12 +1692,22 @@
 	{
 		"unit_id": 102301,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104193,
 		"equip_slot_2": 104192,
 		"equip_slot_3": 104282,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 102301,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104193,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104282,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 102501,
@@ -1512,12 +1782,22 @@
 	{
 		"unit_id": 102501,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104253,
 		"equip_slot_2": 104252,
 		"equip_slot_3": 104372,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 102501,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104253,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104522,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 102601,
@@ -1592,12 +1872,22 @@
 	{
 		"unit_id": 102601,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104163,
 		"equip_slot_2": 104162,
 		"equip_slot_3": 104432,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 102601,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104163,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 102701,
@@ -1672,12 +1962,22 @@
 	{
 		"unit_id": 102701,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104193,
 		"equip_slot_2": 104192,
 		"equip_slot_3": 104282,
 		"equip_slot_4": 104191,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 102701,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104193,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104192,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 102801,
@@ -1752,12 +2052,22 @@
 	{
 		"unit_id": 102801,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104282,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 102801,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 102901,
@@ -1832,12 +2142,22 @@
 	{
 		"unit_id": 102901,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104432,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 102901,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104282,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 103001,
@@ -1912,12 +2232,22 @@
 	{
 		"unit_id": 103001,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104043,
 		"equip_slot_2": 104042,
 		"equip_slot_3": 104312,
 		"equip_slot_4": 104041,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 103001,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104043,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104042,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 103101,
@@ -1992,12 +2322,22 @@
 	{
 		"unit_id": 103101,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104043,
 		"equip_slot_2": 104042,
 		"equip_slot_3": 104312,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 103101,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104043,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 103201,
@@ -2072,12 +2412,22 @@
 	{
 		"unit_id": 103201,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104282,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 103201,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 103301,
@@ -2152,12 +2502,22 @@
 	{
 		"unit_id": 103301,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104163,
 		"equip_slot_2": 104192,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 103301,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104193,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 103401,
@@ -2232,12 +2592,22 @@
 	{
 		"unit_id": 103401,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104432,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 103401,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104282,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 103601,
@@ -2312,12 +2682,22 @@
 	{
 		"unit_id": 103601,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104223,
 		"equip_slot_2": 104222,
 		"equip_slot_3": 104522,
 		"equip_slot_4": 104221,
 		"equip_slot_5": 104611,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 103601,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104223,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104222,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 103801,
@@ -2392,12 +2772,22 @@
 	{
 		"unit_id": 103801,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104133,
 		"equip_slot_2": 104132,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104131,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 103801,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104133,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104132,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 104001,
@@ -2472,12 +2862,22 @@
 	{
 		"unit_id": 104001,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104133,
 		"equip_slot_2": 104132,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104431,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 104001,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104133,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 104201,
@@ -2552,12 +2952,22 @@
 	{
 		"unit_id": 104201,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104253,
 		"equip_slot_2": 104252,
 		"equip_slot_3": 104372,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 104201,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104253,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104372,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 104301,
@@ -2632,12 +3042,22 @@
 	{
 		"unit_id": 104301,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104043,
 		"equip_slot_2": 104042,
 		"equip_slot_3": 104282,
 		"equip_slot_4": 104041,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 104301,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104043,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104042,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 104501,
@@ -2712,12 +3132,22 @@
 	{
 		"unit_id": 104501,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104073,
 		"equip_slot_2": 104072,
 		"equip_slot_3": 104372,
 		"equip_slot_4": 104461,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 104501,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104073,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104372,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 104601,
@@ -2792,12 +3222,22 @@
 	{
 		"unit_id": 104601,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104073,
 		"equip_slot_2": 104072,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104431,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 104601,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104073,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104342,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 104701,
@@ -2872,12 +3312,22 @@
 	{
 		"unit_id": 104701,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104432,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 104701,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104312,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 104801,
@@ -2952,12 +3402,22 @@
 	{
 		"unit_id": 104801,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104163,
 		"equip_slot_2": 104192,
 		"equip_slot_3": 104432,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 104801,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104193,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 104901,
@@ -3032,12 +3492,22 @@
 	{
 		"unit_id": 104901,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104432,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 104901,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104432,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 105001,
@@ -3112,12 +3582,22 @@
 	{
 		"unit_id": 105001,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104223,
 		"equip_slot_2": 104222,
 		"equip_slot_3": 104522,
 		"equip_slot_4": 104221,
 		"equip_slot_5": 104611,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 105001,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104223,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104222,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 105101,
@@ -3192,12 +3672,22 @@
 	{
 		"unit_id": 105101,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104312,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 105101,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104282,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 105201,
@@ -3272,12 +3762,22 @@
 	{
 		"unit_id": 105201,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104162,
 		"equip_slot_3": 104312,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 105201,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104163,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104312,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 105301,
@@ -3352,12 +3852,22 @@
 	{
 		"unit_id": 105301,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104072,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104401,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 105301,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104073,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104342,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 105701,
@@ -3432,12 +3942,22 @@
 	{
 		"unit_id": 105701,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104282,
 		"equip_slot_4": 104011,
 		"equip_slot_5": 104551,
 		"equip_slot_6": 103553
+	},
+	{
+		"unit_id": 105701,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104012,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
 	},
 	{
 		"unit_id": 105801,
@@ -3512,12 +4032,22 @@
 	{
 		"unit_id": 105801,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104013,
 		"equip_slot_2": 104012,
 		"equip_slot_3": 104432,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 105801,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104013,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104282,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 105901,
@@ -3592,12 +4122,22 @@
 	{
 		"unit_id": 105901,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104163,
 		"equip_slot_2": 104162,
 		"equip_slot_3": 104432,
 		"equip_slot_4": 104491,
 		"equip_slot_5": 104581,
 		"equip_slot_6": 103583
+	},
+	{
+		"unit_id": 105901,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104163,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104342,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104581
 	},
 	{
 		"unit_id": 106001,
@@ -3672,12 +4212,22 @@
 	{
 		"unit_id": 106001,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104223,
 		"equip_slot_2": 104222,
 		"equip_slot_3": 104522,
 		"equip_slot_4": 104221,
 		"equip_slot_5": 104611,
 		"equip_slot_6": 103614
+	},
+	{
+		"unit_id": 106001,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104223,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104222,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104611
 	},
 	{
 		"unit_id": 106301,
@@ -3752,7 +4302,7 @@
 	{
 		"unit_id": 106301,
 		"promotion_level": 8,
-		"equip_slot_1": 999999,
+		"equip_slot_1": 104133,
 		"equip_slot_2": 104132,
 		"equip_slot_3": 104342,
 		"equip_slot_4": 104131,
@@ -3760,6 +4310,16 @@
 		"equip_slot_6": 103553
 	},
 	{
+		"unit_id": 106301,
+		"promotion_level": 9,
+		"equip_slot_1": 999999,
+		"equip_slot_2": 104133,
+		"equip_slot_3": 999999,
+		"equip_slot_4": 104132,
+		"equip_slot_5": 999999,
+		"equip_slot_6": 104551
+	},
+	{
 		"unit_id": 403101,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -3832,6 +4392,16 @@
 	{
 		"unit_id": 403101,
 		"promotion_level": 8,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
+		"unit_id": 403101,
+		"promotion_level": 9,
 		"equip_slot_1": 0,
 		"equip_slot_2": 0,
 		"equip_slot_3": 0,
@@ -3920,6 +4490,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 404201,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 408401,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -3992,6 +4572,16 @@
 	{
 		"unit_id": 408401,
 		"promotion_level": 8,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
+		"unit_id": 408401,
+		"promotion_level": 9,
 		"equip_slot_1": 0,
 		"equip_slot_2": 0,
 		"equip_slot_3": 0,
@@ -4080,6 +4670,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 408402,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 408403,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4152,6 +4752,16 @@
 	{
 		"unit_id": 408403,
 		"promotion_level": 8,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
+		"unit_id": 408403,
+		"promotion_level": 9,
 		"equip_slot_1": 0,
 		"equip_slot_2": 0,
 		"equip_slot_3": 0,
@@ -4240,6 +4850,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 900001,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 900002,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4312,6 +4932,16 @@
 	{
 		"unit_id": 900002,
 		"promotion_level": 8,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
+		"unit_id": 900002,
+		"promotion_level": 9,
 		"equip_slot_1": 0,
 		"equip_slot_2": 0,
 		"equip_slot_3": 0,
@@ -4400,6 +5030,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 900102,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 900201,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4480,6 +5120,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 900201,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 900202,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4560,6 +5210,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 900202,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 900302,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4640,6 +5300,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 900302,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 902501,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4720,6 +5390,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 902501,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 905801,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4800,6 +5480,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 905801,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 905901,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4880,6 +5570,16 @@
 		"equip_slot_6": 0
 	},
 	{
+		"unit_id": 905901,
+		"promotion_level": 9,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
 		"unit_id": 905902,
 		"promotion_level": 1,
 		"equip_slot_1": 0,
@@ -4952,6 +5652,16 @@
 	{
 		"unit_id": 905902,
 		"promotion_level": 8,
+		"equip_slot_1": 0,
+		"equip_slot_2": 0,
+		"equip_slot_3": 0,
+		"equip_slot_4": 0,
+		"equip_slot_5": 0,
+		"equip_slot_6": 0
+	},
+	{
+		"unit_id": 905902,
+		"promotion_level": 9,
 		"equip_slot_1": 0,
 		"equip_slot_2": 0,
 		"equip_slot_3": 0,
