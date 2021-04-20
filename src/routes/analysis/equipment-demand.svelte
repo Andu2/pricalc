@@ -75,7 +75,7 @@ function generateDemand(unitIds) {
 
 let questCountCache = {};
 function getQuestCount(itemId, isHard = false) {
-	let cacheKey = itemId + isHard;
+	let cacheKey = itemId + (isHard ? "H" : "N");
 	if (questCountCache[cacheKey] !== undefined) {
 		return questCountCache[cacheKey];
 	}
@@ -135,15 +135,15 @@ function getDemandTableData() {
 				if (craftData["condition_equipment_id_" + i]) {
 					let craftItem = lookupRows("equipment_data", { equipment_id: craftData["condition_equipment_id_" + i] }, {}, { cache: true})[0];
 					if (isFragment(craftItem)) {
-						dropId = craftData.condition_equipment_id_1;
-						rowData.fragments = craftData.consume_num_1;
+						dropId = craftData["condition_equipment_id_" + i];
+						rowData.fragments = craftData["consume_num_" + i];
 						break;
 					}
 				}
 			}
 		}
 
-		rowData.normalQuests = Math.round(getQuestCount(dropId) * 100) / 100;
+		rowData.normalQuests = Math.round(getQuestCount(dropId, false) * 100) / 100;
 		rowData.hardQuests = Math.round(getQuestCount(dropId, true) * 100) / 100;
 
 		rowData.totalDemand = rowData.demand + rowData.craftDemand;
