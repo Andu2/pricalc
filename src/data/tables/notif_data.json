@@ -330,6 +330,36 @@
 		"comment": "Zzz... All items... guildhouse... full... Zzz..."
 	},
 	{
+		"unit_id": 101501,
+		"notif_type": 1,
+		"comment": "Look at you and your full stamina. What say we go off together somewhere? ♪"
+	},
+	{
+		"unit_id": 101501,
+		"notif_type": 2,
+		"comment": "My, my. Your skip tickets at the guildhouse are all full. Now we can go all sorts of places together."
+	},
+	{
+		"unit_id": 101501,
+		"notif_type": 3,
+		"comment": "Your stamina at the guildhouse is full. And just where do you plan on taking me, young man?"
+	},
+	{
+		"unit_id": 101501,
+		"notif_type": 4,
+		"comment": "The guildhouse is full to the brim with EXP potions. Seeing everyone's growth always makes me happy."
+	},
+	{
+		"unit_id": 101501,
+		"notif_type": 5,
+		"comment": "Goodness me! Look at all that Mana in the guildhouse! Just don't go wasting it now, you hear? Hehe."
+	},
+	{
+		"unit_id": 101501,
+		"notif_type": 6,
+		"comment": "All of your items at the guildhouse are full. Don't forget to collect them now, okay?"
+	},
+	{
 		"unit_id": 101601,
 		"notif_type": 1,
 		"comment": "Whoa, look at who's got full stamina! You're just buzzing with energy!"

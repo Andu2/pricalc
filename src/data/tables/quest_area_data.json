@@ -90,6 +90,15 @@
 		"end_time": "2030/12/17 14:59:59"
 	},
 	{
+		"area_id": 11011,
+		"area_name": "11. Genua Desert",
+		"map_type": 101,
+		"sheet_id": "bgm_M93",
+		"que_id": "bgm_M93",
+		"start_time": "2021/04/11 13:00:00",
+		"end_time": "2030/12/17 14:59:59"
+	},
+	{
 		"area_id": 12001,
 		"area_name": "1. Juno Plains",
 		"map_type": 101,
@@ -177,6 +186,15 @@
 		"sheet_id": "bgm_M101",
 		"que_id": "bgm_M101",
 		"start_time": "2021/03/15 23:00:00",
+		"end_time": "2030/12/17 14:59:59"
+	},
+	{
+		"area_id": 12011,
+		"area_name": "11. Genua Desert",
+		"map_type": 101,
+		"sheet_id": "bgm_M93",
+		"que_id": "bgm_M93",
+		"start_time": "2021/04/11 13:00:00",
 		"end_time": "2030/12/17 14:59:59"
 	},
 	{
