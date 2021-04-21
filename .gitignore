@@ -6,4 +6,4 @@ master.db
 /src/node_modules/@sapper/
 yarn-error.log
 /__sapper__/
-src/data/*.json
+src/data/tables/*.json
