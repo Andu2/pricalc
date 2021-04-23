@@ -12,11 +12,13 @@
 	let unitConfigs = $savedSimTeam;
 	for (var key in unitConfigs.offense) {
 		if (!isValidUnitConfiguration(unitConfigs.offense[key])) {
+			debugger;
 			unitConfigs.offense[key] = baseUnitConfig;
 		}
 	}
 	for (var key in unitConfigs.defense) {
 		if (!isValidUnitConfiguration(unitConfigs.defense[key])) {
+			debugger;
 			unitConfigs.defense[key] = baseUnitConfig;
 		}
 	}
@@ -45,7 +47,7 @@
 	function getConfigEditing(slotId) {
 		if (slotId === null) return null;
 		let slotSplit = slotId.split(".");
-		return unitConfigs[slotSplit[0]][slotSplit[1]];
+		return {...unitConfigs[slotSplit[0]][slotSplit[1]]};
 	}
 
 	function setConfig(configEditing) {

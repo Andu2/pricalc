@@ -1,5 +1,5 @@
 import { UNLOCKED_UNITS } from "@src/data/priconnedb";
-import { createActor, isValidUnitConfiguration } from "@src/logic/unit";
+import { createActor, isValidUnitConfiguration, getUnitType } from "@src/logic/unit";
 
 function initUnitForBattle(unit) {
 	unit.currentHp = unit.hp;
@@ -134,10 +134,17 @@ function setStartPositions(battlefield) {
 	let missingOffense = 5 - battlefield.offense.length;
 	let missingDefense = 5 - battlefield.defense.length;
 	battlefield.offense.forEach(function(actor, i) {
-		actor.position = 1000 + 200 * (i + missingOffense);
+		actor.position = 604 + 200 * (i + missingOffense);
+		if (getUnitType(actor.config.id) === "boss") {
+			// Bosses have larger "attack widths"?
+			actor.position -= 300;
+		}
 	});
 	battlefield.defense.forEach(function(actor, i) {
-		actor.position = 1000 + 200 * (i + missingDefense);
+		actor.position = 604 + 200 * (i + missingDefense);
+		if (getUnitType(actor.config.id) === "boss") {
+			actor.position -= 300;
+		}
 	});
 
 	var canCalculate = true;
@@ -164,8 +171,9 @@ function setStartPositions(battlefield) {
 function advancePositions(movingActors, opposingActors, skillQueue) {
 	let closestOpposingActor = 2160;
 	opposingActors.forEach(function(actor) {
-		if (actor.position < closestOpposingActor) {
-			closestOpposingActor = actor.position;
+		let effectivePosition = actor.position;
+		if (effectivePosition < closestOpposingActor) {
+			closestOpposingActor = effectivePosition;
 		}
 	});
 

@@ -7,9 +7,9 @@ export const nav = [
 		path: "units",
 		displayName: "Units"
 	}, {
-		path: "simulator",
-		displayName: "Simulator"
-	}, {
+	// 	path: "simulator",
+	// 	displayName: "Simulator"
+	// }, {
 		path: "tool-index",
 		displayName: "Analysis Tools"
 	}, {
@@ -102,12 +102,12 @@ export const pages = [
 		description: "View character, enemy, and boss details, including stats and detailed skill descriptions.",
 		icon: "images/unit/unit_icon_unit_101211.png"
 	}, {
-		path: "simulator",
-		category: "Analysis",
-		displayName: "Simulator",
-		description: "Select a lineup of units and simulate the positions each unit will end up in. More simulation features coming soon™!",
-		icon: "images/skill/icon_icon_skill_1001.png"
-	}, {
+	// 	path: "simulator",
+	// 	category: "Analysis",
+	// 	displayName: "Simulator",
+	// 	description: "Select a lineup of units and simulate the positions each unit will end up in. More simulation features coming soon™!",
+	// 	icon: "images/skill/icon_icon_skill_1001.png"
+	// }, {
 		path: "notification-quiz",
 		category: "Quizzes",
 		displayName: "Notification Quiz",
