@@ -50,4 +50,21 @@ export const baseUnitConfig = {
 };
 export const savedUnit = localStorageStore("savedUnit", baseUnitConfig);
 
+export const savedSimTeam = localStorageStore("savedSimTeam", {
+	offense: {
+		unit1: baseUnitConfig,
+		unit2: baseUnitConfig,
+		unit3: baseUnitConfig,
+		unit4: baseUnitConfig,
+		unit5: baseUnitConfig
+	},
+	defense: {
+		unit1: baseUnitConfig,
+		unit2: baseUnitConfig,
+		unit3: baseUnitConfig,
+		unit4: baseUnitConfig,
+		unit5: baseUnitConfig
+	}
+});
+
 export const lastVersion = localStorageStore("lastVersion", version);

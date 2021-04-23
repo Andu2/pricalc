@@ -7,7 +7,7 @@
 	import UnitCard_Drops from "@src/components/UnitCard_Drops.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import UnitInput from "@src/components/UnitInput.svelte";
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, MAX_RANK, lookupRows } from "@src/data/priconnedb";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, MAX_RANK, WEAPON_TYPES, lookupRows } from "@src/data/priconnedb";
 	import { createActor, calculatePower, getUnitType, getUnitIdBase, isValidUnitConfiguration } from "@src/logic/unit";
 	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
 	import { sortByAttr } from "@src/utils"
@@ -344,6 +344,25 @@
 					<div class="button max-all-button" on:click={maxAll}>Max all</div>
 				</div>
 				{/if}
+				<div class="unit-card-miscstats">
+					<table>
+						{#if actor && actor.unitData && actor && actor.unitData.search_area_width}
+						<tr>
+							<td class="stat-label">Range</td>
+							<td class="stat-number">{actor.unitData.search_area_width}</td>
+						</tr>
+						{/if}
+						{#if actor && actor.unitData && actor && actor.unitData.rarity}
+						<tr>
+							<td class="stat-label">Base rarity</td>
+							<td class="stat-number">{actor.unitData.rarity}</td>
+						</tr>
+						{/if}
+<!-- 						<tr>
+							<td>Weapon type:</td>
+							<td>{actor && actor.unitData ? WEAPON_TYPES[actor.unitData.se_type] : "???"}</td>
+						</tr> -->
+				</div>
 				<div class="unit-card-description">
 					{@html unitComments}
 					{#if !validConfig}
@@ -395,7 +414,7 @@ div.card-section-wrap {
 }
 
 div.card-middle-row-wrap {
-	padding-top: 10px;
+	padding-top: 5px;
 	padding-bottom: 5px;
 	border-spacing: 10px;
 	display: table;
@@ -408,7 +427,7 @@ div.unit-card-middlerow {
 div.max-all-button-wrap {
 	display: table-cell;
 	min-width: 80px;
-	vertical-align: top;
+	vertical-align: middle;
 }
 
 div.max-all-button {
@@ -417,7 +436,25 @@ div.max-all-button {
 
 div.unit-card-description {
 	display: table-cell;
-	vertical-align: top;
+	vertical-align: middle;
+}
+
+div.unit-card-miscstats {
+	padding: 0 10px;
+	min-width: 130px;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+td.stat-label {
+	padding-right: 10px;
+	vertical-align: text-bottom;
+}
+
+td.stat-number {
+	font-family: monospace;
+	font-size: 10pt;
+	vertical-align: text-bottom;
 }
 
 td.bond-cell {

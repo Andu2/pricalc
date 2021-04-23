@@ -2,6 +2,7 @@
 	import { NUMBER_TO_STAT, SKILL_NAMES, STAT_DISPLAY_NAMES, lookupRows, getUnitSkills } from "@src/data/priconnedb";
 	import { getUnitType } from "@src/logic/unit";
 	import { describeEffect, describeTarget } from "@src/logic/skill";
+	import Tooltip from "@src/components/Tooltip.svelte";
 
 	export let unitId;
 	export let rank;
@@ -168,6 +169,7 @@
 	}
 
 	function getBasicAttackDescription(actor) {
+		if (!actor || !actor.unitData) return "";
 		let damageType = "physical"
 		let damageAmount = actor.atk;
 		if (actor.unitData.atk_type === 2) {
@@ -175,7 +177,7 @@
 			damageAmount = actor.magic_str;
 		}
 		if (damageAmount <= 0) return "";
-		return "Deal " + damageAmount + " " + damageType + " damage. Target: closest enemy."
+		return "Deal " + damageAmount + " " + damageType + " damage. Target: closest enemy. Cast time: " + actor.unitData.normal_atk_cast_time + " seconds."
 		//return "Deal " + damageAmount + " " + damageType + " damage. Target: 1st enemy. Charge time: " + actor.unitData.normal_atk_cast_time + " seconds";
 	}
 
@@ -186,7 +188,9 @@
 	<div class="card-section-header">Skills</div>
 	{#if basicAttackDescription}
 	<p class="basic-attack">
-		<strong>Basic attack:</strong> {basicAttackDescription}
+		<strong>Basic attack:</strong> {basicAttackDescription} <Tooltip 
+			header={"Cast Time"} 
+			text={"Cast time is the idle time before an attack. It does not include animation time. Attack speed buffs reduce cast time, but they do not speed up animations."} />
 	</p>
 	{/if}
 	{#each unlockedSkills as skill, i}
@@ -209,7 +213,9 @@
 				{#each unitSkills[skill].actions as action}
 					<em>{@html getActionDescription(action, skill, actor)}</em>
 				{/each}
-				<!-- <em>Skill cast time {unitSkills[skill].data.skill_cast_time}</em> -->
+				{#if unitSkills[skill].data.skill_cast_time}
+				<span class='skill-technical-description'><em>Cast time: {unitSkills[skill].data.skill_cast_time} seconds</em></span>
+				{/if}
 			</div>
 		</div>
 	{/each}

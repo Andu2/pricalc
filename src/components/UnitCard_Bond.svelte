@@ -18,7 +18,7 @@ function getRelevantStoryGroups(unitId) {
 		}
 	});
 	return relevantStoryIds.map(function(storyId) {
-		return Math.floor(storyId / 1000);
+		return Math.floor(storyId / 1000) + ""; // Need to force string keys. Number keys makes weird things happen
 	});
 }
 
@@ -42,8 +42,9 @@ function setBondIds(storyGroups) {
 		}
 	}
 	storyGroups.forEach(function(storyGroup) {
-		if (bond[storyGroup] === undefined) {
-			bond[storyGroup] = carryNumber;
+		let key = storyGroup + ""; // Need to force string keys. Number keys makes weird things happen
+		if (bond[key] === undefined) {
+			bond[key] = carryNumber;
 		}
 	});
 }

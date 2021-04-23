@@ -193,6 +193,18 @@ export const BUFF_NUMBER_TO_STAT = {
 	14: "don't know"
 }
 
+export const WEAPON_TYPES = {
+	1: "Fist",
+	2: "Dagger",
+	3: "Axe",
+	4: "Short Sword",
+	5: "Long Sword",
+	6: "Spear",
+	7: "Staff",
+	8: "Bow"
+	// 9: "Dagger"
+}
+
 let lookupCache = {};
 export function lookupRows(tableName, constraints, calculated = {}, options = {}) {
 	if (tables[tableName] === undefined) {

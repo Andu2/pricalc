@@ -249,7 +249,7 @@ function getEquipmentStats(equipmentSet, config) {
 function getBondStats(config) {
 	let stats = {};
 	for (var baseUnitIdString in config.bond) {
-		let baseUnitId = baseUnitIdString * 1; // it's making it a string for some reason...
+		let baseUnitId = baseUnitIdString * 1;
 		var bondStories = lookupRows("story_detail", { story_group_id: baseUnitId });
 		var unlockedStoryIds = bondStories.filter(function(story) {
 			return (story.love_level <= config.bond[baseUnitId])

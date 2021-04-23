@@ -1,5 +1,5 @@
 import { UNLOCKED_UNITS } from "@src/data/priconnedb";
-import { createActor } from "@src/logic/unit";
+import { createActor, isValidUnitConfiguration } from "@src/logic/unit";
 
 function initUnitForBattle(unit) {
 	unit.currentHp = unit.hp;
@@ -92,20 +92,31 @@ function simpleBattle(attacker, defender) {
 
 export function createBattlefield(offense, defense) {
 	let offenseActors = getSortedActors(offense);
+	offenseActors.forEach(function(actor) {
+		actor.side = "offense";
+		actor.moving = true;
+	});
 	let defenseActors = getSortedActors(defense);
+	defenseActors.forEach(function(actor) {
+		actor.side = "defense";
+		actor.moving = true;
+	});
 
-	setStartPositions(offenseActors, defenseActors);
-
-	return {
+	let battlefield = {
 		offense: offenseActors,
-		defense: defenseActors
+		defense: defenseActors,
+		skillQueue: []
 	}
+
+	setStartPositions(battlefield);
+
+	return battlefield;
 }
 
 function getSortedActors(unitConfigs) {
 	let actors = [];
 	for (var slot in unitConfigs) {
-		if (unitConfigs[slot] && unitConfigs[slot].id > -1) {
+		if (unitConfigs[slot] && unitConfigs[slot].id > -1 && isValidUnitConfiguration(unitConfigs[slot])) {
 			actors.push(createActor(unitConfigs[slot]));
 		}
 	}
@@ -119,19 +130,21 @@ function getSortedActors(unitConfigs) {
 
 const LIMA_ID = 105201;
 
-function setStartPositions(offenseActors, defenseActors) {
-	offenseActors.forEach(function(actor, i) {
-		actor.position = 1000 + 200 * i;
+function setStartPositions(battlefield) {
+	let missingOffense = 5 - battlefield.offense.length;
+	let missingDefense = 5 - battlefield.defense.length;
+	battlefield.offense.forEach(function(actor, i) {
+		actor.position = 1000 + 200 * (i + missingOffense);
 	});
-	defenseActors.forEach(function(actor, i) {
-		actor.position = 1000 + 200 * i;
+	battlefield.defense.forEach(function(actor, i) {
+		actor.position = 1000 + 200 * (i + missingDefense);
 	});
 
 	var canCalculate = true;
-	if (defenseActors.length === 0 || defenseActors.length === 1 && defenseActors[0].config.id === LIMA_ID) {
+	if (battlefield.defense.length === 0 || battlefield.defense.length === 1 && battlefield.defense[0].config.id === LIMA_ID) {
 		canCalculate = false;
 	}
-	if (offenseActors.length === 0 || offenseActors.length === 1 && offenseActors[0].config.id === LIMA_ID) {
+	if (battlefield.offense.length === 0 || battlefield.offense.length === 1 && battlefield.offense[0].config.id === LIMA_ID) {
 		canCalculate = false;
 	}
 
@@ -142,13 +155,13 @@ function setStartPositions(offenseActors, defenseActors) {
 	let someoneMoved = false;
 	do {
 		someoneMoved = false;
-		if (advancePositions(defenseActors, offenseActors)) someoneMoved = true;
-		if (advancePositions(offenseActors, defenseActors)) someoneMoved = true;
+		if (advancePositions(battlefield.defense, battlefield.offense, battlefield.skillQueue)) someoneMoved = true;
+		if (advancePositions(battlefield.offense, battlefield.defense, battlefield.skillQueue)) someoneMoved = true;
 	} while (someoneMoved);
 }
 
 // returns true if someone moved
-function advancePositions(movingActors, opposingActors) {
+function advancePositions(movingActors, opposingActors, skillQueue) {
 	let closestOpposingActor = 2160;
 	opposingActors.forEach(function(actor) {
 		if (actor.position < closestOpposingActor) {
@@ -158,11 +171,23 @@ function advancePositions(movingActors, opposingActors) {
 
 	let moved = false;
 	movingActors.forEach(function(actor) {
-		if (actor.config.id === LIMA_ID) return;
-		if (actor.position + closestOpposingActor > actor.unitData.search_area_width) {
-			actor.position -= 12;
-			moved = true;
+		if (actor.position + closestOpposingActor > actor.unitData.search_area_width && actor.config.id !== LIMA_ID) {
+			actor.moving = true;
 		}
+		if (actor.moving) {
+			actor.position -= actor.unitData.move_speed * 1.6 / 60; // 60 fps, no idea where *1.6 comes from
+			moved = true;
+			if (actor.position + closestOpposingActor <= actor.unitData.search_area_width || actor.config.id === LIMA_ID) {	
+				// Move to back of queue
+				let queueIndex = skillQueue.indexOf(actor);
+				if (queueIndex > -1) {
+					skillQueue.splice(queueIndex, 1);
+				}
+				skillQueue.push(actor);
+				actor.moving = false;
+			}
+		}
+		
 	});
 
 	return moved;

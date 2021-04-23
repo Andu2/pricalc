@@ -18,6 +18,7 @@
 			distance.push({
 				img: getUnitImg(actor.config.id, actor.config.rarity),
 				name: actor.name,
+				side: actor.side,
 				allyDistances: allyDistances,
 				enemyDistances: enemyDistances
 			});
@@ -30,6 +31,7 @@
 			distance.push({
 				img: getUnitImg(actor.config.id, actor.config.rarity),
 				name: actor.name,
+				side: actor.side,
 				allyDistances: allyDistances,
 				enemyDistances: enemyDistances
 			});
@@ -45,7 +47,7 @@
 			allyDistances.push({
 				img: getUnitImg(ally.config.id, ally.config.rarity),
 				name: ally.name,
-				distance: Math.abs(ally.position - actor.position)
+				distance: Math.round(Math.abs(ally.position - actor.position) * 100) / 100
 			});
 		});
 		allyDistances.sort(sortByAttr("distance"))
@@ -58,7 +60,7 @@
 			enemyDistances.push({
 				img: getUnitImg(enemy.config.id, enemy.config.rarity),
 				name: enemy.name,
-				distance: Math.abs(enemy.position + actor.position)
+				distance: Math.round(Math.abs(enemy.position + actor.position) * 100) / 100
 			});
 		});
 		enemyDistances.sort(sortByAttr("distance"))
@@ -66,11 +68,13 @@
 	}
 </script>
 
-<h3>Initial distances</h3>
 <table>
-	<tr><th>Unit</th><th>Distance to enemies</th><th>Distance to allies</th></tr>
+	<tr><th>Team</th><th>Unit</th><th>Distance to enemies</th><th>Distance to allies</th></tr>
 	{#each distances as distanceSet}
 	<tr>
+		<td>
+			{distanceSet.side}
+		</td>
 		<td>
 			<div class="distance-icon">
 				<div class="distance-icon-name">{distanceSet.name}</div>
@@ -112,13 +116,6 @@
 	div.distance-icon {
 		display: inline-block;
 		margin:0 2px;
-	}
-
-	div.distance-icon-name {
-		text-align: center;
-	}
-
-	div.distance-icon-distance {
 		text-align: center;
 	}
 </style>
