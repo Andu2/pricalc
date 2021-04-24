@@ -153,8 +153,8 @@ export const changeLog = [{
 			"Merged analysis and guides",
 			"Added ability to hide menu and added page indices",
 			"Guides: Divine amulet costs",
-			"Added simulator",
-			"Added unit filter on equipment demand tool"
+			"Added unit filter on equipment demand tool",
+			"Added cast times and animation times"
 		]
 	}, {
 		version: "0.3.2",

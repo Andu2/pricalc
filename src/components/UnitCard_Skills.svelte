@@ -1,5 +1,5 @@
 <script>
-	import { NUMBER_TO_STAT, SKILL_NAMES, STAT_DISPLAY_NAMES, lookupRows, getUnitSkills } from "@src/data/priconnedb";
+	import { NUMBER_TO_STAT, SKILL_NAMES, STAT_DISPLAY_NAMES, lookupRows, getUnitSkills, animationDurations } from "@src/data/priconnedb";
 	import { getUnitType } from "@src/logic/unit";
 	import { describeEffect, describeTarget } from "@src/logic/skill";
 	import Tooltip from "@src/components/Tooltip.svelte";
@@ -182,15 +182,55 @@
 	}
 
 	$: boundValues(level, skillLevels)
+	$: attackAnimationTime = getAttackAnimationDuration(actor)
+
+	function getAttackAnimationDuration(actor) {
+		if (!actor || !actor.unitData) return 0;
+		return getClassAttackAnimationDuration(actor.unitData.se_type);
+	}
+
+	function getClassAttackAnimationDuration(classId) {
+		let classIdString = classId + "";
+		if (classIdString.length < 2) {
+			classIdString = "0" + classIdString;
+		}
+		return animationDurations[classIdString + "_attack"];
+	}
+
+	const skillAnimationIds = {
+		"union_burst": "skill0",
+		"main_skill_1": "skill1",
+		"main_skill_2": "skill2"
+	}
+
+	function getSkillAnimationDuration(skill, unitId) {
+		let animationName = unitId + "_" + skillAnimationIds[skill];
+		let times = [0];
+		if (animationDurations[animationName]) {
+			times = [Math.round(animationDurations[animationName] * 100) / 100];
+		}
+		if (animationDurations[animationName + "_1"]) { // multi part skill
+			let animNumber = 1;
+			while (animationDurations[animationName + "_" + animNumber]) {
+				times.push(Math.round(animationDurations[animationName + "_" + animNumber] * 100) / 100)
+				animNumber++;
+			}	
+		}
+		return times.join(" / ");
+	}
 </script>
 
 <div class="card-section">
 	<div class="card-section-header">Skills</div>
 	{#if basicAttackDescription}
 	<p class="basic-attack">
-		<strong>Basic attack:</strong> {basicAttackDescription} <Tooltip 
-			header={"Cast Time"} 
-			text={"Cast time is the idle time before an attack. It does not include animation time. Attack speed buffs reduce cast time, but they do not speed up animations."} />
+		<strong>Basic attack:</strong> {basicAttackDescription}
+		{#if attackAnimationTime > 0}
+		Animation time: {Math.round(attackAnimationTime * 100) / 100} seconds
+		{/if}
+		<Tooltip 
+			header={"Skill Timings"} 
+			text={"Cast time is the idle time before an attack or skill. Animation time is the length of the animation for the attack/skill. Attack speed buffs reduce cast time, but they do not speed up animations. Skill effects occur at some point within the animation time. I am not sure how to determine the exact time at which a skill action occurs within an animation. (Help wanted!)"} />
 	</p>
 	{/if}
 	{#each unlockedSkills as skill, i}
@@ -213,8 +253,11 @@
 				{#each unitSkills[skill].actions as action}
 					<em>{@html getActionDescription(action, skill, actor)}</em>
 				{/each}
-				{#if unitSkills[skill].data.skill_cast_time}
+				{#if skill.indexOf("main_skill") > -1}
 				<span class='skill-technical-description'><em>Cast time: {unitSkills[skill].data.skill_cast_time} seconds</em></span>
+					{#if unitType === "character"}
+					<span class='skill-technical-description'><em>Animation time: {getSkillAnimationDuration(skill, unitId)} seconds</em></span>
+					{/if}
 				{/if}
 			</div>
 		</div>
