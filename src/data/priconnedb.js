@@ -52,6 +52,7 @@ import quest_area_data from "@src/data/tables/quest_area_data.csv";
 import shop_static_price_group from "@src/data/tables/shop_static_price_group.csv";
 
 export {default as animationDurations} from "@src/data/animation-durations.json";
+export {default as jpContentHistory} from "@src/data/jp-content-history.json";
 
 import { sortByAttr } from "@src/utils";
 

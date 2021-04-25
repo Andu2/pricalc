@@ -177,12 +177,17 @@
 			damageAmount = actor.magic_str;
 		}
 		if (damageAmount <= 0) return "";
-		return "Deal " + damageAmount + " " + damageType + " damage. Target: closest enemy. Cast time: " + actor.unitData.normal_atk_cast_time + " seconds."
-		//return "Deal " + damageAmount + " " + damageType + " damage. Target: 1st enemy. Charge time: " + actor.unitData.normal_atk_cast_time + " seconds";
+		return "Deal " + damageAmount + " " + damageType + " damage. Target: closest enemy.";
 	}
 
 	$: boundValues(level, skillLevels)
 	$: attackAnimationTime = getAttackAnimationDuration(actor)
+	$: attackCastTime = getAttackCastTime(actor);
+
+	function getAttackCastTime(actor) {
+		if (!actor || !actor.unitData) return 0;
+		return actor.unitData.normal_atk_cast_time;
+	}
 
 	function getAttackAnimationDuration(actor) {
 		if (!actor || !actor.unitData) return 0;
@@ -225,8 +230,11 @@
 	{#if basicAttackDescription}
 	<p class="basic-attack">
 		<strong>Basic attack:</strong> {basicAttackDescription}
+		{#if attackCastTime > 0}
+		<span class="cast-time">Cast time: {Math.round(attackCastTime * 100) / 100} seconds.</span>
+		{/if}
 		{#if attackAnimationTime > 0}
-		Animation time: {Math.round(attackAnimationTime * 100) / 100} seconds
+		<span class="animation-time">Animation time: {Math.round(attackAnimationTime * 100) / 100} seconds.</span>
 		{/if}
 		<Tooltip 
 			header={"Skill Timings"} 
@@ -254,9 +262,9 @@
 					<em>{@html getActionDescription(action, skill, actor)}</em>
 				{/each}
 				{#if skill.indexOf("main_skill") > -1}
-				<span class='skill-technical-description'><em>Cast time: {unitSkills[skill].data.skill_cast_time} seconds</em></span>
+				<span class='skill-technical-description cast-time'><em>Cast time: {unitSkills[skill].data.skill_cast_time} seconds</em></span>
 					{#if unitType === "character"}
-					<span class='skill-technical-description'><em>Animation time: {getSkillAnimationDuration(skill, unitId)} seconds</em></span>
+					<span class='skill-technical-description animation-time'><em>Animation time: {getSkillAnimationDuration(skill, unitId)} seconds</em></span>
 					{/if}
 				{/if}
 			</div>
@@ -266,7 +274,7 @@
 		<strong>Attack sequence:</strong> {describeAttackPattern(unitId, rank)}
 	</div>
 	{#if unitType === "boss" || unitType === "enemy"}
-	<p><em>Technical skill descriptions are still being worked on, especially for bosses and enemies, as I have not had the chance to go through them all yet.</em></p>
+	<p><em>Technical skill descriptions for bosses and enemies are still a work in progress.</em></p>
 	{/if}
 </div>
 
@@ -320,6 +328,14 @@ div.button {
 }
 p.basic-attack {
 	margin: 20px 0;
+}
+
+span.cast-time {
+	color: #1f77ff;
+}
+
+span.animation-time {
+	color: #dc2afb;
 }
 
 </style>

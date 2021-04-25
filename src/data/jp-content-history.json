@@ -1,0 +1,1700 @@
+{
+	"jpLaunchDate": "2018-02-15",
+	"enLaunchDate": "2021-01-19",
+	"lastUpdateDate": "2021-04-24",
+	"units": [
+		{
+			"name": "Jun",
+			"pool": "permanent",
+			"unitId": 104701,
+			"jpDate": "2018-02-28"
+		}, {
+			"name": "Rin",
+			"pool": "permanent",
+			"unitId": 102601,
+			"jpDate": "2018-03-15"
+		}, {
+			"name": "Arisa",
+			"pool": "permanent",
+			"unitId": 106301,
+			"jpDate": "2018-03-31"
+		}, {
+			"name": "Ayane",
+			"pool": "permanent",
+			"unitId": 102301,
+			"jpDate": "2018-04-16"
+		}, {
+			"name": "Kyoka",
+			"pool": "permanent",
+			"unitId": 103601,
+			"jpDate": "2018-04-30"
+		}, {
+			"name": "Misato",
+			"pool": "permanent",
+			"unitId": 101501,
+			"jpDate": "2018-05-15"
+		}, {
+			"name": "Illya",
+			"pool": "permanent",
+			"unitId": 104401,
+			"jpDate": "2018-05-31"
+		}, {
+			"name": "Tsumugi",
+			"pool": "permanent",
+			"unitId": 105401,
+			"jpDate": "2018-06-15"
+		}, {
+			"name": "Pecorine (Summer)",
+			"pool": "limited",
+			"unitId": 107501,
+			"jpDate": "2018-06-30"
+		}, {
+			"name": "Kokkoro (Summer)",
+			"pool": "event",
+			"unitId": 107601,
+			"jpDate": "2018-06-30"
+		}, {
+			"name": "Suzume (Summer)",
+			"pool": "limited",
+			"unitId": 107701,
+			"jpDate": "2018-07-17"
+		}, {
+			"name": "Karyl (Summer)",
+			"pool": "limited",
+			"unitId": 107801,
+			"jpDate": "2018-07-31"
+		}, {
+			"name": "Mifuyu (Summer)",
+			"pool": "event",
+			"unitId": 108001,
+			"jpDate": "2018-07-31"
+		}, {
+			"name": "Tamaki (Summer)",
+			"pool": "limited",
+			"unitId": 107901,
+			"jpDate": "2018-08-21"
+		}, {
+			"name": "Tomo",
+			"pool": "permanent",
+			"unitId": 103701,
+			"jpDate": "2018-08-31"
+		}, {
+			"name": "Matsuri",
+			"pool": "permanent",
+			"unitId": 100501,
+			"jpDate": "2018-09-18"
+		}, {
+			"name": "Miyako (Halloween)",
+			"pool": "event",
+			"unitId": 108201,
+			"jpDate": "2018-09-30"
+		}, {
+			"name": "Shinobu (Halloween)",
+			"pool": "limited",
+			"unitId": 108101,
+			"jpDate": "2018-09-30"
+		}, {
+			"name": "Misaki (Halloween)",
+			"pool": "limited",
+			"unitId": 108301,
+			"jpDate": "2018-10-18"
+		}, {
+			"name": "Christina",
+			"pool": "limited",
+			"unitId": 107101,
+			"jpDate": "2018-10-31"
+		}, {
+			"name": "Ruka",
+			"pool": "permanent",
+			"unitId": 105601,
+			"jpDate": "2018-11-03"
+		}, {
+			"name": "Nanaka",
+			"pool": "permanent",
+			"unitId": 101301,
+			"jpDate": "2018-11-19"
+		}, {
+			"name": "Chika (Christmas)",
+			"pool": "limited",
+			"unitId": 108401,
+			"jpDate": "2018-11-30"
+		}, {
+			"name": "Kurumi (Christmas)",
+			"pool": "event",
+			"unitId": 108501,
+			"jpDate": "2018-11-30"
+		}, {
+			"name": "Ayane (Christmas)",
+			"pool": "limited",
+			"unitId": 108601,
+			"jpDate": "2018-12-19"
+		}, {
+			"name": "Yui (New Year)",
+			"pool": "limited",
+			"unitId": 108801,
+			"jpDate": "2018-12-31"
+		}, {
+			"name": "Rei (New Year)",
+			"pool": "event",
+			"unitId": 108901,
+			"jpDate": "2018-12-31"
+		}, {
+			"name": "Hiyori (New Year)",
+			"pool": "limited",
+			"unitId": 108701,
+			"jpDate": "2019-01-18"
+		}, {
+			"name": "Shizuru (Valentine)",
+			"pool": "limited",
+			"unitId": 109101,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Eriko (Valentine)",
+			"pool": "event",
+			"unitId": 109001,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Muimi",
+			"pool": "limited",
+			"unitId": 106101,
+			"jpDate": "2019-02-15"
+		}, {
+			"name": "Kasumi",
+			"pool": "permanent",
+			"unitId": 101401,
+			"jpDate": "2019-02-28"
+		}, {
+			"name": "Ayumi",
+			"pool": "permanent",
+			"unitId": 105501,
+			"jpDate": "2019-03-19"
+		}, {
+			"name": "Anne",
+			"pool": "permanent",
+			"unitId": 109201,
+			"jpDate": "2019-03-31"
+		}, {
+			"name": "Lou",
+			"pool": "event",
+			"unitId": 109301,
+			"jpDate": "2019-03-31"
+		}, {
+			"name": "Grea",
+			"pool": "permanent",
+			"unitId": 109401,
+			"jpDate": "2019-04-19"
+		}, {
+			"name": "Kuka (Ooedo)",
+			"pool": "permanent",
+			"unitId": 109501,
+			"jpDate": "2019-04-30"
+		}, {
+			"name": "Ninon (Ooedo)",
+			"pool": "permanent",
+			"unitId": 109601,
+			"jpDate": "2019-05-17"
+		}, {
+			"name": "Rem",
+			"pool": "limited",
+			"unitId": 109701,
+			"jpDate": "2019-05-31"
+		}, {
+			"name": "Ram",
+			"pool": "event",
+			"unitId": 109801,
+			"jpDate": "2019-05-31"
+		}, {
+			"name": "Emilia",
+			"pool": "limited",
+			"unitId": 109901,
+			"jpDate": "2019-06-18"
+		}, {
+			"name": "Suzuna (Summer)",
+			"pool": "limited",
+			"unitId": 110001,
+			"jpDate": "2019-06-30"
+		}, {
+			"name": "Io (Summer)",
+			"pool": "event",
+			"unitId": 110101,
+			"jpDate": "2019-06-30"
+		}, {
+			"name": "Saren (Summer)",
+			"pool": "limited",
+			"unitId": 110301,
+			"jpDate": "2019-07-18"
+		}, {
+			"name": "Makoto (Summer)",
+			"pool": "limited",
+			"unitId": 110401,
+			"jpDate": "2019-07-31"
+		}, {
+			"name": "Kaori (Summer)",
+			"pool": "event",
+			"unitId": 110501,
+			"jpDate": "2019-07-31"
+		}, {
+			"name": "Maho (Summer)",
+			"pool": "limited",
+			"unitId": 110601,
+			"jpDate": "2019-08-15"
+		}, {
+			"name": "Neneka",
+			"pool": "limited",
+			"unitId": 107001,
+			"jpDate": "2019-08-31"
+		}, {
+			"name": "Aoi (Transfer Student)",
+			"pool": "permanent",
+			"unitId": 110701,
+			"jpDate": "2019-09-03"
+		}, {
+			"name": "Chloe",
+			"pool": "permanent",
+			"unitId": 110801,
+			"jpDate": "2019-09-16"
+		}, {
+			"name": "Misogi (Halloween)",
+			"pool": "event",
+			"unitId": 111201,
+			"jpDate": "2019-09-30"
+		}, {
+			"name": "Kyoka (Halloween)",
+			"pool": "limited",
+			"unitId": 111101,
+			"jpDate": "2019-09-30"
+		}, {
+			"name": "Mimi (Halloween)",
+			"pool": "permanent",
+			"unitId": 111301,
+			"jpDate": "2019-10-16"
+		}, {
+			"name": "Luna",
+			"pool": "permanent",
+			"unitId": 111401,
+			"jpDate": "2019-10-31"
+		}, {
+			"name": "Kaya",
+			"pool": "permanent",
+			"unitId": 106501,
+			"jpDate": "2019-11-15"
+		}, {
+			"name": "Nozomi (Christmas)",
+			"pool": "event",
+			"unitId": 111601,
+			"jpDate": "2019-11-30"
+		}, {
+			"name": "Christina (Christmas)",
+			"pool": "limited",
+			"unitId": 111501,
+			"jpDate": "2019-11-30"
+		}, {
+			"name": "Illya (Christmas)",
+			"pool": "permanent",
+			"unitId": 111701,
+			"jpDate": "2019-12-20"
+		}, {
+			"name": "Karyl (New Year)",
+			"pool": "limited",
+			"unitId": 112001,
+			"jpDate": "2019-12-31"
+		}, {
+			"name": "Suzume (New Year)",
+			"pool": "event",
+			"unitId": 112101,
+			"jpDate": "2019-12-31"
+		}, {
+			"name": "Kokkoro (New Year)",
+			"pool": "limited",
+			"unitId": 111901,
+			"jpDate": "2020-01-16"
+		}, {
+			"name": "Kasumi (Magical Girl)",
+			"pool": "permanent",
+			"unitId": 112201,
+			"jpDate": "2020-01-31"
+		}, {
+			"name": "Shiori (Magical Girl)",
+			"pool": "event",
+			"unitId": 112301,
+			"jpDate": "2020-01-31"
+		}, {
+			"name": "Pecorine (Princess)",
+			"pool": "limited",
+			"unitId": 180401,
+			"jpDate": "2020-02-15"
+		}, {
+			"name": "Mio",
+			"pool": "event",
+			"unitId": 112601,
+			"jpDate": "2020-02-29"
+		}, {
+			"name": "Uzuki",
+			"pool": "limited",
+			"unitId": 112401,
+			"jpDate": "2020-02-29"
+		}, {
+			"name": "Rin [iDOLM@STER]",
+			"pool": "limited",
+			"unitId": 112501,
+			"jpDate": "2020-03-13"
+		}, {
+			"name": "Yuni",
+			"pool": "permanent",
+			"unitId": 111001,
+			"jpDate": "2020-03-31"
+		}, {
+			"name": "Chieru",
+			"pool": "permanent",
+			"unitId": 110901,
+			"jpDate": "2020-04-15"
+		}, {
+			"name": "Rin (Ranger)",
+			"pool": "permanent",
+			"unitId": 112701,
+			"jpDate": "2020-04-30"
+		}, {
+			"name": "Mahiru (Ranger)",
+			"pool": "permanent",
+			"unitId": 112801,
+			"jpDate": "2020-05-15"
+		}, {
+			"name": "Kokkoro (Princess)",
+			"pool": "limited",
+			"unitId": 180501,
+			"jpDate": "2020-05-31"
+		}, {
+			"name": "Ayumi (Wonderland)",
+			"pool": "event",
+			"unitId": 113001,
+			"jpDate": "2020-05-31"
+		}, {
+			"name": "Rino (Wonderland)",
+			"pool": "permanent",
+			"unitId": 112901,
+			"jpDate": "2020-06-03"
+		}, {
+			"name": "Inori",
+			"pool": "permanent",
+			"unitId": 106601,
+			"jpDate": "2020-06-17"
+		}, {
+			"name": "Yui (Princess)",
+			"pool": "limited",
+			"unitId": 180201,
+			"jpDate": "2020-06-30"
+		}, {
+			"name": "Anna (Summer)",
+			"pool": "event",
+			"unitId": 113201,
+			"jpDate": "2020-06-30"
+		}, {
+			"name": "Ruka (Summer)",
+			"pool": "limited",
+			"unitId": 113101,
+			"jpDate": "2020-07-03"
+		}, {
+			"name": "Nanaka (Summer)",
+			"pool": "permanent",
+			"unitId": 113301,
+			"jpDate": "2020-07-15"
+		}, {
+			"name": "Hatsune (Summer)",
+			"pool": "limited",
+			"unitId": 113401,
+			"jpDate": "2020-07-31"
+		}, {
+			"name": "Misato (Summer)",
+			"pool": "event",
+			"unitId": 113501,
+			"jpDate": "2020-07-31"
+		}, {
+			"name": "Jun (Summer)",
+			"pool": "permanent",
+			"unitId": 113601,
+			"jpDate": "2020-08-15"
+		}, {
+			"name": "Labyrista",
+			"pool": "limited",
+			"unitId": 106801,
+			"jpDate": "2020-08-31"
+		}, {
+			"name": "Akari (Angel)",
+			"pool": "permanent",
+			"unitId": 113701,
+			"jpDate": "2020-09-03"
+		}, {
+			"name": "Yori (Angel)",
+			"pool": "permanent",
+			"unitId": 113801,
+			"jpDate": "2020-09-19"
+		}, {
+			"name": "Tsumugi (Halloween)",
+			"pool": "permanent",
+			"unitId": 113901,
+			"jpDate": "2020-09-30"
+		}, {
+			"name": "Matsuri (Halloween)",
+			"pool": "event",
+			"unitId": 114101,
+			"jpDate": "2020-09-30"
+		}, {
+			"name": "Rei (Halloween)",
+			"pool": "permanent",
+			"unitId": 114001,
+			"jpDate": "2020-10-15"
+		}, {
+			"name": "Monika (Magical Girl)",
+			"pool": "permanent",
+			"unitId": 114201,
+			"jpDate": "2020-10-31"
+		}, {
+			"name": "Tomo (Magical Girl)",
+			"pool": "permanent",
+			"unitId": 114301,
+			"jpDate": "2020-11-21"
+		}, {
+			"name": "Akino (Christmas)",
+			"pool": "limited",
+			"unitId": 114401,
+			"jpDate": "2020-11-30"
+		}, {
+			"name": "Yukari (Christmas)",
+			"pool": "event",
+			"unitId": 114601,
+			"jpDate": "2020-11-30"
+		}, {
+			"name": "Saren (Christmas)",
+			"pool": "permanent",
+			"unitId": 114501,
+			"jpDate": "2020-12-21"
+		}, {
+			"name": "Hiyori (Princess)",
+			"pool": "limited",
+			"unitId": 180101,
+			"jpDate": "2020-12-31"
+		}, {
+			"name": "Muimi (New Year)",
+			"pool": "event",
+			"unitId": 114701,
+			"jpDate": "2020-12-31"
+		}, {
+			"name": "Pecorine (New Year)",
+			"pool": "limited",
+			"unitId": 111801,
+			"jpDate": "2021-01-03"
+		}, {
+			"name": "Neneka (New Year)",
+			"pool": "limited",
+			"unitId": 115001,
+			"jpDate": "2021-01-22"
+		}, {
+			"name": "Yui (Ceremonial Dress)",
+			"pool": "event",
+			"unitId": 115601,
+			"jpDate": "2021-01-31"
+		}, {
+			"name": "Kokkoro (Ceremonial Dress)",
+			"pool": "limited",
+			"unitId": 115501,
+			"jpDate": "2021-01-31"
+		}, {
+			"name": "Sheffy",
+			"pool": "permanent",
+			"unitId": 106401,
+			"jpDate": "2021-02-15"
+		}, {
+			"name": "Kasumi (Summer)",
+			"pool": "permanent",
+			"unitId": -1,
+			"jpDate": "2021-02-23"
+		}, {
+			"name": "Lima (Cinderella)",
+			"pool": "limited",
+			"unitId": -1,
+			"jpDate": "2021-02-28"
+		}, {
+			"name": "Karyl (Princess)",
+			"pool": "limited",
+			"unitId": -1,
+			"jpDate": "2021-02-28"
+		}, {
+			"name": "Makoto (Cinderella)",
+			"pool": "permanent",
+			"unitId": -1,
+			"jpDate": "2021-03-03"
+		}, {
+			"name": "Maho (Cinderella)",
+			"pool": "permanent",
+			"unitId": -1,
+			"jpDate": "2021-03-22"
+		}, {
+			"name": "Chieru (School Festival)",
+			"pool": "permanent",
+			"unitId": -1,
+			"jpDate": "2021-03-31"
+		}, {
+			"name": "Chloe (School Festival)",
+			"pool": "permanent",
+			"unitId": -1,
+			"jpDate": "2021-04-15"
+		}
+	],
+	"uniqueEquipment": [
+		{
+			"name": "Hiyori",
+			"unitId": 100101,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Yui",
+			"unitId": 100201,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Rei",
+			"unitId": 100301,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Kurumi",
+			"unitId": 102101,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Saren",
+			"unitId": 102801,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Nozomi",
+			"unitId": 102901,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Pecorine",
+			"unitId": 105801,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Kokkoro",
+			"unitId": 105901,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Karyl",
+			"unitId": 106001,
+			"jpDate": "2018-11-26"
+		}, {
+			"name": "Ninon",
+			"unitId": 103001,
+			"jpDate": "2018-12-31"
+		}, {
+			"name": "Akino",
+			"unitId": 103201,
+			"jpDate": "2018-12-31"
+		}, {
+			"name": "Yukari",
+			"unitId": 103401,
+			"jpDate": "2018-12-31"
+		}, {
+			"name": "Tamaki",
+			"unitId": 104601,
+			"jpDate": "2018-12-31"
+		}, {
+			"name": "Mifuyu",
+			"unitId": 104801,
+			"jpDate": "2018-12-31"
+		}, {
+			"name": "Arisa",
+			"unitId": 106301,
+			"jpDate": "2018-12-31"
+		}, {
+			"name": "Akari",
+			"unitId": 100601,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Anna",
+			"unitId": 100901,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Rino",
+			"unitId": 101101,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Yori",
+			"unitId": 102201,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Eriko",
+			"unitId": 102701,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Shinobu",
+			"unitId": 103101,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Jun",
+			"unitId": 104701,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Shizuru",
+			"unitId": 104901,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Mitsuki",
+			"unitId": 105101,
+			"jpDate": "2019-01-31"
+		}, {
+			"name": "Hatsune",
+			"unitId": 101201,
+			"jpDate": "2019-02-28"
+		}, {
+			"name": "Kaori",
+			"unitId": 101701,
+			"jpDate": "2019-02-28"
+		}, {
+			"name": "Rin",
+			"unitId": 102601,
+			"jpDate": "2019-02-28"
+		}, {
+			"name": "Mahiru",
+			"unitId": 103301,
+			"jpDate": "2019-02-28"
+		}, {
+			"name": "Makoto",
+			"unitId": 104301,
+			"jpDate": "2019-02-28"
+		}, {
+			"name": "Lima",
+			"unitId": 105201,
+			"jpDate": "2019-02-28"
+		}, {
+			"name": "Matsuri",
+			"unitId": 100501,
+			"jpDate": "2019-03-31"
+		}, {
+			"name": "Misato",
+			"unitId": 101501,
+			"jpDate": "2019-03-31"
+		}, {
+			"name": "Io",
+			"unitId": 101801,
+			"jpDate": "2019-03-31"
+		}, {
+			"name": "Tomo",
+			"unitId": 103701,
+			"jpDate": "2019-03-31"
+		}, {
+			"name": "Shiori",
+			"unitId": 103801,
+			"jpDate": "2019-03-31"
+		}, {
+			"name": "Aoi",
+			"unitId": 104001,
+			"jpDate": "2019-03-31"
+		}, {
+			"name": "Yuki",
+			"unitId": 100801,
+			"jpDate": "2019-04-30"
+		}, {
+			"name": "Ayane",
+			"unitId": 102301,
+			"jpDate": "2019-04-30"
+		}, {
+			"name": "Suzume",
+			"unitId": 102501,
+			"jpDate": "2019-04-30"
+		}, {
+			"name": "Kuka",
+			"unitId": 104501,
+			"jpDate": "2019-04-30"
+		}, {
+			"name": "Monika",
+			"unitId": 105301,
+			"jpDate": "2019-04-30"
+		}, {
+			"name": "Djeeta",
+			"unitId": 105701,
+			"jpDate": "2019-04-30"
+		}, {
+			"name": "Misogi",
+			"unitId": 100401,
+			"jpDate": "2019-05-31"
+		}, {
+			"name": "Miyako",
+			"unitId": 100701,
+			"jpDate": "2019-05-31"
+		}, {
+			"name": "Mimi",
+			"unitId": 102001,
+			"jpDate": "2019-05-31"
+		}, {
+			"name": "Kyoka",
+			"unitId": 103601,
+			"jpDate": "2019-05-31"
+		}, {
+			"name": "Illya",
+			"unitId": 104401,
+			"jpDate": "2019-05-31"
+		}, {
+			"name": "Misaki",
+			"unitId": 105001,
+			"jpDate": "2019-05-31"
+		}, {
+			"name": "Maho",
+			"unitId": 101001,
+			"jpDate": "2019-06-30"
+		}, {
+			"name": "Suzuna",
+			"unitId": 101601,
+			"jpDate": "2019-06-30"
+		}, {
+			"name": "Chika",
+			"unitId": 104201,
+			"jpDate": "2019-06-30"
+		}, {
+			"name": "Tsumugi",
+			"unitId": 105401,
+			"jpDate": "2019-06-30"
+		}, {
+			"name": "Pecorine (Summer)",
+			"unitId": 107501,
+			"jpDate": "2019-07-13"
+		}, {
+			"name": "Kokkoro (Summer)",
+			"unitId": 107601,
+			"jpDate": "2019-07-13"
+		}, {
+			"name": "Karyl (Summer)",
+			"unitId": 107801,
+			"jpDate": "2019-07-13"
+		}, {
+			"name": "Nanaka",
+			"unitId": 101301,
+			"jpDate": "2019-07-31"
+		}, {
+			"name": "Kasumi",
+			"unitId": 101401,
+			"jpDate": "2019-07-31"
+		}, {
+			"name": "Ruka",
+			"unitId": 105601,
+			"jpDate": "2019-07-31"
+		}, {
+			"name": "Suzume (Summer)",
+			"unitId": 107701,
+			"jpDate": "2019-08-10"
+		}, {
+			"name": "Tamaki (Summer)",
+			"unitId": 107901,
+			"jpDate": "2019-08-10"
+		}, {
+			"name": "Mifuyu (Summer)",
+			"unitId": 108001,
+			"jpDate": "2019-08-10"
+		}, {
+			"name": "Ayumi",
+			"unitId": 105501,
+			"jpDate": "2019-08-31"
+		}, {
+			"name": "Shinobu (Halloween)",
+			"unitId": 108101,
+			"jpDate": "2019-10-11"
+		}, {
+			"name": "Miyako (Halloween)",
+			"unitId": 108201,
+			"jpDate": "2019-10-11"
+		}, {
+			"name": "Misaki (Halloween)",
+			"unitId": 108301,
+			"jpDate": "2019-10-11"
+		}, {
+			"name": "Chika (Christmas)",
+			"unitId": 108401,
+			"jpDate": "2019-12-11"
+		}, {
+			"name": "Ayane (Christmas)",
+			"unitId": 108601,
+			"jpDate": "2019-12-11"
+		}, {
+			"name": "Kurumi (Christmas)",
+			"unitId": 108501,
+			"jpDate": "2019-12-11"
+		}, {
+			"name": "Rei (New Year)",
+			"unitId": 108901,
+			"jpDate": "2020-01-10"
+		}, {
+			"name": "Yui (New Year)",
+			"unitId": 108801,
+			"jpDate": "2020-01-10"
+		}, {
+			"name": "Hiyori (New Year)",
+			"unitId": 108701,
+			"jpDate": "2020-01-10"
+		}, {
+			"name": "Eriko (Valentine)",
+			"unitId": 109001,
+			"jpDate": "2020-02-10"
+		}, {
+			"name": "Shizuru (Valentine)",
+			"unitId": 109101,
+			"jpDate": "2020-02-10"
+		}, {
+			"name": "Christina",
+			"unitId": 107101,
+			"jpDate": "2020-02-15"
+		}, {
+			"name": "Anne",
+			"unitId": 109201,
+			"jpDate": "2020-04-10"
+		}, {
+			"name": "Lou",
+			"unitId": 109301,
+			"jpDate": "2020-04-10"
+		}, {
+			"name": "Grea",
+			"unitId": 109401,
+			"jpDate": "2020-04-10"
+		}, {
+			"name": "Kuka (Ooedo)",
+			"unitId": 109501,
+			"jpDate": "2020-05-10"
+		}, {
+			"name": "Ninon (Ooedo)",
+			"unitId": 109601,
+			"jpDate": "2020-05-10"
+		}, {
+			"name": "Suzuna (Summer)",
+			"unitId": 110001,
+			"jpDate": "2020-06-10"
+		}, {
+			"name": "Io (Summer)",
+			"unitId": 110101,
+			"jpDate": "2020-06-10"
+		}, {
+			"name": "Saren (Summer)",
+			"unitId": 110301,
+			"jpDate": "2020-06-10"
+		}, {
+			"name": "Muimi",
+			"unitId": 106101,
+			"jpDate": "2020-06-30"
+		}, {
+			"name": "Makoto (Summer)",
+			"unitId": 110401,
+			"jpDate": "2020-07-10"
+		}, {
+			"name": "Kaori (Summer)",
+			"unitId": 110501,
+			"jpDate": "2020-07-10"
+		}, {
+			"name": "Maho (Summer)",
+			"unitId": 110601,
+			"jpDate": "2020-07-10"
+		}, {
+			"name": "Aoi (Transfer Student)",
+			"unitId": 110701,
+			"jpDate": "2020-08-10"
+		}, {
+			"name": "Chloe",
+			"unitId": 110801,
+			"jpDate": "2020-08-10"
+		}, {
+			"name": "Misogi (Halloween)",
+			"unitId": 111201,
+			"jpDate": "2020-09-14"
+		}, {
+			"name": "Mimi (Halloween)",
+			"unitId": 111301,
+			"jpDate": "2020-09-14"
+		}, {
+			"name": "Kyoka (Halloween)",
+			"unitId": 111101,
+			"jpDate": "2020-09-14"
+		}, {
+			"name": "Luna",
+			"unitId": 111401,
+			"jpDate": "2020-10-10"
+		}, {
+			"name": "Kaya",
+			"unitId": 106501,
+			"jpDate": "2020-10-10"
+		}, {
+			"name": "Rem",
+			"unitId": 109701,
+			"jpDate": "2020-11-10"
+		}, {
+			"name": "Ram",
+			"unitId": 109801,
+			"jpDate": "2020-11-10"
+		}, {
+			"name": "Emilia",
+			"unitId": 109901,
+			"jpDate": "2020-11-10"
+		}, {
+			"name": "Christina (Christmas)",
+			"unitId": 111501,
+			"jpDate": "2020-12-10"
+		}, {
+			"name": "Nozomi (Christmas)",
+			"unitId": 111601,
+			"jpDate": "2020-12-10"
+		}, {
+			"name": "Illya (Christmas)",
+			"unitId": 111701,
+			"jpDate": "2020-12-10"
+		}, {
+			"name": "Karyl (New Year)",
+			"unitId": 112001,
+			"jpDate": "2021-01-12"
+		}, {
+			"name": "Kokkoro (New Year)",
+			"unitId": 111901,
+			"jpDate": "2021-01-12"
+		}, {
+			"name": "Suzume (New Year)",
+			"unitId": 112101,
+			"jpDate": "2021-01-12"
+		}, {
+			"name": "Kasumi (Magical Girl)",
+			"unitId": 112201,
+			"jpDate": "2021-02-10"
+		}, {
+			"name": "Shiori (Magical Girl)",
+			"unitId": 112301,
+			"jpDate": "2021-02-10"
+		}, {
+			"name": "Rin [iDOLM@STER]",
+			"unitId": 112501,
+			"jpDate": "2021-03-08"
+		}, {
+			"name": "Uzuki",
+			"unitId": 112401,
+			"jpDate": "2021-03-08"
+		}, {
+			"name": "Mio",
+			"unitId": 112601,
+			"jpDate": "2021-03-08"
+		}, {
+			"name": "Yuni",
+			"unitId": 111001,
+			"jpDate": "2021-04-08"
+		}, {
+			"name": "Chieru",
+			"unitId": 110901,
+			"jpDate": "2021-04-08"
+		}
+	],
+	"sixStar": [
+		{
+			"name": "Pecorine",
+			"unitId": 105801,
+			"jpDate": "2019-08-31"
+		}, {
+			"name": "Kokkoro",
+			"unitId": 105901,
+			"jpDate": "2019-08-31"
+		}, {
+			"name": "Karyl",
+			"unitId": 106001,
+			"jpDate": "2019-08-31"
+		}, {
+			"name": "Rino",
+			"unitId": 101101,
+			"jpDate": "2019-09-30"
+		}, {
+			"name": "Lima",
+			"unitId": 105201,
+			"jpDate": "2019-10-31"
+		}, {
+			"name": "Io",
+			"unitId": 101801,
+			"jpDate": "2019-11-30"
+		}, {
+			"name": "Yukari",
+			"unitId": 103401,
+			"jpDate": "2019-12-31"
+		}, {
+			"name": "Maho",
+			"unitId": 101001,
+			"jpDate": "2020-01-31"
+		}, {
+			"name": "Yui",
+			"unitId": 100201,
+			"jpDate": "2020-02-29"
+		}, {
+			"name": "Hiyori",
+			"unitId": 100101,
+			"jpDate": "2020-02-29"
+		}, {
+			"name": "Rei",
+			"unitId": 100301,
+			"jpDate": "2020-02-29"
+		}, {
+			"name": "Hatsune",
+			"unitId": 101201,
+			"jpDate": "2020-03-31"
+		}, {
+			"name": "Tamaki",
+			"unitId": 104601,
+			"jpDate": "2020-04-30"
+		}, {
+			"name": "Mifuyu",
+			"unitId": 104801,
+			"jpDate": "2020-05-31"
+		}, {
+			"name": "Shizuru",
+			"unitId": 104901,
+			"jpDate": "2020-06-30"
+		}, {
+			"name": "Ayane",
+			"unitId": 102301,
+			"jpDate": "2020-08-06"
+		}, {
+			"name": "Saren",
+			"unitId": 102801,
+			"jpDate": "2020-09-07"
+		}, {
+			"name": "Akino",
+			"unitId": 103201,
+			"jpDate": "2020-09-07"
+		}, {
+			"name": "Ninon",
+			"unitId": 103001,
+			"jpDate": "2020-10-07"
+		}, {
+			"name": "Mahiru",
+			"unitId": 103301,
+			"jpDate": "2020-11-05"
+		}, {
+			"name": "Suzuna",
+			"unitId": 101601,
+			"jpDate": "2020-12-07"
+		}, {
+			"name": "Akari",
+			"unitId": 100601,
+			"jpDate": "2021-01-07"
+		}, {
+			"name": "Yori",
+			"unitId": 102201,
+			"jpDate": "2021-02-08"
+		}, {
+			"name": "Misogi",
+			"unitId": -1,
+			"jpDate": "2021-03-05"
+		}, {
+			"name": "Mimi",
+			"unitId": -1,
+			"jpDate": "2021-03-05"
+		}, {
+			"name": "Kyoka",
+			"unitId": -1,
+			"jpDate": "2021-03-05"
+		}, {
+			"name": "Nozomi",
+			"unitId": -1,
+			"jpDate": "2021-04-07"
+		}
+	],
+	"levelCap": [
+		{
+			"level": 80,
+			"jpDate": "2018-02-15"
+		}, {
+			"level": 85,
+			"jpDate": "2018-03-15"
+		}, {
+			"level": 88,
+			"jpDate": "2018-04-16"
+		}, {
+			"level": 90,
+			"jpDate": "2018-04-30"
+		}, {
+			"level": 93,
+			"jpDate": "2018-05-15"
+		}, {
+			"level": 95,
+			"jpDate": "2018-05-31"
+		}, {
+			"level": 98,
+			"jpDate": "2018-06-15"
+		}, {
+			"level": 100,
+			"jpDate": "2018-06-30"
+		}, {
+			"level": 102,
+			"jpDate": "2018-07-17"
+		}, {
+			"level": 105,
+			"jpDate": "2018-08-15"
+		}, {
+			"level": 107,
+			"jpDate": "2018-09-18"
+		}, {
+			"level": 110,
+			"jpDate": "2018-10-18"
+		}, {
+			"level": 112,
+			"jpDate": "2018-11-19"
+		}, {
+			"level": 115,
+			"jpDate": "2018-12-19"
+		}, {
+			"level": 118,
+			"jpDate": "2019-01-18"
+		}, {
+			"level": 121,
+			"jpDate": "2019-02-15"
+		}, {
+			"level": 124,
+			"jpDate": "2019-03-19"
+		}, {
+			"level": 127,
+			"jpDate": "2019-04-19"
+		}, {
+			"level": 130,
+			"jpDate": "2019-05-17"
+		}, {
+			"level": 133,
+			"jpDate": "2019-06-18"
+		}, {
+			"level": 136,
+			"jpDate": "2019-07-18"
+		}, {
+			"level": 139,
+			"jpDate": "2019-08-15"
+		}, {
+			"level": 142,
+			"jpDate": "2019-09-16"
+		}, {
+			"level": 145,
+			"jpDate": "2019-10-16"
+		}, {
+			"level": 148,
+			"jpDate": "2019-11-15"
+		}, {
+			"level": 151,
+			"jpDate": "2019-12-20"
+		}, {
+			"level": 154,
+			"jpDate": "2020-01-16"
+		}, {
+			"level": 157,
+			"jpDate": "2020-02-15"
+		}, {
+			"level": 160,
+			"jpDate": "2020-04-15"
+		}, {
+			"level": 163,
+			"jpDate": "2020-05-15"
+		}, {
+			"level": 166,
+			"jpDate": "2020-06-17"
+		}, {
+			"level": 169,
+			"jpDate": "2020-07-15"
+		}, {
+			"level": 172,
+			"jpDate": "2020-08-15"
+		}, {
+			"level": 175,
+			"jpDate": "2020-09-19"
+		}, {
+			"level": 178,
+			"jpDate": "2020-10-15"
+		}, {
+			"level": 181,
+			"jpDate": "2020-11-21"
+		}, {
+			"level": 184,
+			"jpDate": "2020-12-21"
+		}, {
+			"level": 187,
+			"jpDate": "2021-01-22"
+		}, {
+			"level": 190,
+			"jpDate": "2021-02-15"
+		}, {
+			"level": 193,
+			"jpDate": "2021-03-16"
+		}, {
+			"level": 196,
+			"jpDate": "2021-04-15"
+		}
+	],
+	"furnitureLevelCap": [
+		{
+			"level": 10,
+			"jpDate": "2018-02-15"
+		}, {
+			"level": 13,
+			"jpDate": "2019-03-31"
+		}, {
+			"level": 14,
+			"jpDate": "2019-05-17"
+		}, {
+			"level": 15,
+			"jpDate": "2019-09-16"
+		}, {
+			"level": 16,
+			"jpDate": "2019-12-20"
+		}, {
+			"level": 17,
+			"jpDate": "2020-04-15"
+		}, {
+			"level": 18,
+			"jpDate": "2020-08-15"
+		}, {
+			"level": 19,
+			"jpDate": "2020-11-21"
+		}, {
+			"level": 20,
+			"jpDate": "2021-02-15"
+		}
+	],
+	"grotto": [
+		{
+			"level": 6,
+			"jpDate": "2018-11-29"
+		}, {
+			"level": 7,
+			"jpDate": "2019-02-16"
+		}, {
+			"level": 8,
+			"jpDate": "2019-11-15"
+		}, {
+			"level": 9,
+			"jpDate": "2020-02-15"
+		}, {
+			"level": 10,
+			"jpDate": "2020-08-20"
+		}, {
+			"level": 11,
+			"jpDate": "2021-02-15"
+		}
+	],
+	"dungeon": [
+		{
+			"level": "Extreme",
+			"jpDate": "2018-07-20"
+		}, {
+			"level": "Extreme II",
+			"jpDate": "2019-02-28"
+		}, {
+			"level": "Extreme III",
+			"jpDate": "2020-02-29"
+		}, {
+			"level": "Extreme IV",
+			"jpDate": "2021-04-12"
+		}
+	],
+	"ranks": [
+		{
+			"rank": "8-3",
+			"questArea": 9,
+			"jpDate": "2018-03-15"
+		}, {
+			"rank": "8-5",
+			"questArea": 10,
+			"jpDate": "2018-04-16"
+		}, {
+			"rank": "9-3",
+			"questArea": 11,
+			"jpDate": "2018-05-15"
+		}, {
+			"rank": "9-5",
+			"questArea": 12,
+			"jpDate": "2018-06-15"
+		}, {
+			"rank": "10-3",
+			"questArea": 13,
+			"jpDate": "2018-07-17"
+		}, {
+			"rank": "10-4",
+			"questArea": 14,
+			"jpDate": "2018-08-15"
+		}, {
+			"rank": "10-5",
+			"questArea": 15,
+			"jpDate": "2018-09-18"
+		}, {
+			"rank": "11-3",
+			"questArea": 16,
+			"jpDate": "2018-10-18"
+		}, {
+			"rank": "11-4",
+			"questArea": 17,
+			"jpDate": "2018-11-19"
+		}, {
+			"rank": "11-5",
+			"questArea": 18,
+			"jpDate": "2018-12-19"
+		}, {
+			"rank": "12-3",
+			"questArea": 19,
+			"jpDate": "2019-01-18"
+		}, {
+			"rank": "12-4",
+			"questArea": 20,
+			"jpDate": "2019-02-15"
+		}, {
+			"rank": "12-5",
+			"questArea": 21,
+			"jpDate": "2019-03-19"
+		}, {
+			"rank": "13-3",
+			"questArea": 22,
+			"jpDate": "2019-04-19"
+		}, {
+			"rank": "13-4",
+			"questArea": 23,
+			"jpDate": "2019-05-17"
+		}, {
+			"rank": "13-5",
+			"questArea": 24,
+			"jpDate": "2019-06-18"
+		}, {
+			"rank": "14-3",
+			"questArea": 25,
+			"jpDate": "2019-07-18"
+		}, {
+			"rank": "14-4",
+			"questArea": 26,
+			"jpDate": "2019-08-15"
+		}, {
+			"rank": "14-5",
+			"questArea": 27,
+			"jpDate": "2019-09-16"
+		}, {
+			"rank": "15-3",
+			"questArea": 28,
+			"jpDate": "2019-10-16"
+		}, {
+			"rank": "15-4",
+			"questArea": 29,
+			"jpDate": "2019-11-15"
+		}, {
+			"rank": "15-5",
+			"questArea": 30,
+			"jpDate": "2019-12-20"
+		}, {
+			"rank": "16-3",
+			"questArea": 31,
+			"jpDate": "2020-01-16"
+		}, {
+			"rank": "16-3",
+			"questArea": 31,
+			"jpDate": "2020-01-16"
+		}, {
+			"rank": "16-4",
+			"questArea": 32,
+			"jpDate": "2020-02-15"
+		}, {
+			"rank": "16-5",
+			"questArea": 33,
+			"jpDate": "2020-04-15"
+		}, {
+			"rank": "17-3",
+			"questArea": 34,
+			"jpDate": "2020-05-15"
+		}, {
+			"rank": "17-4",
+			"questArea": 35,
+			"jpDate": "2020-06-17"
+		}, {
+			"rank": "17-5",
+			"questArea": 36,
+			"jpDate": "2020-07-15"
+		}, {
+			"rank": "18-3",
+			"questArea": 37,
+			"jpDate": "2020-08-15"
+		}, {
+			"rank": "18-4",
+			"questArea": 38,
+			"jpDate": "2020-09-19"
+		}, {
+			"rank": "18-5",
+			"questArea": 39,
+			"jpDate": "2020-10-15"
+		}, {
+			"rank": "19-3",
+			"questArea": 40,
+			"jpDate": "2020-11-21"
+		}, {
+			"rank": "19-4",
+			"questArea": 41,
+			"jpDate": "2020-12-21"
+		}, {
+			"rank": "19-5",
+			"questArea": 42,
+			"jpDate": "2021-01-22"
+		}, {
+			"rank": "20-3",
+			"questArea": 43,
+			"jpDate": "2021-02-15"
+		}, {
+			"rank": "20-4",
+			"questArea": 44,
+			"jpDate": "2021-03-16"
+		}, {
+			"rank": "20-5",
+			"questArea": 45,
+			"jpDate": "2021-04-15"
+		}
+	],
+	"events": [
+		{
+
+		}
+	],
+	"shardsInShop": [
+		{
+			"name": "Rin",
+			"unitId": 102601,
+			"shop": "dungeon",
+			"jpDate": "2018-06-19"
+		}, {
+			"name": "Ayane",
+			"unitId": 102301,
+			"shop": "arena",
+			"jpDate": "2018-08-15"
+		}, {
+			"name": "Misato",
+			"unitId": 101501,
+			"shop": "dungeon",
+			"jpDate": "2018-10-18"
+		}, {
+			"name": "Tsumugi",
+			"unitId": 105401,
+			"shop": "princessArena",
+			"jpDate": "2018-12-19"
+		}, {
+			"name": "Matsuri",
+			"unitId": 100501,
+			"shop": "dungeon",
+			"jpDate": "2019-03-19"
+		}, {
+			"name": "Christina",
+			"unitId": 107101,
+			"shop": "master",
+			"jpDate": "2019-05-17"
+		}, {
+			"name": "Muimi",
+			"unitId": 106101,
+			"shop": "master",
+			"jpDate": "2019-05-17"
+		}, {
+			"name": "Nanaka",
+			"unitId": 101301,
+			"shop": "arena",
+			"jpDate": "2019-05-17"
+		}, {
+			"name": "Pecorine (Summer)",
+			"unitId": 107501,
+			"shop": "master",
+			"jpDate": "2019-07-18"
+		}, {
+			"name": "Karyl (Summer)",
+			"unitId": 107801,
+			"shop": "master",
+			"jpDate": "2019-07-18"
+		}, {
+			"name": "Suzume (Summer)",
+			"unitId": 107701,
+			"shop": "master",
+			"jpDate": "2019-08-15"
+		}, {
+			"name": "Tamaki (Summer)",
+			"unitId": 107901,
+			"shop": "master",
+			"jpDate": "2019-08-15"
+		}, {
+			"name": "Ayumi",
+			"unitId": 105501,
+			"shop": "dungeon",
+			"jpDate": "2019-08-28"
+		}, {
+			"name": "Neneka",
+			"unitId": 107001,
+			"shop": "master",
+			"jpDate": "2019-09-18"
+		}, {
+			"name": "Shinobu (Halloween)",
+			"unitId": 108101,
+			"shop": "master",
+			"jpDate": "2019-10-18"
+		}, {
+			"name": "Misaki (Halloween)",
+			"unitId": 108301,
+			"shop": "master",
+			"jpDate": "2019-10-18"
+		}, {
+			"name": "Chika (Christmas)",
+			"unitId": 108401,
+			"shop": "master",
+			"jpDate": "2019-12-20"
+		}, {
+			"name": "Ayane (Christmas)",
+			"unitId": 108601,
+			"shop": "master",
+			"jpDate": "2019-12-20"
+		}, {
+			"name": "Yui (New Year)",
+			"unitId": 108801,
+			"shop": "master",
+			"jpDate": "2020-01-16"
+		}, {
+			"name": "Hiyori (New Year)",
+			"unitId": 108701,
+			"shop": "master",
+			"jpDate": "2020-01-16"
+		}, {
+			"name": "Shizuru (Valentine)",
+			"unitId": 109101,
+			"shop": "master",
+			"jpDate": "2020-02-15"
+		}, {
+			"name": "Pecorine (Princess)",
+			"unitId": 180401,
+			"shop": "master",
+			"jpDate": "2020-03-16"
+		}, {
+			"name": "Kokkoro (Princess)",
+			"unitId": 180501,
+			"shop": "master",
+			"jpDate": "2020-06-17"
+		}, {
+			"name": "Suzuna (Summer)",
+			"unitId": 110001,
+			"shop": "master",
+			"jpDate": "2020-06-17"
+		}, {
+			"name": "Saren (Summer)",
+			"unitId": 110301,
+			"shop": "master",
+			"jpDate": "2020-06-17"
+		}, {
+			"name": "Yui (Princess)",
+			"unitId": 180201,
+			"shop": "master",
+			"jpDate": "2020-07-15"
+		}, {
+			"name": "Makoto (Summer)",
+			"unitId": 110401,
+			"shop": "master",
+			"jpDate": "2020-07-15"
+		}, {
+			"name": "Maho (Summer)",
+			"unitId": 110601,
+			"shop": "master",
+			"jpDate": "2020-07-15"
+		}, {
+			"name": "Labyrista",
+			"unitId": 106801,
+			"shop": "master",
+			"jpDate": "2020-09-19"
+		}, {
+			"name": "Kyoka (Halloween)",
+			"unitId": 111101,
+			"shop": "master",
+			"jpDate": "2020-09-19"
+		}, {
+			"name": "Rem",
+			"unitId": 109701,
+			"shop": "master",
+			"jpDate": "2020-11-21"
+		}, {
+			"name": "Emilia",
+			"unitId": 109901,
+			"shop": "master",
+			"jpDate": "2020-11-21"
+		}, {
+			"name": "Christina (Christmas)",
+			"unitId": 111501,
+			"shop": "master",
+			"jpDate": "2020-12-21"
+		}, {
+			"name": "Karyl (New Year)",
+			"unitId": 112001,
+			"shop": "master",
+			"jpDate": "2021-01-22"
+		}, {
+			"name": "Kokkoro (New Year)",
+			"unitId": 111901,
+			"shop": "master",
+			"jpDate": "2021-01-22"
+		}, {
+			"name": "Hiyori (Princess)",
+			"unitId": 180101,
+			"shop": "master",
+			"jpDate": "2021-02-15"
+		}, {
+			"name": "Karyl (Princess)",
+			"unitId": -1,
+			"shop": "master",
+			"jpDate": "2021-03-16"
+		}, {
+			"name": "Rin [iDOLM@STER]",
+			"unitId": 112501,
+			"shop": "master",
+			"jpDate": "2021-03-16"
+		}, {
+			"name": "Uzuki",
+			"unitId": 112401,
+			"shop": "master",
+			"jpDate": "2021-03-16"
+		}
+	],
+	"arenaShuffle": [
+		{
+			"type": "arena",
+			"jpDate": "2018-08-20"
+		}, {
+			"type": "princessArena",
+			"jpDate": "2019-02-19"
+		}, {
+			"type": "arena",
+			"jpDate": "2020-02-18"
+		}, {
+			"type": "princessArena",
+			"jpDate": "2020-09-19"
+		}, {
+			"type": "arena",
+			"jpDate": "2021-02-19"
+		}
+	],
+	"features": [
+		{
+			"description": "Luna Tower",
+			"jpDate": "2018-09-13" 
+		}, {
+			"description": "Sanctum Survey",
+			"jpDate": "2018-11-20" 
+		}, {
+			"description": "Unique equipment",
+			"jpDate": "2018-11-26" 
+		}, {
+			"description": "Mana exchange gives additional grotto attempts",
+			"jpDate": "2019-05-17" 
+		}, {
+			"description": "Master coins and master shop",
+			"jpDate": "2019-05-17" 
+		}, {
+			"description": "6-star rarity",
+			"jpDate": "2019-08-31" 
+		}, {
+			"description": "Friend battle",
+			"jpDate": "2019-10-31"
+		}, {
+			"description": "Ability to switch to lower rarity",
+			"jpDate": "2020-08-15"
+		}, {
+			"description": "Growth spheres",
+			"jpDate": "2020-11-30"
+		}, {
+			"description": "Ability to skip arena fights",
+			"jpDate": "2021-02-15"
+		}, {
+			"description": "Only require 200 exchange points to select a character from a focus banner (\"spark\"), down from 300",
+			"jpDate": "2021-03-31"
+		}, {
+			"description": "Ability to skip dungeons",
+			"jpDate": "2021-04-13"
+		}
+	]
+}

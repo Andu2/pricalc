@@ -329,7 +329,13 @@ export function describeTarget(action) {
 
 	let targetType = "???";
 	if (action.target_type === 0) {
-		targetType = "ex skill";
+		if (action.action_id === 104700301) {
+			// Jun??? why???
+			targetType = "closest";
+		}
+		else {
+			targetType = "ex skill";
+		}
 	}
 	else if (action.target_type === 1) {
 		targetType = "current target";

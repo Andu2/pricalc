@@ -6,7 +6,7 @@
 	export let segment;
 
 	let menuPages = pages.filter(function(pageConfig) {
-		return (pageConfig.category !== "Featured PriCalc Tools" && pageConfig.category !== "Quizzes")
+		return (pageConfig.category !== "Featured PriCalc Tools")
 	});
 	let categories = {};
 	menuPages.forEach(function(pageConfig) {
@@ -17,7 +17,15 @@
 		categories[category].push(pageConfig);
 	});
 
-	let categoryOrder = Object.keys(categories).sort();
+	const priority = ["Analysis", "Calculators", "Reference", "JP Content History", "Misc Data", "Fun Stuff"];
+
+	let categoryOrder = Object.keys(categories).sort(function(a, b) {
+		let aPriority = priority.indexOf(a);
+		let bPriority = priority.indexOf(b);
+		if (aPriority === -1) aPriority = 999;
+		if (bPriority === -1) bPriority = 999;
+		return aPriority - bPriority;
+	});
 </script>
 
 <div id="menu-wrap">

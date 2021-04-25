@@ -33,7 +33,7 @@
 				shardsToBuy = shardsNeeded;
 			}
 			else {
-				shardsToBuy = Math.min(shardsNeeded, Math.max(costData.buy_count_to - shardsBought));
+				shardsToBuy = Math.max(0, Math.min(shardsNeeded, Math.max(costData.buy_count_to - shardsBought)));
 			}
 
 			amuletsNeeded += shardsToBuy * costData.count;

@@ -1,5 +1,6 @@
 <script>
 	export let pages;
+	export let priority = [];
 
 	let categories = {};
 	pages.forEach(function(pageConfig) {
@@ -10,7 +11,19 @@
 		categories[category].push(pageConfig);
 	});
 
-	let categoryOrder = Object.keys(categories).sort();
+	let categoryOrder;
+	if (priority.length > 0) {
+		categoryOrder = Object.keys(categories).sort(function(a, b) {
+			let aPriority = priority.indexOf(a);
+			let bPriority = priority.indexOf(b);
+			if (aPriority === -1) aPriority = 999;
+			if (bPriority === -1) bPriority = 999;
+			return aPriority - bPriority;
+		});
+	}
+	else {
+		categoryOrder = Object.keys(categories).sort();
+	}
 </script>
 
 {#each categoryOrder as category}

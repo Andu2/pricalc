@@ -121,6 +121,8 @@ tr.even {
 
 div.table-wrap {
 	max-height: 750px;
+	display: inline-block;
+	max-width: 100%;
 	overflow-x: auto;
 
 	/* Is there no good solution? CSS is so shit */

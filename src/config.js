@@ -14,7 +14,7 @@ export const nav = [
 		displayName: "Analysis Tools"
 	}, {
 		path: "misc-index",
-		displayName: "Other"
+		displayName: "Misc"
 	}
 ];
 
@@ -33,7 +33,7 @@ export const pages = [
 		icon: "images/unit/unit_icon_unit_103011.png"
 	}, {
 		path: "guides/chara-profiles",
-		category: "Reference",
+		category: "Misc Data",
 		displayName: "Character Profiles",
 		description: "Character information including age, race, height, weight, birthday, and blood type.",
 		icon: "images/unit/unit_icon_unit_100211.png"
@@ -109,7 +109,7 @@ export const pages = [
 	// 	icon: "images/skill/icon_icon_skill_1001.png"
 	// }, {
 		path: "notification-quiz",
-		category: "Quizzes",
+		category: "Fun Stuff",
 		displayName: "Notification Quiz",
 		description: "Match the notification message to the character!",
 		icon: "images/unit/unit_icon_unit_100611.png"
@@ -143,6 +143,36 @@ export const pages = [
 	// 	displayName: "Clan Battle Data",
 	// 	description: "An overview of the bosses in each clan battle.",
 	// 	icon: "images/unit/unit_icon_unit_302100.png"
+	}, {
+		path: "jp-history/characters",
+		category: "JP Content History",
+		displayName: "Characters Added",
+		description: "Dates on which characters were added in JP.",
+		icon: "images/unit/unit_icon_unit_106811.png" 
+	}, {
+		path: "jp-history/features",
+		category: "JP Content History",
+		displayName: "Game Updates",
+		description: "Dates on which various game updates where added in JP, including new dungeons, new grotto levels, new furniture levels, and other new features. Also, dates on which arenas were shuffled.",
+		icon: "images/item/icon_icon_item_90008.png" 
+	}, {
+		path: "jp-history/ranks-levels-areas",
+		category: "JP Content History",
+		displayName: "Ranks and Max Level",
+		description: "Dates on which the max level was increased, and dates on which new equipment was added (along with the associated quest area).",
+		icon: "images/equipment/icon_icon_equipment_105552.png" 
+	}, {
+		path: "jp-history/six-stars",
+		category: "JP Content History",
+		displayName: "Six Stars Added",
+		description: "Dates on which characters got a six star upgrade.",
+		icon: "images/unit/unit_icon_unit_101261.png" 
+	}, {
+		path: "jp-history/unique-equipment",
+		category: "JP Content History",
+		displayName: "Unique Equipment",
+		description: "Dates on which characters got their unique equipment.",
+		icon: "images/equipment/icon_icon_equipment_140000.png" 
 	}
 ].sort(sortByAttr("displayName"));
 
@@ -154,7 +184,8 @@ export const changeLog = [{
 			"Added ability to hide menu and added page indices",
 			"Guides: Divine amulet costs",
 			"Added unit filter on equipment demand tool",
-			"Added cast times and animation times"
+			"Added cast times and animation times",
+			"Added JP content history section"
 		]
 	}, {
 		version: "0.3.2",
