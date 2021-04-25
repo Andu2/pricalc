@@ -163,8 +163,8 @@ function setStartPositions(battlefield) {
 	let someoneMoved = false;
 	do {
 		someoneMoved = false;
-		if (advancePositions(battlefield.defense, battlefield.offense, battlefield.skillQueue)) someoneMoved = true;
 		if (advancePositions(battlefield.offense, battlefield.defense, battlefield.skillQueue)) someoneMoved = true;
+		if (advancePositions(battlefield.defense, battlefield.offense, battlefield.skillQueue)) someoneMoved = true;
 	} while (someoneMoved);
 }
 
