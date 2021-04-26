@@ -75,6 +75,6 @@
 
 <p><input type="checkbox" bind:checked={hideUnlockedUnits} /> Hide characters that are already in global edition</p>
 
-<DopeAssTable data={data} columns={columns} />
+<DopeAssTable data={data} columns={columns} scroll={false} />
 
 <JPContentFooter />

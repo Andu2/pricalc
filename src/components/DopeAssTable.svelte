@@ -3,6 +3,7 @@
 	export let data;
 	export let columns;
 	export let options = {};
+	export let scroll = true;
 
 	import Tooltip from "@src/components/Tooltip.svelte";
 
@@ -68,7 +69,7 @@
 	}
 </script>
 
-<div class="table-wrap">
+<div class="table-wrap" class:scroll={scroll}>
 	<table>
 		<tr>
 		{#each columns as column}
@@ -119,11 +120,14 @@ tr.even {
 	background-color: #cfe4ff;
 }
 
-div.table-wrap {
+div.scroll {
 	max-height: 750px;
+	overflow-x: auto;
+}
+
+div.table-wrap {
 	display: inline-block;
 	max-width: 100%;
-	overflow-x: auto;
 
 	/* Is there no good solution? CSS is so shit */
 /*	border-style: solid;

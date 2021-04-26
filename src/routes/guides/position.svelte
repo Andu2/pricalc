@@ -22,7 +22,7 @@ let positionData = UNLOCKED_UNITS.map(function(unitData) {
 		for (var i = 0; i < unitSkills[skillName].actions.length; i++) {
 			let action = unitSkills[skillName].actions[i];
 			if (action.action_type === 2) {
-				if (skillName === "union_burst" && (action.target_range < 0 || action.target_type !== 3)) continue;
+				if (skillName === "union_burst" && (action.target_range < 0 || action.target_range >= 2160 || action.target_type !== 3)) continue;
 				positionManipSkills.push(unitSkills[skillName].data.name);
 			}
 		}
@@ -83,4 +83,4 @@ let columns = [
 
 <p><strong>The character's range value is not necessarily the exact position they will be at in an actual battle.</strong> When walking forward, units move in increments of 12, so they will end up closer than their minimum range if the distance to the closest enemy is not a multiple of 12. This is why Saren does not always boost the unit she's "supposed" to! Exact distances depend on team compositions. <!-- To simulate exact distances, try the <a href="simulator">simulator.</a> --></p>
 
-<DopeAssTable data={positionData} columns={columns} />
+<DopeAssTable data={positionData} columns={columns} scroll={false} />

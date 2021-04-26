@@ -50,10 +50,8 @@ export function describeEffect(action, actor, level) {
 		// detail 1 = move to range of target
 		// detail 5 = some kind of gradual move (Mimi UB, Lima skill 1)
 		// I have no clue honestly why Mimi permanently moves but others don't
-		// Enemies move up to Mimi while she's doing her animation, but not to others who have an animation where they move back
-		// see Kaori: https://www.youtube.com/watch?v=WQQU6E0UPcE
 		if (action.action_detail_1 === 1) {
-			if (action.target_range === -1 || action.target_type !== 3) {
+			if (action.target_range === -1 || action.target_range === 2160 || action.target_type !== 3) {
 				description = "Temporarily move to range " + action.action_value_1 + " of target.";
 			}
 			else {
@@ -465,11 +463,18 @@ export function describeTarget(action) {
 			break;
 	}
 
+	if (action.action_id === 304201301) {
+		// Garoog why??
+		// There is clearly something going on here regarding effect areas but I have no idea what it is
+		targetPhrase = "2nd closest enemy?"
+		isPlural = false;
+	}
+
 	if (isPlural) {
 		let countPhrase = "all";
 		if (action.target_count > 1) {
 			if (action.target_count < 5) {
-				countPhrase = action.target_count;
+				countPhrase = "up to " + action.target_count;
 			}
 		}
 

@@ -54,6 +54,6 @@
 
 <JPContentHeader />
 
-<DopeAssTable data={data} columns={columns} />
+<DopeAssTable data={data} columns={columns} scroll={false} />
 
 <JPContentFooter />
