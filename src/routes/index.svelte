@@ -22,8 +22,9 @@
 	<li><a href="https://expugn.github.io/priconne-quest-helper/">Priconne Quest Helper</a> by S'pugn - Item farming calculator</li>
 	<li><a href="https://shioris-library.com/">Shiori's Library</a> by Ruiqi Mao - Unit and equipment database, includes an equipment farming calculator</li>
 	<li><a href="https://kenofnz.github.io/priconne-en-event-timer/">PriConne EN Event Schedule</a> by KenOfNZ - Get exact amount of time left before the start/end of game events, super useful for converting UTC time</li>
-	<li><a href="https://github.com/Dimbreath/PriconneData">PriconneData</a> by Dimbreath - A repository containing dumps of the game's database</li>
 	<li><a href="https://www.priconneglobal.info/">Priconne Global Info</a> by YoYoPop is an informational site focused on the Global server</li>
+	<li><a href="https://fansubbing.com/priconne-hub/">Fansubbing PriConne Hub</a> is a great resource for upcoming banners and events</li>
+	<li>Sproot's <a href="https://docs.google.com/spreadsheets/d/1xWEoSw7h-XylS-YWxhjxJd4YrlLr6xq_ClGDoSqKTAQ/edit?usp=sharing">SprootSheet</a> contains useful recommendations and several calculators, including a player level calculator and a character leveling cost calculator</li>
 	<li>Massive shoutout to esterTion for making the original datamining tools and S'pugn for making an <a href="https://github.com/Expugn/priconne-en_db-fetch">English version</a></li>
 </ul>
 
