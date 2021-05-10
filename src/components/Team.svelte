@@ -1,8 +1,8 @@
 <script>
 	import UnitSlot from "@src/components/UnitSlot.svelte";
-	import { lookupRows, UNLOCKED_UNITS } from "@src/data/priconnedb";
+	import { lookupRows } from "@src/data/priconnedb";
 	import { baseUnitConfig } from "@src/settings.js"
-	import { isValidUnitConfiguration, calculatePower, createActor } from "@src/logic/unit";
+	import { isValidUnitConfiguration, calculatePower, createActor, getUnlockedUnits } from "@src/logic/unit";
 	import { getContext } from "svelte";
 
 	export let team = {};

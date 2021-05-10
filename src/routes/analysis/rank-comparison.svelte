@@ -1,12 +1,14 @@
 <script>
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, UNLOCKED_UNITS } from "@src/data/priconnedb";
-	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp } from "@src/logic/unit";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
+	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, getUnlockedUnits } from "@src/logic/unit";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import { hideImpossibleRarities } from "@src/settings.js";
 
 	let tableData;
 	let tableColumns;
+
+	let UNLOCKED_UNITS = [];
 
 	const RANK_OPTIONS = [{
 		rank: 7,

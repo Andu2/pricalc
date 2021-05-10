@@ -1,4 +1,6 @@
 <script>
+	export let unit;
+
 	import UnitCard_EquipSet from "@src/components/UnitCard_EquipSet.svelte";
 	import UnitCard_Skills from "@src/components/UnitCard_Skills.svelte";
 	import UnitCard_Stats from "@src/components/UnitCard_Stats.svelte";
@@ -7,12 +9,38 @@
 	import UnitCard_Drops from "@src/components/UnitCard_Drops.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
 	import UnitInput from "@src/components/UnitInput.svelte";
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, MAX_LEVEL, MAX_RANK, WEAPON_TYPES, lookupRows } from "@src/data/priconnedb";
-	import { createActor, calculatePower, getUnitType, getUnitIdBase, isValidUnitConfiguration } from "@src/logic/unit";
-	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
+	import DataComponent from "@src/components/DataComponent.svelte";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES, WEAPON_TYPES, lookupRows, getTable, isTableLoaded } from "@src/data";
+	import { getMaxRank } from "@src/logic/item";
+	import { getMaxLevel } from "@src/logic/player";
+	import { createActor, getUnitType, getUnitIdBase, isValidUnitConfiguration, getBlankEquipmentSet } from "@src/logic/unit";
+	import { hideImpossibleRarities, includeExSkillStats, dataSource } from "@src/settings.js";
 	import { sortByAttr } from "@src/utils"
 
-	export let unit;
+	$: requiredTables = getRequiredTables($dataSource);
+
+	function getRequiredTables(dataSource) {
+		let alwaysRequiredTables = [ "unit_data", "experience_team", "chara_story_status", "unit_promotion",
+			"skill_action", "skill_data", "unit_skill_data", "unit_rarity", "unit_promotion_status",
+			"equipment_data", "equipment_enhance_rate", "story_detail", "unit_status_coefficient",
+			"unit_attack_pattern", "enemy_parameter", "wave_group_data", "unit_enemy_data", "quest_data",
+			"training_quest_data", "resist_data", "ailment_data" ];
+		let [ dataSourceServer, dataSourceVersion ] = dataSource.split("-");
+		if (dataSourceServer === "en") {
+			return alwaysRequiredTables.concat([ "clan_battle_boss_group" ])
+		}
+		else {
+			return alwaysRequiredTables;
+		}
+	}
+
+	let MAX_LEVEL = 1;
+	let MAX_RANK = {
+		rank: 1,
+		equipment: {}
+	}
+	let dataLoaded = false;
+
 	let options = {};
 	$: options.includeExSkillStats = $includeExSkillStats;
 
@@ -22,6 +50,7 @@
 	$: setUnitVariant(unitVariant);
 
 	function getUnitVariants(unitId) {
+		if (!dataLoaded) return [];
 		if (getUnitType(unitId) !== "boss" && getUnitType(unitId) !== "enemy" && getUnitType(unitId) !== "shadow") return [];
 
 		let unitBaseId = getUnitIdBase(unitId);
@@ -39,7 +68,14 @@
 			// let's try to get more info on this guy
 			let additionalContext = "";
 			if (getUnitType(unitId) === "boss") {
-				let clanBattleBossInfo = lookupRows("clan_battle_boss_group", {});
+				let clanBattleBossInfo;
+				if (isTableLoaded("clan_battle_boss_group")) {
+					clanBattleBossInfo = getTable("clan_battle_boss_group");
+				}
+				else {
+					// TODO: JP clan battle boss data format
+					clanBattleBossInfo = [];
+				}
 				let clanBattles = [];
 				clanBattleBossInfo.forEach(function(bossInfo) {
 					let bossWave = lookupRows("wave_group_data", { wave_group_id: bossInfo.wave_group_id, enemy_id_1: variant.enemy_id });
@@ -66,7 +102,7 @@
 				}
 			}
 			if (!additionalContext.length) {
-				let waves = lookupRows("wave_group_data", {});
+				let waves = getTable("wave_group_data");
 				let wavesIn = [];
 				waves.forEach(function(wave) {
 					for (var i = 1; i <= 5; i++) {
@@ -77,7 +113,7 @@
 					}
 				});
 
-				let quests = lookupRows("quest_data", {});
+				let quests = getTable("quest_data");
 				let questsIn = [];
 				quests.forEach(function(quest) {
 					for (var i = 1; i <= 3; i++) {
@@ -89,7 +125,7 @@
 						}
 					}
 				});
-				let grottoQuests = lookupRows("training_quest_data", {});
+				let grottoQuests = getTable("training_quest_data");
 				grottoQuests.forEach(function(quest) {
 					for (var i = 1; i <= 3; i++) {
 						if (wavesIn.indexOf(quest["wave_group_id_" + i]) > -1) {
@@ -143,7 +179,7 @@
 	function maxAll() {
 		unit.rarity = 5;
 		unit.level = MAX_LEVEL;
-		unit.rank = MAX_RANK;
+		unit.rank = MAX_RANK.rank;
 		unit.equipment = {
 			slot1: {
 				equipped: true,
@@ -182,7 +218,10 @@
 	}
 
 	function recalculate(unit, validConfig) {
-		if (validConfig) {
+		if (!dataLoaded) {
+			return;
+		}
+		else if (validConfig) {
 			return createActor(unit, options);
 		}
 		else if (typeof actor === "undefined") {
@@ -204,7 +243,7 @@
 			else if (unit.level < 1) unit.level = 1;
 		}
 		if (typeof unit.rank === "number") {
-			if (unit.rank > MAX_RANK) unit.rank = MAX_RANK;
+			if (unit.rank > MAX_RANK.rank) unit.rank = MAX_RANK.rank;
 			else if (unit.rank < 1) unit.rank = 1;
 		}
 		if (typeof unit.bond === "object") {
@@ -218,32 +257,7 @@
 	}
 
 	function resetEquipment() {
-		unit.equipment = {
-			slot1: {
-				equipped: false,
-				refine: 0
-			},
-			slot2: {
-				equipped: false,
-				refine: 0
-			},
-			slot3: {
-				equipped: false,
-				refine: 0
-			},
-			slot4: {
-				equipped: false,
-				refine: 0
-			},
-			slot5: {
-				equipped: false,
-				refine: 0
-			},
-			slot6: {
-				equipped: false,
-				refine: 0
-			}
-		}
+		unit.equipment = getBlankEquipmentSet();
 	}
 
 	function resetAll() {
@@ -260,7 +274,7 @@
 			},
 			bond: []
 		}
-		resetEquipment();
+		resetEquipment()
 	}
 
 	$: validConfig = validateConfig(unit);
@@ -269,10 +283,16 @@
 	$: unitName = getName(actor);
 
 	function getName(actor) {
-		return actor.name || "Select a character...";
+		if (actor && actor.name) {
+			return actor.name;
+		}
+		else {
+			return "Select a character...";
+		}
 	}
 
 	function validateConfig(unit) {
+		if (!dataLoaded) return true;
 		constrainUnitConfig();
 		return isValidUnitConfiguration(unit);
 	}
@@ -281,7 +301,7 @@
 		if (!validConfig) {
 			return "Invalid unit configuration"
 		}
-		if (actor.unitData) {
+		if (actor && actor.unitData) {
 			if (typeof actor.unitData.comment === "string") {
 				return actor.unitData.comment.replace(/\\n/g, "<br />");
 			}
@@ -296,85 +316,100 @@
 			return "???"
 		}
 	}
+
+	function onDataReady() {
+		MAX_LEVEL = getMaxLevel();
+		MAX_RANK = getMaxRank();
+		dataLoaded = true;
+		validateConfig(unit)
+		if (!isValidUnitConfiguration(unit)) {
+			resetAll();
+		}
+		recalculate()
+	}
 </script>
 
-<div>
-	<div class="unit-card-header">
-		<div class="unit-card-image">
-			<UnitInput bind:unitId={unit.id} rarity={unit.rarity} enemyId={unit.enemyId} />
-			<div class="unit-card-parameters">
-				<div><strong>{unitName}</strong></div>
-				{#if unitType === "character"}
-				<table><tr>
-					<td>
-						<table>
-							<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
-							<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>
-							<tr><td>Rank:</td><td><input type="number" min=1 max={MAX_RANK} bind:value={unit.rank} on:change={resetEquipment} /></td></tr>
-						</table>
-					</td>
-					<td class="bond-cell">
-						<UnitCard_Bond unitId={unit.id} bind:bond={unit.bond} />
-					</td>
-				</tr></table>
-				{/if}
-				{#if unitType === "summon"}
-				<table>
-					<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
-					<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>
-				</table>
-				{/if}
-				{#if unitType === "boss" || unitType === "enemy" || unitType === "shadow"}
-				<table>
-					<tr><td>Variant:</td><td>
-						<select bind:value={unitVariant}>
-							{#each unitVariants as variant, i}
-							<option value={i}>{variant.displayName}</option>
-							{/each}
-						</select>
-					</td></tr>
-				</table>
-				{/if}
-			</div>
-		</div>
-		<div class="card-middle-row-wrap">
-			<div class="unit-card-middlerow">
-				{#if unitType === "character"}
-				<div class="max-all-button-wrap">
-					<div class="button max-all-button" on:click={maxAll}>Max all</div>
-				</div>
-				{/if}
-				<div class="unit-card-miscstats">
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	{#if dataLoaded}
+	<div>
+		<div class="unit-card-header">
+			<div class="unit-card-inputs">
+				<UnitInput bind:unitId={unit.id} rarity={unit.rarity} enemyId={unit.enemyId} />
+				<div class="unit-card-parameters">
+					<div><strong>{unitName}</strong></div>
+					{#if unitType === "character"}
+					<table><tr>
+						<td>
+							<table>
+								<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
+								<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>
+								<tr><td>Rank:</td><td><input type="number" min=1 max={MAX_RANK.rank} bind:value={unit.rank} on:change={resetEquipment} /></td></tr>
+							</table>
+						</td>
+						<td class="bond-cell">
+							<UnitCard_Bond unitId={unit.id} bind:bond={unit.bond} />
+						</td>
+					</tr></table>
+					{/if}
+					{#if unitType === "summon"}
 					<table>
-						{#if actor && actor.unitData && actor && actor.unitData.search_area_width}
-						<tr>
-							<td class="stat-label">Range</td>
-							<td class="stat-number">{actor.unitData.search_area_width}</td>
-						</tr>
-						{/if}
-						{#if actor && actor.unitData && actor && actor.unitData.rarity}
-						<tr>
-							<td class="stat-label">Base rarity</td>
-							<td class="stat-number">{actor.unitData.rarity}</td>
-						</tr>
-						{/if}
-<!-- 						<tr>
-							<td>Weapon type:</td>
-							<td>{actor && actor.unitData ? WEAPON_TYPES[actor.unitData.se_type] : "???"}</td>
-						</tr> -->
-				</div>
-				<div class="unit-card-description">
-					{@html unitComments}
-					{#if !validConfig}
-					<a on:click={resetAll}>(reset)</a>
+						<tr><td>Rarity:</td><td><RaritySelect bind:rarity={unit.rarity} /></td></tr>
+						<tr><td>Level:</td><td><input type="number" min=1 max={MAX_LEVEL} bind:value={unit.level} /></td></tr>
+					</table>
+					{/if}
+					{#if unitType === "boss" || unitType === "enemy" || unitType === "shadow"}
+					<table>
+						<tr><td>Variant:</td><td>
+							<select bind:value={unitVariant}>
+								{#each unitVariants as variant, i}
+								<option value={i}>{variant.displayName}</option>
+								{/each}
+							</select>
+						</td></tr>
+					</table>
 					{/if}
 				</div>
 			</div>
+			{#if actor}
+			<div class="card-middle-row-wrap">
+				<div class="unit-card-middlerow">
+					{#if unitType === "character"}
+					<div class="max-all-button-wrap">
+						<div class="button max-all-button" on:click={maxAll}>Max all</div>
+					</div>
+					{/if}
+					<div class="unit-card-miscstats">
+						<table>
+							{#if actor && actor.unitData && actor && actor.unitData.search_area_width}
+							<tr>
+								<td class="stat-label">Range</td>
+								<td class="stat-number">{actor.unitData.search_area_width}</td>
+							</tr>
+							{/if}
+							{#if actor && actor.unitData && actor && actor.unitData.rarity}
+							<tr>
+								<td class="stat-label">Base rarity</td>
+								<td class="stat-number">{actor.unitData.rarity}</td>
+							</tr>
+							{/if}
+	<!-- 						<tr>
+								<td>Weapon type:</td>
+								<td>{actor && actor.unitData ? WEAPON_TYPES[actor.unitData.se_type] : "???"}</td>
+							</tr> -->
+						</table>
+					</div>
+					<div class="unit-card-description">
+						{@html unitComments}
+						{#if !validConfig}
+						<a on:click={resetAll}>(reset)</a>
+						{/if}
+					</div>
+				</div>
+			</div>
+			{/if}
 		</div>
-	</div>
-	{#if unitType !== "???"}
-	<div class="card-section-wrap">
-		<div class="card-section-row">
+		{#if actor && unitType !== "???"}
+		<div class="card-section-wrap">
 			<UnitCard_Stats actor={actor} />
 			{#if unitType === "character"}
 			<UnitCard_EquipSet unitId={unit.id} rank={unit.rank} bind:equipment={unit.equipment} />
@@ -389,28 +424,23 @@
 			<UnitCard_Skills unitId={unit.id} rank={unit.rank} level={unit.level} rarity={unit.rarity} actor={actor} bind:skillLevels={unit.skills} />
 			{/if}
 		</div>
+		{/if}
 	</div>
 	{/if}
-</div>
+</DataComponent>
 
 <style>
 div.unit-card-header {
 	padding-left: 10px;
 }
 
+div.unit-card-inputs {
+}
+
 div.unit-card-parameters {
 	display: inline-block;
 	vertical-align: top;
 	padding-left: 10px;
-}
-
-div.card-section-row {
-	display: table-row;
-}
-
-div.card-section-wrap {
-	display: table;
-	border-spacing: 10px;
 }
 
 div.card-middle-row-wrap {

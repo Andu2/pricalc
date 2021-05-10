@@ -1,7 +1,11 @@
 <script>
 import DopeAssTable from "@src/components/DopeAssTable.svelte";
-import { lookupRows, UNLOCKED_UNITS, SUMMON_UNITS, getUnitSkills } from "@src/data/priconnedb";
+import { lookupRows } from "@src/data/priconnedb";
+import { getUnitSkills } from "@src/logic/skill";
 import { sortByAttr } from "@src/utils"
+
+let UNLOCKED_UNITS = [];
+let SUMMON_UNITS = [];
 
 let sarenData = lookupRows("unit_data", { unit_id: 102801 })[0];
 

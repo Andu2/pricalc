@@ -1,11 +1,15 @@
 <script>
-	import { STAT_NAMES, STAT_DISPLAY_NAMES, UNLOCKED_UNITS, MAX_LEVEL, MAX_RANK, MAX_RANK_EQUIPMENT } from "@src/data/priconnedb";
-	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, getUnitIdBase } from "@src/logic/unit";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
+	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, getUnitIdBase, getUnlockedUnits } from "@src/logic/unit";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import { includeExSkillStats } from "@src/settings.js";
 
 	let tableData;
 	let tableColumns;
+
+	let UNLOCKED_UNITS = [];
+	let MAX_LEVEL = 10;
+	let MAX_RANK = 2;
 
 	// Fuck it, add every character bond
 	let maxedBonds = {};

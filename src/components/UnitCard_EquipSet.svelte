@@ -1,6 +1,7 @@
 <script>
 	import { lookupRows } from "@src/data/priconnedb"
 	import { getMaxRefine } from "@src/logic/unit"
+	import { getItemImg } from "@src/logic/ui";
 
 	export let unitId = -1;
 	export let rank = 1;
@@ -96,14 +97,14 @@
 		var equipmentImages = {}
 		for (var i = 1; i <= 6; i++) {
 			if (!equipmentSet || equipmentSet["equip_slot_" + i] === 999999) {
-				equipmentImages["slot" + i] = "images/equipment/icon_icon_equipment_999999.png";
+				equipmentImages["slot" + i] = getItemImg(999999);
 			}
 			else {
 				if (equipment["slot" + i].equipped) {
-					equipmentImages["slot" + i] = "images/equipment/icon_icon_equipment_" + equipmentSet["equip_slot_" + i] + ".png";
+					equipmentImages["slot" + i] = getItemImg(equipmentSet["equip_slot_" + i]);
 				}
 				else {
-					equipmentImages["slot" + i] = "images/equipment/icon_icon_equipment_invalid_" + equipmentSet["equip_slot_" + i] + ".png";
+					equipmentImages["slot" + i] = getItemImg(equipmentSet["equip_slot_" + i], { invalid: true });
 				}
 			}
 		}
@@ -159,79 +160,100 @@
 </script>
 
 <div class="card-section">
-	<div class="card-section-header">Equipment</div>
-	<table class="equipment-set">
-	{#each [0,1,2] as row}
-		<!-- wanted to do it this way but svelte doesn't like it: {#if slot % 2 === 1} -->
-		<tr>
-		{#each [row*2+1, row*2+2] as slot}
-			<td>
-				<img class="equipment" src={equipmentImages["slot" + slot]} on:click={toggleEquip(slot)} />
-				<div class="rarity-toggle">
-					{#each [1,2,3,4,5] as refineNum}
-						{#if equipmentMaxRefine["slot" + slot] >= refineNum}
-							{#if equipment["slot" + slot].refine >= refineNum}
-								<div class="icon-star-full" on:click={setRefine(slot, refineNum)} ></div>
-							{:else}
-								<div class="icon-star-full unfull" on:click={setRefine(slot, refineNum)} ></div>
+	<div class="card-section-header centered">Equipment</div>
+	<div class="equipment-wrap">
+		<table class="equipment-set">
+		{#each [0,1,2] as row}
+			<!-- wanted to do it this way but svelte doesn't like it: {#if slot % 2 === 1} -->
+			<tr>
+			{#each [row*2+1, row*2+2] as slot}
+				<td>
+					<img class="equipment" src={equipmentImages["slot" + slot]} on:click={toggleEquip(slot)} />
+					<div class="rarity-toggle">
+						{#each [1,2,3,4,5] as refineNum}
+							{#if equipmentMaxRefine["slot" + slot] >= refineNum}
+								{#if equipment["slot" + slot].refine >= refineNum}
+									<div class="icon-star-full" on:click={setRefine(slot, refineNum)} ></div>
+								{:else}
+									<div class="icon-star-full unfull" on:click={setRefine(slot, refineNum)} ></div>
+								{/if}
 							{/if}
-						{/if}
-					{/each}
-				</div>
-			</td>
-		{/each}
-		</tr>
+						{/each}
+					</div>
+				</td>
+			{/each}
+			</tr>
 
-	{/each}
-	</table>
-	<div class="buttons">
-		<div class="button" id="button-equip" on:click={toggleAllEquip}>
-			{#if !allEquipped}
-			Equip All
-			{:else}
-			Unequip All
-			{/if}
-		</div>
-		<div class="button" id="button-refine" on:click={toggleAllRefine}>
-			{#if !allRefined}
-			Refine All
-			{:else}
-			Unrefine All
-			{/if}
+		{/each}
+		</table>
+		<div class="buttons">
+			<div class="button" id="button-equip" on:click={toggleAllEquip}>
+				{#if !allEquipped}
+				Equip All
+				{:else}
+				Unequip All
+				{/if}
+			</div>
+			<div class="button" id="button-refine" on:click={toggleAllRefine}>
+				{#if !allRefined}
+				Refine All
+				{:else}
+				Unrefine All
+				{/if}
+			</div>
 		</div>
 	</div>
 </div>
 
 <style>
-td {
-	padding: 5px 10px;
-}
+	div.card-section {
+		min-width: 210px;
+		max-width: 250px;
+		flex-grow: 1;
+		text-align: center;
+	}
 
-img.equipment {
-	width: 90px;
-	cursor: pointer;
-}
+	div.equipment-wrap {
+		display: inline-block;
+	}
 
-div.icon-star-full {
-	display: inline-block;
-	padding-right: 1px;
-	font-size: 17px;
-	cursor: pointer;
-	color: #ffd049;
-}
+	td {
+		padding: 5px 10px;
+	}
 
-div.unfull {
-	color: #ccd7e2;
-}
+	img.equipment {
+		width: 90px;
+		cursor: pointer;
+	}
 
-div.rarity-toggle {
-	height: 17px;
-	padding-bottom: 5px;
-}
+	img.equipment:hover {
+		opacity: 0.8;
+	}
 
-div.button {
-	padding: 5px;
-	width: 210px;
-	margin: 5px 0;
-}
+	div.icon-star-full {
+		display: inline-block;
+		padding-right: 1px;
+		font-size: 17px;
+		cursor: pointer;
+		color: #ffd049;
+	}
+
+	div.icon-star-full:hover {
+		opacity: 0.8;
+	}
+
+	div.unfull {
+		color: #ccd7e2;
+	}
+
+	div.rarity-toggle {
+		height: 17px;
+		padding-bottom: 5px;
+	}
+
+	div.button {
+		padding: 5px;
+		width: 210px;
+		margin: 5px 0;
+	}
 </style>

@@ -1,10 +1,13 @@
 <script>
-	import { jpContentHistory, UNLOCKED_UNITS } from "@src/data/priconnedb";
+	import { jpContentHistory } from "@src/data/priconnedb";
+	import { getUnlockedUnits } from "@src/logic/unit";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
 	import JPContentFooter from "@src/components/JPContentFooter.svelte";
 
 	let hideUnlockedUnits = true;
+
+	let UNLOCKED_UNITS = [];
 
 	const jpLaunchDate = new Date(jpContentHistory.jpLaunchDate);
 	const unlockedIds = UNLOCKED_UNITS.map(function(unitData) {

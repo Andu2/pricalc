@@ -1,32 +1,14 @@
 <script>
-	import { lookupRows, UNLOCKED_UNITS } from "@src/data/priconnedb";
+	import { lookupRows, getTable } from "@src/data/priconnedb";
+	import { getUnlockedUnits } from "@src/logic/unit";
+	import { getUnitImg } from "@src/logic/ui";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import Doughnut from "svelte-chartjs/src/Doughnut.svelte";
+	import DataComponent from "@src/components/DataComponent.svelte";
 
-	let unlockedIds = UNLOCKED_UNITS.map(function(unitData) {
-		return unitData.unit_id;
-	})
+	const requiredTables = [ "unit_data", "unit_profile" ];
 
-	let profiles = lookupRows("unit_profile", {});
-	// This actually changes the underlying data, but this is the only place that it is used so I say it's fine
-	profiles.forEach(function(profile) {
-		profile.birth_date = getMonth(profile.birth_month) + " " + profile.birth_day;
-		profile.race = profile.race.slice(0, 1).toUpperCase() + profile.race.slice(1);
-
-		var unitIdString = profile.unit_id + "";
-		var unitIdWithRarity = unitIdString.slice(0, 4) + "3" + unitIdString.slice(-1); 
-		var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
-
-		profile.icon = "<img class=\"table-icon\" src=\"" + charImg + "\" />";
-	});
-
-	profiles = profiles.filter(function(profile) {
-		return (unlockedIds.indexOf(profile.unit_id) > -1)
-	}).sort(function(a, b) {
-		if (a.unit_name > b.unit_name) return 1;
-		else if (a.unit_name < b.unit_name) return -1;
-		else return 0;
-	});
+	let profileData = [];
 
 	let columns = [{
 		attr: "icon",
@@ -157,11 +139,11 @@
 		return counts;
 	}
 
-	let averageAge = getAverage(profiles, "age");
-	let averageHeight = getAverage(profiles, "height");
-	let averageWeight = getAverage(profiles, "weight");
-	let raceCount = getCount(profiles, "race");
-	let bloodCount = getCount(profiles, "blood_type");
+	let averageAge = 1;
+	let averageHeight = 1;
+	let averageWeight = 1;
+	let raceCount = {};
+	let bloodCount = {};
 
 	let colors = [
 		"rgba(255, 50, 50, 0.5)", 
@@ -177,10 +159,6 @@
 		}],
 		labels: []
 	};
-	for (var race in raceCount) {
-		raceChartData.datasets[0].data.push(raceCount[race]);
-		raceChartData.labels.push(race);
-	}
 	let raceChartOptions = {
 		title: {
 			display: true,
@@ -195,38 +173,77 @@
 		}],
 		labels: []
 	};
-	for (var blood in bloodCount) {
-		bloodChartData.datasets[0].data.push(bloodCount[blood]);
-		bloodChartData.labels.push(blood);
-	}
 	let bloodChartOptions = {
 		title: {
 			display: true,
 			text: "Blood Type"
 		}
 	};
+
+	function onDataReady() {
+		let unlockedIds = getUnlockedUnits().map(function(unitData) {
+			return unitData.unit_id;
+		});
+
+		let profiles = getTable("unit_profile");
+		profileData = profiles.map(function(profile) {
+			let profileCopy = {...profile};
+			profileCopy.birth_date = getMonth(profileCopy.birth_month) + " " + profileCopy.birth_day;
+			profileCopy.race = profileCopy.race.slice(0, 1).toUpperCase() + profileCopy.race.slice(1);
+			profileCopy.icon = "<img class=\"table-icon\" src=\"" + getUnitImg(profileCopy.unit_id) + "\" />";
+			return profileCopy;
+		});
+
+		profileData = profileData.filter(function(profile) {
+			return (unlockedIds.indexOf(profile.unit_id) > -1)
+		}).sort(function(a, b) {
+			if (a.unit_name > b.unit_name) return 1;
+			else if (a.unit_name < b.unit_name) return -1;
+			else return 0;
+		});
+
+		averageAge = getAverage(profileData, "age");
+		averageHeight = getAverage(profileData, "height");
+		averageWeight = getAverage(profileData, "weight");
+		raceCount = getCount(profileData, "race");
+		bloodCount = getCount(profileData, "blood_type");
+
+		for (var race in raceCount) {
+			raceChartData.datasets[0].data.push(raceCount[race]);
+			raceChartData.labels.push(race);
+		}
+		for (var blood in bloodCount) {
+			bloodChartData.datasets[0].data.push(bloodCount[blood]);
+			bloodChartData.labels.push(blood);
+		}
+	}
+
 </script>
 
-<h2>Character Profiles</h2>
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	<h2>Character Profiles</h2>
 
-<div class="table-wrap">
-	<DopeAssTable data={profiles} columns={columns} />
-</div>
-<h2>Statistics</h2>
-<p>
-	Average age: {Math.round(averageAge * 100) / 100} <br />
-	Average height: {convertCmToFeetString(averageHeight)} <br />
-	Average weight: {convertKgToPoundsString(averageWeight)}
-</p>
+	<p>Next birthday: </p>
 
-<table class="charts"><tr>
-	<td>
-		<Doughnut data={raceChartData} options={raceChartOptions} />
-	</td>
-	<td>
-		<Doughnut data={bloodChartData} options={bloodChartOptions} />
-	</td>
-</tr></table>
+	<div class="table-wrap">
+		<DopeAssTable data={profileData} columns={columns} />
+	</div>
+	<h2>Statistics</h2>
+	<p>
+		Average age: {Math.round(averageAge * 100) / 100} <br />
+		Average height: {convertCmToFeetString(averageHeight)} <br />
+		Average weight: {convertKgToPoundsString(averageWeight)}
+	</p>
+
+	<table class="charts"><tr>
+		<td>
+			<Doughnut data={raceChartData} options={raceChartOptions} />
+		</td>
+		<td>
+			<Doughnut data={bloodChartData} options={bloodChartOptions} />
+		</td>
+	</tr></table>
+</DataComponent>
 
 <style>
 table.charts {

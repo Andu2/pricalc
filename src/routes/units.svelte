@@ -1,25 +1,9 @@
 <script>
 import { stores } from "@sapper/app";
-// import LZString from "lz-string";
 const { page } = stores();
 import { savedUnit, baseUnitConfig } from "@src/settings.js"
 import { isValidUnitConfiguration } from "@src/logic/unit";
-
-// if ($page.query.data) {
-// 	unit = JSON.parse(LZString.decompressFromEncodedURIComponent($page.query.data));
-// }
-
-let unit = $savedUnit;
-if (!isValidUnitConfiguration(unit)) {
-	unit = baseUnitConfig;
-}
-$: savedUnit.set(unit)
-
 import UnitCard from "@src/components/UnitCard.svelte";
 </script>
 
-<UnitCard bind:unit={unit}/>
-
-<!-- <div>
-	{LZString.compressToEncodedURIComponent(JSON.stringify(unit))}
-</div> -->
+<UnitCard bind:unit={$savedUnit}/>

@@ -1,5 +1,5 @@
 <script>
-	import { jpContentHistory, UNLOCKED_UNITS } from "@src/data/priconnedb";
+	import { jpContentHistory } from "@src/data/priconnedb";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
 	import JPContentFooter from "@src/components/JPContentFooter.svelte";
 

@@ -1,0 +1,17 @@
+{
+	"light": {
+		"name": "Default",
+		"colors": {
+			"highlight": "#ef7485",
+			"link": "#ef7485",
+			"linkHover": "#566590",
+			"marginBackground": "#e7eef8"
+		}
+	},
+	"dark": {
+		"name": "Dark",
+		"colors": {
+			"marginBackground": "black"
+		}
+	}
+}

@@ -4,13 +4,15 @@ import replace from '@rollup/plugin-replace';
 import commonjs from '@rollup/plugin-commonjs';
 import url from '@rollup/plugin-url';
 import svelte from 'rollup-plugin-svelte';
+import { postcss, globalStyle } from 'svelte-preprocess';
+import postcssVariables from 'postcss-css-variables';
 import babel from '@rollup/plugin-babel';
-// import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
+import themes from './themes.json';
 import json from '@rollup/plugin-json';
-import csv from './rollup-csv';
+// import csv from './rollup-csv';
 import alias from '@rollup/plugin-alias';
 
 const mode = process.env.NODE_ENV;
@@ -35,7 +37,19 @@ export default {
 				compilerOptions: {
 					dev,
 					hydratable: true
-				}
+				},
+				preprocess: [
+					postcss({
+						plugins: [
+							postcssVariables({ 
+								preserve: true,
+								preserveInjectedVariables: false,
+								variables: themes.light.colors
+							})
+						]
+					}),
+					globalStyle()
+				]
 			}),
 			url({
 				sourceDir: path.resolve(__dirname, 'src/node_modules/images'),
@@ -48,7 +62,7 @@ export default {
 			commonjs(),
 
 			json(),
-			csv(),
+			// csv(),
 
 			alias({
 				entries: [
@@ -96,6 +110,18 @@ export default {
 					generate: 'ssr',
 					hydratable: true
 				},
+				preprocess: [
+					postcss({
+						plugins: [
+							postcssVariables({ 
+								preserve: true,
+								preserveInjectedVariables: false,
+								variables: themes.light.colors
+							})
+						]
+					}),
+					globalStyle()
+				],
 				emitCss: false
 			}),
 			url({
@@ -109,7 +135,7 @@ export default {
 			commonjs(),
 
 			json(),
-			csv(),
+			// csv(),
 
 			alias({
 				entries: [

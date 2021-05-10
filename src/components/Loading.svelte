@@ -171,7 +171,7 @@
 
 </script>
 
-<div class="loading-text">Loading...</div>
+<div class="loading-text">Loading page...</div>
 
 <div class="wrap">
 <!-- 	<canvas bind:this={canvas} id="loading-animation" /> -->

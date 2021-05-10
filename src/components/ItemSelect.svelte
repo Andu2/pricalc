@@ -1,20 +1,21 @@
 <script>
-import { lookupRows, DROPPABLE_ITEMS } from "@src/data/priconnedb";
+import { getTable } from "@src/data";
 import { sortByAttr } from "@src/utils";
-import { getItemType } from "@src/logic/item";
-import { getItemImg } from "@src/logic/ui";
+import { getItemImg, getItemType, getDroppableItems } from "@src/logic";
 
 export let itemId;
 export let selectCallback;
 
+let DROPPABLE_ITEMS = getDroppableItems();
+
 $: itemType = getItemType(itemId);
 
 // TODO: If this component is used in a context other than drops, move this filter out of this component
-let items = lookupRows("item_data", {}).filter(function(item) {
+let items = getTable("item_data").filter(function(item) {
 	return (DROPPABLE_ITEMS.indexOf(item.item_id) > -1)
 }).sort(sortByAttr("item_type"));
 
-let equipment = lookupRows("equipment_data", {}).filter(function(equipment) {
+let equipment = getTable("equipment_data").filter(function(equipment) {
 	return (DROPPABLE_ITEMS.indexOf(equipment.equipment_id) > -1)
 }).sort(sortByAttr("promotion_level"));
 

@@ -1,22 +1,28 @@
 <script>
-import { lookupRows, UNLOCKED_UNITS } from "@src/data/priconnedb";
+import { lookupRows, getTable } from "@src/data/priconnedb";
 import { onMount } from "svelte";
+import { readable } from "svelte/store";
 import { localStorageStore } from "@src/local-store";
+import { getUnlockedUnits } from "@src/logic/unit";
+import DataComponent from "@src/components/DataComponent.svelte";
 
-let notifications = lookupRows("notif_data", {});
-let quizLength = localStorageStore("notifQuiz/quizLength", notifications.length);
-let questionOrder = localStorageStore("notifQuiz/questionOrder", getNewQuestionOrder(notifications));
+let requiredTables = [ "unit_data", "notif_data" ];
+
+let notifications = [];
+let quizLength = readable(0);
+let questionOrder = readable([]);
 let numAnswered = localStorageStore("notifQuiz/numAnswered", 0);
 let numCorrect = localStorageStore("notifQuiz/numCorrect", 0);
 
+let UNLOCKED_UNITS = [];
 let gradeText = "";
 let notification = null;
-nextQuestion(true);
+
 $: correctChoice = getCorrectChoice(notification);
 $: choices = getChoices(notification);
 $: notificationType = getNotificationType(notification);
-$: encouragement = getEncouragement($numAnswered);
-$: outOfQuestions = isOutOfQuestions($numAnswered);
+$: encouragement = getEncouragement($numAnswered, quizLength);
+$: outOfQuestions = isOutOfQuestions($numAnswered, quizLength);
 
 let notificationTypes = {
 	1: "your stamina is full",
@@ -84,6 +90,7 @@ function getChoices(notification) {
 		if (choices.indexOf(randomUnit) === -1) {
 			choices.push(randomUnit);
 		}
+		attempt++;
 	} while (attempt <= MAX_ATTEMPTS && choices.length < 5);
 	return shuffle(choices);
 }
@@ -119,6 +126,10 @@ function respond(i) {
 
 function getEncouragement(numAnswered) {
 	let numQuestions = notifications.length;
+	if (numQuestions === 0) {
+		return "No notification data."
+	}
+
 	let pctAnswered = numAnswered / numQuestions;
 	if (pctAnswered === 1) {
 		return "Congratulations! You went through all the possible notifications, you absolute champion";
@@ -141,11 +152,13 @@ function getEncouragement(numAnswered) {
 }
 
 function reset() {
-	$numAnswered = 0;
-	$numCorrect = 0;
-	$questionOrder = getNewQuestionOrder(notifications);
-	$quizLength = notifications.length;
-	nextQuestion(true);
+	if (notifications.length > 0) {
+		$numAnswered = 0;
+		$numCorrect = 0;
+		$questionOrder = getNewQuestionOrder(notifications);
+		$quizLength = notifications.length;
+		nextQuestion(true);
+	}
 }
 
 function isOutOfQuestions() {
@@ -161,57 +174,70 @@ function getNotificationText(notification) {
 	}
 }
 
+function onDataReady() {
+	notifications = getTable("notif_data");
+	quizLength = localStorageStore("notifQuiz/quizLength", notifications.length);
+	questionOrder = localStorageStore("notifQuiz/questionOrder", getNewQuestionOrder(notifications));
+	UNLOCKED_UNITS = getUnlockedUnits();
+
+	nextQuestion(true);
+}
+
 </script>
 
-<div class="notification-quiz-wrap">
-	<h1>Notification Quiz</h1>
-	{#if !outOfQuestions}
-	<p class="question">Which character says this notification when {notificationType}?</p>
-	<p class="notification-text">{getNotificationText(notification)}</p>
-	<div>
-		<table><tr>
-			{#each choices as choice, i}
-			<td on:click={respond(i)} 
-				class:correct={gradeText && correctChoice === choice} 
-				class:incorrect={gradeText && correctChoice !== choice}
-				class:not-yet-selected={!gradeText}
-			>
-				<img src={getUnitImage(choice)} /><br />
-				{choice.unit_name}
-			</td>
-			{/each}
-		</tr></table>
-	</div>
-	<div class="response">
-		<div class="grade">
-			{#if gradeText}
-			<span 
-				class:correct={gradeText.indexOf("orrect") > -1} 
-				class:incorrect={gradeText.indexOf("ncorrect") > -1}
-			>{gradeText}</span>
-			{:else}
-			<span class="faded-response">Select a character...</span>
-			{/if}
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	<div class="notification-quiz-wrap">
+		<h1>Notification Quiz</h1>
+		{#if !outOfQuestions}
+		<p class="question">Which character says this notification when {notificationType}?</p>
+		<p class="notification-text">{getNotificationText(notification)}</p>
+		<div>
+			<table><tr>
+				{#each choices as choice, i}
+				<td on:click={respond(i)} 
+					class:correct={gradeText && correctChoice === choice} 
+					class:incorrect={gradeText && correctChoice !== choice}
+					class:not-yet-selected={!gradeText}
+				>
+					<img src={getUnitImage(choice)} /><br />
+					{choice.unit_name}
+				</td>
+				{/each}
+			</tr></table>
 		</div>
-		<div class="button" on:click={nextQuestion} class:show={gradeText.length > 0}>Next question</div>
+		<div class="response">
+			<div class="grade">
+				{#if gradeText}
+				<span 
+					class:correct={gradeText.indexOf("orrect") > -1} 
+					class:incorrect={gradeText.indexOf("ncorrect") > -1}
+				>{gradeText}</span>
+				{:else}
+				<span class="faded-response">Select a character...</span>
+				{/if}
+			</div>
+			<div class="button" on:click={nextQuestion} class:show={gradeText.length > 0}>Next question</div>
+		</div>
+		{:else if !notifications.length > 0}
+		<p class="notification-text">You did it!</p>
+		{/if}
+		<div class="quiz-control">
+			<p>Current score: {$numCorrect} / {$numAnswered}
+				{#if $numAnswered > 0}
+				({Math.round($numCorrect / $numAnswered * 100)}%)
+				{/if}
+			</p>
+			<p>Notifications left: {$questionOrder.length} <a on:click={reset}>(reset)</a>
+				{#if notifications.length > $quizLength}
+				<span class="soft">Note: new notifications have been added since you started this quiz. They will not be included until you reset.</span>
+				{:else if notifications.length < $quizLength}
+				<span class="soft">Note: notifications have been removed since you started this quiz. You will not be able to continue the quiz until resetting or switching back to a newer data source.</span>
+				{/if}
+			</p>
+			<p class="soft">{encouragement}</p>
+		</div>
 	</div>
-	{:else}
-	<p class="notification-text">You did it!</p>
-	{/if}
-	<div class="quiz-control">
-		<p>Current score: {$numCorrect} / {$numAnswered}
-			{#if $numAnswered > 0}
-			({Math.round($numCorrect / $numAnswered * 100)}%)
-			{/if}
-		</p>
-		<p>Notifications left: {$questionOrder.length} <a on:click={reset}>(reset)</a>
-			{#if notifications.length !== $quizLength}
-			<span class="soft">Note: new notifications have been added since you started this quiz. They will not be included until you reset.</span>
-			{/if}
-		</p>
-		<p class="soft">{encouragement}</p>
-	</div>
-</div>
+</DataComponent>
 
 <style>
 h1 {

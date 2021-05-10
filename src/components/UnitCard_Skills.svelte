@@ -1,7 +1,8 @@
 <script>
-	import { NUMBER_TO_STAT, SKILL_NAMES, STAT_DISPLAY_NAMES, lookupRows, getUnitSkills, animationDurations } from "@src/data/priconnedb";
+	import { NUMBER_TO_STAT, SKILL_NAMES, STAT_DISPLAY_NAMES, lookupRows, animationDurations } from "@src/data/priconnedb";
 	import { getUnitType } from "@src/logic/unit";
-	import { describeEffect, describeTarget } from "@src/logic/skill";
+	import { describeEffect, describeTarget, getUnitSkills } from "@src/logic/skill";
+	import { getIcon, getItemImg } from "@src/logic/ui";
 	import Tooltip from "@src/components/Tooltip.svelte";
 
 	export let unitId;
@@ -71,10 +72,10 @@
 		var skillImages = {};
 		for (var skillName in unitSkills) {
 			if (!unitSkills[skillName].data || !unitSkills[skillName].data.icon_type) {
-				skillImages[skillName] = "images/equipment/icon_icon_equipment_999999.png";
+				skillImages[skillName] = getItemImg(999999);
 			}
 			else {
-				skillImages[skillName] = "images/skill/icon_icon_skill_" + unitSkills[skillName].data.icon_type + ".png";
+				skillImages[skillName] = getIcon("icon_skill_" + unitSkills[skillName].data.icon_type);
 			}
 		}
 		return skillImages;
@@ -289,6 +290,8 @@ em:empty {
 
 div.card-section {
 	min-width: 350px;
+	flex-grow: 100;
+	flex-basis: 500px;
 }
 
 img.skill {

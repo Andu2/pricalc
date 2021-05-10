@@ -1,11 +1,14 @@
 <script>
-import { UNLOCKED_UNITS, SUMMON_UNITS, lookupRows } from "@src/data/priconnedb"
-import { getUnitIdBase, getUnitType } from "@src/logic/unit";
+import { lookupRows } from "@src/data/priconnedb"
+import { getUnitIdBase, getUnitType, getUnlockedUnits, getSummonUnits } from "@src/logic/unit";
 import { getUnitImg } from "@src/logic/ui"
 import { sortByAttr } from "@src/utils"
 
 export let unitId = -1;
 export let selectCallback;
+
+let UNLOCKED_UNITS = getUnlockedUnits();
+let SUMMON_UNITS = getSummonUnits();
 
 let bossBaseIds = [];
 let enemyBaseIds = []

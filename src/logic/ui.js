@@ -1,37 +1,67 @@
 import { getUnitType } from "@src/logic/unit";
 import { getItemType } from "@src/logic/item";
+import { dataSourceServer } from "@src/settings";
+import { get } from "svelte/store";
 
-export function getUnitImg(unitId, rarity) {
-	rarity = rarity || 1;
+export const CDN_URL = "https://pricalc.b-cdn.net";
+
+export function getUnitImg(unitId, options = {}) {
+	if (options.rarity === undefined) options.rarity = 1;
+	if (options.server === undefined) options.server = dataSourceServer;
+	if (options.useMissingImage === undefined) options.useMissingImage = true;
 	if (unitId > -1) {
 		let unitType = getUnitType(unitId);
 		if (unitType === "character") {
 			var unitIdString = unitId + "";
-			var unitIdWithRarity = unitIdString.slice(0, 4) + (rarity >= 3 ? "3" : "1") + unitIdString.slice(-1); 
-			return "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
+			let imgRarity = 1;
+			if (options.rarity >= 6) imgRarity = 6;
+			else if (options.rarity >= 3) imgRarity = 3;
+			var unitIdWithRarity = unitIdString.slice(0, 4) + imgRarity + unitIdString.slice(-1); 
+			return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_" + unitIdWithRarity + ".png";
+		}
+		else if (unitType === "summon") {
+			// Summons don't have an icon, so I made them myself.
+			return "images/unit/icon_unit_" + unitId + ".png";
 		}
 		else if (unitType === "shadow") {
-			return "images/unit/unit_icon_shadow_" + (unitId - 500000 + 10) + ".png";
+			return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_shadow_" + (unitId - 500000 + 10) + ".png";
 		}
 		else {
-			return "images/unit/unit_icon_unit_" + unitId + ".png";
+			return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_" + unitId + ".png";
 		}
 	}
+
+	if (options.useMissingImage) {
+		return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_unknown.png";
+	}
 	else {
-		return "images/unit/unit_icon_unit_unknown.png";
+		// 1x1 transparent png to prevent "broken image"
+		return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
 	}
 }
 
-export function getItemImg(itemId) {
+export function getItemImg(itemId, options = {}) {
+	if (options.invalid === undefined) options.invalid = false;
+	if (options.server === undefined) options.server = dataSourceServer;
 	if (itemId > -1) {
 		let itemType = getItemType(itemId);
+		let itemIdString = itemId + "";
+		if (options.invalid) {
+			itemIdString = "invalid_" + itemId;
+		}
 		if (itemType === "item") {
-			return "images/item/icon_icon_item_" + itemId + ".png";
+			return CDN_URL + "/" + options.server + "/icon/extract/latest/icon_item_" + itemIdString + ".png";
 		}
 		else if (itemType === "equipment") {
-			return "images/equipment/icon_icon_equipment_" + itemId + ".png";
+			return CDN_URL + "/" + options.server + "/icon/extract/latest/icon_equipment_" + itemIdString + ".png";
 		}
 	}
 		
-	return "images/unit/unit_icon_unit_unknown.png";
+	return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_unknown.png";
+}
+
+// For arbitrary other icons
+export function getIcon(iconName, options = {}) {
+	if (options.server === undefined) options.server = dataSourceServer;
+	return CDN_URL + "/" + options.server + "/icon/extract/latest/" + iconName + ".png";
 }

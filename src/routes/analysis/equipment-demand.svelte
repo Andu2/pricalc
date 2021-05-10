@@ -1,13 +1,14 @@
 <script>
 import DopeAssTable from "@src/components/DopeAssTable.svelte";
 import CharacterFilter from "@src/components/CharacterFilter.svelte";
-import { lookupRows, UNLOCKED_UNITS } from "@src/data/priconnedb";
-import { getMaxRefine } from "@src/logic/unit";
+import { lookupRows } from "@src/data";
+import { getMaxRefine, getUnlockedUnits, isFragment, isHardQuest } from "@src/logic";
 import { sortByAttr } from "@src/utils";
-import { isFragment } from "@src/logic/item";
-import { isHardQuest } from "@src/logic/quest";
+
+export const requiredTables = [ "quest_data", "wave_group_data", "item_data", "equipment_data", "enemy_reward_data" ];
 
 let unitIds = {};
+let UNLOCKED_UNITS = [];
 UNLOCKED_UNITS.forEach(function(unit) {
 	unitIds[unit.unit_id] = true;
 });
@@ -206,20 +207,25 @@ let columns = [
 	}
 ];
 
+function onDataReady() {
+	
+}
+
 </script>
 
 <h2>Equipment Demand</h2>
-
-<table id="demand-table-table">
-	<tr>
-		<td id="demand-table-config">
-			<CharacterFilter bind:unitIds={unitIds} />
-		</td>
-		<td id="demand-table">
-			<DopeAssTable data={data} columns={columns} />
-		</td>
-	</tr>
-</table>
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	<table id="demand-table-table">
+		<tr>
+			<td id="demand-table-config">
+				<CharacterFilter bind:unitIds={unitIds} />
+			</td>
+			<td id="demand-table">
+				<DopeAssTable data={data} columns={columns} />
+			</td>
+		</tr>
+	</table>
+</DataComponent>
 
 <style>
 	td#demand-table-config {

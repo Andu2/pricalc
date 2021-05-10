@@ -35,3 +35,8 @@ export function shortNumber(number) {
 	}
 	return (Math.round(shortenedNumber * 1000) / 1000) + abbrevs[index];
 }
+
+export function round(number, decimalPlaces) {
+	let multFactor = Math.pow(10, decimalPlaces);
+	return Math.round(number * multFactor) / multFactor;
+}

@@ -1,4 +1,3 @@
-import { UNLOCKED_UNITS } from "@src/data/priconnedb";
 import { createActor, isValidUnitConfiguration, getUnitType } from "@src/logic/unit";
 
 function initUnitForBattle(unit) {

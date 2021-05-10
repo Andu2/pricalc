@@ -2,6 +2,8 @@
 	export let pages;
 	export let priority = [];
 
+	import { CDN_URL } from "@src/logic/ui";
+
 	let categories = {};
 	pages.forEach(function(pageConfig) {
 		let category = pageConfig.category || "Uncategorized";
@@ -31,7 +33,7 @@
 	<div class="category-content">
 	{#each categories[category] as pageConfig}
 		<div class="page-card">
-			<div class="page-icon"><a href={pageConfig.path}><img src={pageConfig.icon} /></a></div>
+			<div class="page-icon"><a href={pageConfig.path}><img src={CDN_URL + "/" + pageConfig.icon} /></a></div>
 			<div class="page-info">
 				<div class="page-name"><a href={pageConfig.path}>{pageConfig.displayName}</a></div>
 				<div class="description">{pageConfig.description}</div>

@@ -1,6 +1,8 @@
 <script>
-	import { lookupRows, UNLOCKED_UNITS } from "@src/data/priconnedb";
+	import { lookupRows } from "@src/data/priconnedb";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
+
+	let UNLOCKED_UNITS = [];
 
 	let tableData = UNLOCKED_UNITS.map(function(unit) {
 		var unitIdString = unit.unit_id + "";

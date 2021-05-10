@@ -1,4 +1,4 @@
-import { NUMBER_TO_STAT, BUFF_NUMBER_TO_STAT, STAT_DISPLAY_NAMES, lookupRows } from "@src/data/priconnedb";
+import { getTable, NUMBER_TO_STAT, BUFF_NUMBER_TO_STAT, STAT_DISPLAY_NAMES, SKILL_NAMES, lookupRows } from "@src/data/priconnedb";
 
 // action 8 is speed manip
 const action8Detail = {
@@ -515,4 +515,65 @@ function pluralize(side) {
 		return side + "s";
 	}
 	else return side;
+}
+
+// Shorthand for complex skills/actions lookup
+let cachedUnitSkills = {}
+export function getUnitSkills(unitId) {
+	if (cachedUnitSkills[unitId] !== undefined) {
+		return cachedUnitSkills[unitId];
+	}
+
+	let skill_data = getTable("skill_data");
+	let skill_action = getTable("skill_action");
+
+	let unitSkills = {};
+	let skillsToLookup = SKILL_NAMES.concat(["ex_skill_evolution_1"]);
+	skillsToLookup.forEach(function(skillName) {
+		unitSkills[skillName] = {
+			type: skillName,
+			data: null,
+			actions: []
+		}
+	});
+
+	let unitSkillData = lookupRows("unit_skill_data", { unit_id: unitId }, {}, { cache: true })[0];
+	if (unitSkillData === undefined) {
+		console.warn("Unable to get skill data for unit id " + unitId);
+		return unitSkills;
+	}
+
+	// skills
+	skill_data.forEach(function(skillData) {
+		for (var skillName in unitSkillData) {
+			if (skillName === "unit_id") continue;
+			if (skillData.skill_id === unitSkillData[skillName]) {
+				if (!unitSkills[skillName]) {
+					unitSkills[skillName] = {
+						type: skillName,
+						data: null,
+						actions: []
+					}
+				}
+				unitSkills[skillName].data = skillData;
+			}
+		}
+	});
+
+	// actions
+	skill_action.forEach(function(skillAction) {
+		for (var skillName in unitSkills) {
+			if (unitSkills[skillName].data) {
+				for (var i = 1; i <= 7; i++) {
+					if (skillAction.action_id === unitSkills[skillName].data["action_" + i]) {
+						unitSkills[skillName].actions.push(skillAction)
+					}
+				}
+			}
+		}
+	});
+
+	cachedUnitSkills[unitId] = unitSkills;
+
+	return unitSkills;
 }

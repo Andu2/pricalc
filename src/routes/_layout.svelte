@@ -3,11 +3,13 @@
 	import Loading from '@src/components/Loading.svelte';
 	import Modal from "@src/components/Modal.svelte";
 	import SideMenu from "@src/components/SideMenu.svelte";
-	import { horizontalSlide } from "@src/horizontal-slide";
-	import { lastVersion, showMenu } from "@src/settings";
+	import GlobalStyle from "@src/components/GlobalStyle.svelte";
+	import { lastVersion, showMenu, theme, dataSourceServer, dataSourceVersion } from "@src/settings";
 	import { version } from "@src/config";
 	import { stores } from "@sapper/app";
 	import { derived } from "svelte/store";
+	import themes from "@src/../themes.json";
+
 	const { preloading } = stores();
 	let isLongLoad = derived(preloading, function(current, set) {
 		setTimeout(function() {
@@ -21,32 +23,53 @@
 	}
 	lastVersion.set(version);
 
+	$: colorStyle = getColorStyle($theme)
+
+	function getColorStyle(theme) {
+		if (themes[theme] === undefined) return "";
+		let styleString = "";
+		for (var colorVar in themes[theme].colors) {
+			styleString += "--" + colorVar + ": " + themes[theme].colors[colorVar] + ";";
+		}
+		return styleString;
+	}
+
 	export let segment;
 </script>
 
-<Nav {segment} />
+<div id="app-wrap" style={colorStyle}>
+	<GlobalStyle />
 
-<Modal />
+	<Nav {segment} />
 
-<div id="content-wrap">
-	<div id="menu" class:hidden={!$showMenu}>
-		<SideMenu {segment} />
+	<Modal />
+
+	<div id="content-wrap">
+		<div id="menu" class:hidden={!$showMenu}>
+			<SideMenu {segment} />
+		</div>
+		<div id="content">
+			<main>
+				{#if $preloading && $isLongLoad}
+				<Loading />
+				{:else}
+				<slot></slot>
+				{/if}
+			</main>
+		</div>
 	</div>
-	<div id="content">
-		<main>
-			{#if $preloading && $isLongLoad}
-			<Loading />
-			{:else}
-			<slot></slot>
-			{/if}
-		</main>
-	</div>
-</div>
 
-<div class="footer">
+	<div class="footer">
+	</div>
 </div>
 
 <style>
+	div#app-wrap {
+		position: absolute;
+		top: 0; left: 0; right: 0; bottom: 0;
+		overflow: auto;
+	}
+
 	div#content-wrap {
 		position: relative;
 		width: 80%;
@@ -94,13 +117,19 @@
 		width: 0;
 	}
 
-	div.footer {
+/*	div.footer {
 		color:#999999;
 		text-align: center;
 	}
 
 	div.footer a {
 		color:#999999;
+	}*/
+
+	@media only screen and (max-width: 1460px) {
+		div#content-wrap {
+			width: 90%;
+		}
 	}
 
 	@media only screen and (max-width: 1260px) {

@@ -1,4 +1,6 @@
-import { lookupRows, STAT_NAMES, NUMBER_TO_STAT, getUnitSkills } from "@src/data/priconnedb";
+import { getTable, lookupRows, STAT_NAMES, NUMBER_TO_STAT } from "@src/data/priconnedb";
+import { getUnitSkills } from "@src/logic/skill"
+import { sortByAttr } from "@src/utils";
 
 export function isValidUnitConfiguration(unitConfig) {
 	if (typeof unitConfig !== "object") return false;
@@ -11,6 +13,17 @@ export function isValidUnitConfiguration(unitConfig) {
 		}
 		else {
 			console.log("Unit ID " + unitConfig.id + " is unknown type");
+			return false;
+		}
+	}
+
+	if (unitType === "character" || unitType === "summon") {
+		if (lookupRows("unit_data", { unit_id: unitConfig.id }).length === 0) {
+			return false;
+		}
+	}
+	else {
+		if (lookupRows("unit_enemy_data", { unit_id: unitConfig.id }).length === 0) {
 			return false;
 		}
 	}
@@ -62,6 +75,9 @@ export function isValidUnitConfiguration(unitConfig) {
 	}
 	else if (unitType === "enemy" || unitType === "boss" || unitType === "shadow") {
 		if (typeof unitConfig.enemyId !== "number") return false;
+		if (lookupRows("enemy_parameter", { enemy_id: unitConfig.enemyId }).length === 0) {
+			return false;
+		}
 	}
 
 	return true;
@@ -346,7 +362,7 @@ export function getMaxRefine(refineData) {
 export function calculatePower(actor) {
 	var power = 0;
 
-	if (!actor.unitData) return 0;
+	if (!actor || !actor.unitData) return 0;
 
 	let statsForPower = {};
 	for (let statSource in actor.statsBreakdown) {
@@ -430,5 +446,49 @@ export function getUnitIdBase(unitId) {
 	}
 	else {
 		return Math.floor(unitId / 100);
+	}
+}
+
+export function getUnlockedUnits() {
+	return getTable("unit_data").filter(function(unitData) {
+		return unitData.cutin_1 !== 0 && unitData.unit_id < 200000;
+	}).sort(sortByAttr("unit_name"));
+}
+
+export function getSummonUnits() {
+	return getTable("unit_data").filter(function(unitData) {
+		// Summons: manual...there are copies of sylph that I don't want to include
+		if (unitData.unit_id === 404201 || unitData.unit_id === 403101) {// summon
+			return true;
+		}
+	}).sort(sortByAttr("unit_name"))
+}
+
+export function getBlankEquipmentSet() {
+	return {
+		slot1: {
+			equipped: false,
+			refine: 0
+		},
+		slot2: {
+			equipped: false,
+			refine: 0
+		},
+		slot3: {
+			equipped: false,
+			refine: 0
+		},
+		slot4: {
+			equipped: false,
+			refine: 0
+		},
+		slot5: {
+			equipped: false,
+			refine: 0
+		},
+		slot6: {
+			equipped: false,
+			refine: 0
+		}
 	}
 }

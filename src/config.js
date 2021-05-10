@@ -1,6 +1,6 @@
 import { sortByAttr } from "@src/utils";
 
-export const version = "0.4";
+export const version = "0.5";
 
 export const nav = [
 	{
@@ -24,37 +24,37 @@ export const pages = [
 		category: "Calculators",
 		displayName: "Combat Formulas",
 		description: "An interactive guide to how some of the combat formulas work.",
-		icon: "images/skill/icon_icon_skill_2024.png"
+		icon: "jp/icon/extract/latest/icon_skill_2024.png"
 	}, {
 		path: "guides/arena-jewels",
 		category: "Calculators",
 		displayName: "Arena Jewels",
 		description: "An interactive reference on how many jewels can be acquired in the battle arena and princess arena.",
-		icon: "images/unit/unit_icon_unit_103011.png"
+		icon: "jp/unit/extract/latest/icon_unit_103011.png"
 	}, {
 		path: "guides/chara-profiles",
 		category: "Misc Data",
 		displayName: "Character Profiles",
 		description: "Character information including age, race, height, weight, birthday, and blood type.",
-		icon: "images/unit/unit_icon_unit_100211.png"
+		icon: "jp/unit/extract/latest/icon_unit_100211.png"
 	}, {
 		path: "guides/clan-battle-laps",
 		category: "Reference",
 		displayName: "Clan Battle Data",
 		description: "An overview of the bosses in each clan battle.",
-		icon: "images/unit/unit_icon_unit_302100.png"
+		icon: "jp/unit/extract/latest/icon_unit_302100.png"
 	}, {
 		path: "guides/position",
 		category: "Reference",
 		displayName: "Unit Positions",
 		description: "List of ideal range values for each character. Includes distance from Saren.",
-		icon: "images/unit/unit_icon_unit_102811.png"
+		icon: "jp/unit/extract/latest/icon_unit_102811.png"
 	}, {
 		path: "guides/equipment",
 		category: "Reference",
 		displayName: "Equipment Data",
 		description: "Equipment stats, level requirements, and fragment requirements.",
-		icon: "images/equipment/icon_icon_equipment_101011.png"
+		icon: "jp/icon/extract/latest/icon_equipment_101011.png"
 	}, {
 	// 	path: "guides/cute",
 	// 	category: "Reference",
@@ -64,121 +64,129 @@ export const pages = [
 		category: "Reference",
 		displayName: "Quest Data",
 		description: "Enemies and expected drops for every normal and hard quest.",
-		icon: "images/map/icon_icon_map_100020.png"
+		icon: "jp/icon/extract/latest/icon_map_100020.png"
 	}, {
 		path: "analysis/stat-table",
 		category: "Reference",
 		displayName: "Max Stat Table",
 		description: "Stats for each character at maximum level.",
-		icon: "images/skill/icon_icon_skill_2016.png"
+		icon: "jp/icon/extract/latest/icon_skill_2016.png"
 	}, {
 		path: "analysis/rank-comparison",
 		category: "Analysis",
 		displayName: "Rank Comparison",
 		description: "Stat differences between equipment ranks. Useful for determining whether to rank a character up.",
-		icon: "images/equipment/icon_icon_equipment_104551.png"
+		icon: "jp/icon/extract/latest/icon_equipment_104551.png"
 	}, {
 		path: "analysis/damage-scaling",
 		category: "Analysis",
 		displayName: "Skill Damage Scaling",
 		description: "Plot of how much damage each attacking skill does, per skill level and per attack stat.",
-		icon: "images/skill/icon_icon_skill_3001.png"
+		icon: "jp/icon/extract/latest/icon_skill_3001.png"
 	}, {
 		path: "analysis/drops",
 		category: "Analysis",
-		displayName: "Drops Per Stamina",
-		description: "Select an item and see which quests are most efficient for farming that item.",
-		icon: "images/item/icon_icon_item_90007.png"
+		displayName: "Item Drops",
+		description: "Select an item and see which quests drop it, and which quests are most stamina-efficient for farming it.",
+		icon: "jp/icon/extract/latest/icon_item_90007.png"
 	}, {
 		path: "analysis/equipment-demand",
 		category: "Analysis",
 		displayName: "Equipment Demand",
 		description: "Select characters and calculate the amount of each equipment fragment necessary to max them out.",
-		icon: "images/item/icon_icon_item_99002.png"
+		icon: "jp/icon/extract/latest/icon_item_99002.png"
 	}, {
 		path: "units",
 		category: "Reference",
 		displayName: "Unit Data",
 		description: "View character, enemy, and boss details, including stats and detailed skill descriptions.",
-		icon: "images/unit/unit_icon_unit_101211.png"
+		icon: "jp/unit/extract/latest/icon_unit_101211.png"
 	}, {
 	// 	path: "simulator",
 	// 	category: "Analysis",
 	// 	displayName: "Simulator",
 	// 	description: "Select a lineup of units and simulate the positions each unit will end up in. More simulation features coming soon™!",
-	// 	icon: "images/skill/icon_icon_skill_1001.png"
+	// 	icon: "jp/icon/extract/latest/icon_skill_1001.png"
 	// }, {
 		path: "notification-quiz",
 		category: "Fun Stuff",
 		displayName: "Notification Quiz",
 		description: "Match the notification message to the character!",
-		icon: "images/unit/unit_icon_unit_100611.png"
+		icon: "jp/unit/extract/latest/icon_unit_100611.png"
 	}, {
 		path: "guides/divine-amulets",
 		category: "Calculators",
 		displayName: "Shard Amulet Costs",
 		description: "Calculate how many divine amulets you'll need to get a character starred up.",
-		icon: "images/item/icon_icon_item_90005.png"
+		icon: "jp/icon/extract/latest/icon_item_90005.png"
 	}, {
 		path: "units",
 		category: "Featured PriCalc Tools",
 		displayName: "Unit Viewer",
 		description: "With this tool, you can view character stats at specific levels, skill levels, rarity, rank, and bond. You can also view enemy unit and boss stats!",
-		icon: "images/unit/unit_icon_unit_101211.png"
+		icon: "jp/unit/extract/latest/icon_unit_101211.png"
 	// }, {
 	// 	path: "simulator",
 	// 	category: "Featured PriCalc Tools",
 	// 	displayName: "Simulator",
 	// 	description: "Select a lineup of units and simulate a fight.",
-	// 	icon: "images/skill/icon_icon_skill_1001.png"
+	// 	icon: "jp/icon/extract/latest/icon_skill_1001.png"
 	}, {
 		path: "analysis/rank-comparison",
 		category: "Featured PriCalc Tools",
 		displayName: "Rank Comparison",
 		description: "This table shows the stat difference between different ranks for each character. Useful when trying to decide whether to rank up!",
-		icon: "images/equipment/icon_icon_equipment_104551.png"
+		icon: "jp/icon/extract/latest/icon_equipment_104551.png"
 	// }, {
 	// 	path: "guides/clan-battle-laps",
 	// 	category: "Featured PriCalc Tools",
 	// 	displayName: "Clan Battle Data",
 	// 	description: "An overview of the bosses in each clan battle.",
-	// 	icon: "images/unit/unit_icon_unit_302100.png"
+	// 	icon: "jp/unit/extract/latest/icon_unit_302100.png"
 	}, {
 		path: "jp-history/characters",
 		category: "JP Content History",
 		displayName: "Characters Added",
 		description: "Dates on which characters were added in JP.",
-		icon: "images/unit/unit_icon_unit_106811.png" 
+		icon: "jp/unit/extract/latest/icon_unit_106811.png" 
 	}, {
 		path: "jp-history/features",
 		category: "JP Content History",
 		displayName: "Game Updates",
 		description: "Dates on which various game updates where added in JP, including new dungeons, new grotto levels, new furniture levels, and other new features. Also, dates on which arenas were shuffled.",
-		icon: "images/item/icon_icon_item_90008.png" 
+		icon: "jp/icon/extract/latest/icon_item_90008.png" 
 	}, {
 		path: "jp-history/ranks-levels-areas",
 		category: "JP Content History",
 		displayName: "Ranks and Max Level",
 		description: "Dates on which the max level was increased, and dates on which new equipment was added (along with the associated quest area).",
-		icon: "images/equipment/icon_icon_equipment_105552.png" 
+		icon: "jp/icon/extract/latest/icon_equipment_105552.png" 
 	}, {
 		path: "jp-history/six-stars",
 		category: "JP Content History",
 		displayName: "Six Stars Added",
 		description: "Dates on which characters got a six star upgrade.",
-		icon: "images/unit/unit_icon_unit_101261.png" 
+		icon: "jp/unit/extract/latest/icon_unit_101261.png" 
 	}, {
 		path: "jp-history/unique-equipment",
 		category: "JP Content History",
 		displayName: "Unique Equipment",
 		description: "Dates on which characters got their unique equipment.",
-		icon: "images/equipment/icon_icon_equipment_140000.png" 
+		icon: "jp/icon/extract/latest/icon_equipment_140000.png" 
 	}
 ].sort(sortByAttr("displayName"));
 
 export const changeLog = [{
-		version: "0.4",
+		version: "0.5",
 		date: "???",
+		notes: [
+			"Added ability to select data source, including JP data and old data",
+			"Added dark mode",
+			"Unit viewer changes: Added mana cost, equipment cost, shard location"
+		]
+	}, {
+		version: "0.4",
+		date: "2021-04-25",
 		notes: [
 			"Merged analysis and guides",
 			"Added ability to hide menu and added page indices",
