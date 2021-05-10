@@ -23,8 +23,11 @@
 	}, {
 		rank: 9,
 		slots: [2,4,6]
+	}, {
+		rank: 9,
+		slots: [2,3,4,5,6]
 	}]
-	let rank1 = 4;
+	let rank1 = 5;
 	let rank2 = 3;
 	let rarity = 3;
 
