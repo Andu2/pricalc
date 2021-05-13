@@ -10,6 +10,14 @@
 		else if (arena === "princessArena") return "Princess Arena";
 		else return "???";
 	}
+
+	let shopDisplayNames = {
+		"dungeon": "Dungeon",
+		"arena": "Arena",
+		"princessArena": "Princess Arena",
+		"clanBattle": "Clan Battle",
+		"master": "Master"
+	}
 </script>
 
 <h2>JP Misc Features Timeline</h2>
@@ -46,6 +54,19 @@
 	{#each jpContentHistory.grotto as releaseData, i}
 	<tr class:even={i % 2 === 0}>
 		<td>{releaseData.level}</td>
+		<td>{releaseData.jpDate}</td>
+		<td>{Math.round((new Date(releaseData.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24)}</td>
+	</tr>
+	{/each}
+</table>
+
+<h3>Shards in Shop</h3>
+<table class="info-table">
+	<tr><th>Character</th><th>Shop</th><th>JP Release Date</th><th>Days After JP Launch</th></tr>
+	{#each jpContentHistory.shardsInShop as releaseData, i}
+	<tr class:even={i % 2 === 0}>
+		<td>{releaseData.name}</td>
+		<td>{shopDisplayNames[releaseData.shop]}</td>
 		<td>{releaseData.jpDate}</td>
 		<td>{Math.round((new Date(releaseData.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24)}</td>
 	</tr>
