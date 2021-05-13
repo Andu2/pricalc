@@ -128,19 +128,20 @@ function getSortedActors(unitConfigs) {
 }
 
 const LIMA_ID = 105201;
+const BASE_SPACING = 605;
 
 function setStartPositions(battlefield) {
 	let missingOffense = 5 - battlefield.offense.length;
 	let missingDefense = 5 - battlefield.defense.length;
 	battlefield.offense.forEach(function(actor, i) {
-		actor.position = 604 + 200 * (i + missingOffense);
+		actor.position = BASE_SPACING + 200 * (i + missingOffense);
 		if (getUnitType(actor.config.id) === "boss") {
 			// Bosses have larger "attack widths"?
 			actor.position -= 300;
 		}
 	});
 	battlefield.defense.forEach(function(actor, i) {
-		actor.position = 604 + 200 * (i + missingDefense);
+		actor.position = BASE_SPACING + 200 * (i + missingDefense);
 		if (getUnitType(actor.config.id) === "boss") {
 			actor.position -= 300;
 		}
@@ -161,8 +162,8 @@ function setStartPositions(battlefield) {
 	let someoneMoved = false;
 	do {
 		someoneMoved = false;
-		if (advancePositions(battlefield.defense, battlefield.offense, battlefield.skillQueue)) someoneMoved = true;
 		if (advancePositions(battlefield.offense, battlefield.defense, battlefield.skillQueue)) someoneMoved = true;
+		if (advancePositions(battlefield.defense, battlefield.offense, battlefield.skillQueue)) someoneMoved = true;
 	} while (someoneMoved);
 }
 
