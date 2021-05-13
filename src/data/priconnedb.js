@@ -195,16 +195,20 @@ export function lookupRows(tableName, constraints, calculated = {}, options = {}
 	return returnRows;
 }
 
+let cacheFunctionId = 1;
 export function cacheFunction(func) {
-	if (!func.name) throw Error("Cached functions cannot be anonymous")
-	functionCache[func.name] = {};
+	// Can't use function name because of minifier. Use an ID instead
+	// if (!func.name) throw Error("Cached functions cannot be anonymous")
+	let funcKey = cacheFunctionId + ""; // Les get funcKey yall
+	cacheFunctionId++;
+	functionCache[funcKey] = {};
 	return function runCacheFunction() {
 		let cacheKey = JSON.stringify(arguments);
-		if (functionCache[func.name][cacheKey] !== undefined) {
-			return functionCache[func.name][cacheKey];
+		if (functionCache[funcKey][cacheKey] !== undefined) {
+			return functionCache[funcKey][cacheKey];
 		}
 		let returnVal = func.apply(null, arguments);
-		functionCache[func.name][cacheKey] = returnVal;
+		functionCache[funcKey][cacheKey] = returnVal;
 		return returnVal;
 	}
 }
