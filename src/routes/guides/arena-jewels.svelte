@@ -1,24 +1,19 @@
 <script>
-	import { lookupRows } from "@src/data/priconnedb";
+	import { getTable } from "@src/data";
+	import { getIcon } from "@src/logic";
+	import DataComponent from "@src/components/DataComponent.svelte";
 
-	let seasonRewards = lookupRows("arena_max_season_rank_reward", {});
-	let oneTimeRewards = lookupRows("arena_max_rank_reward", {});
-	let dailyRewards = lookupRows("arena_daily_rank_reward", {});
+	const requiredTables = [ "arena_max_season_rank_reward", "arena_max_rank_reward", "arena_daily_rank_reward" ];
 
-	let seasonRewardsTable = seasonRewards.map(summarizeReward);
-	let oneTimeRewardsTable = oneTimeRewards.map(summarizeReward);
-	let dailyRewardsTable = dailyRewards.map(summarizeReward);
+	let seasonRewards = [];
+	let oneTimeRewards = [];
+	let dailyRewards = [];
 
-	let rewardTables = [{
-		header: "All-time Rewards",
-		rewardData: oneTimeRewardsTable
-	}, {
-		header: "Season Rewards",
-		rewardData: seasonRewardsTable
-	}, {
-		header: "Daily Rewards",
-		rewardData: dailyRewardsTable
-	}]
+	let seasonRewardsTable = [];
+	let oneTimeRewardsTable = [];
+	let dailyRewardsTable = [];
+
+	let rewardTables = [];
 
 	function summarizeReward(reward) {
 		let rewardSummary = {
@@ -34,14 +29,13 @@
 	let currentMaxRank = 15001;
 	let seasonMaxRank = 15001;
 	let newMaxRank = 1;
-	$: seasonJewels = calculateSeasonJewels(currentMaxRank, seasonMaxRank, newMaxRank);
-	$: oneTimeJewels = calculateAllTimeJewels(currentMaxRank, seasonMaxRank, newMaxRank);
-
 	let currentRankAtReset = 151;
-	$: missOutJewels = Math.max(0, calculateRewardJewels(1, seasonRewards) - calculateRewardJewels(currentRankAtReset, seasonRewards));
-
 	let holdRank = 950;
 	let holdDays = 90;
+
+	$: seasonJewels = calculateSeasonJewels(currentMaxRank, seasonMaxRank, newMaxRank);
+	$: oneTimeJewels = calculateAllTimeJewels(currentMaxRank, seasonMaxRank, newMaxRank);
+	$: missOutJewels = Math.max(0, calculateRewardJewels(1, seasonRewards) - calculateRewardJewels(currentRankAtReset, seasonRewards));
 	$: holdJewels = calculateDailyReward(holdRank, holdDays, dailyRewards);
 
 	function calculateSeasonJewels(allTimeMaxRank, seasonMaxRank, newRank) {
@@ -75,45 +69,72 @@
 		}
 		return 0;
 	}
+
+	function onDataReady() {
+		seasonRewards = getTable("arena_max_season_rank_reward");
+		oneTimeRewards = getTable("arena_max_rank_reward");
+		dailyRewards = getTable("arena_daily_rank_reward");
+
+		seasonRewardsTable = seasonRewards.map(summarizeReward);
+		oneTimeRewardsTable = oneTimeRewards.map(summarizeReward);
+		dailyRewardsTable = dailyRewards.map(summarizeReward);
+
+		rewardTables = [{
+			header: "All-time Rewards",
+			rewardData: oneTimeRewardsTable
+		}, {
+			header: "Season Rewards",
+			rewardData: seasonRewardsTable
+		}, {
+			header: "Daily Rewards",
+			rewardData: dailyRewardsTable
+		}]
+
+		seasonJewels = calculateSeasonJewels(currentMaxRank, seasonMaxRank, newMaxRank);
+		oneTimeJewels = calculateAllTimeJewels(currentMaxRank, seasonMaxRank, newMaxRank);
+		missOutJewels = Math.max(0, calculateRewardJewels(1, seasonRewards) - calculateRewardJewels(currentRankAtReset, seasonRewards));
+		holdJewels = calculateDailyReward(holdRank, holdDays, dailyRewards);
+	}
 </script>
 
 <h2>Arena Rewards</h2>
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	<p>There are three types of jewel rewards for arenas: Daily, max season rank, and max all-time rank. Max season rank jewels are only obtained <em>if you have already acquired the max all-time rank jewels for the same rank.</em> Since the global server has not yet had a season reset, we cannot currently obtain max season rank jewels.</p>
 
-<p>There are three types of jewel rewards for arenas: Daily, max season rank, and max all-time rank. Max season rank jewels are only obtained <em>if you have already acquired the max all-time rank jewels for the same rank.</em> Since the global server has not yet had a season reset, we cannot currently obtain max season rank jewels.</p>
+	<p>The reward amounts for both arena types are the same.</p>
 
-<p>The reward amounts for both arena types are the same.</p>
+	<h3>Quick Calculations</h3>
 
-<h3>Quick Calculations</h3>
+	<p>If your current maximum all-time rank achieved is <input type="number" bind:value={currentMaxRank} min=1 max=15001 /> <br/>
+		and your maximum achieved rank this season is <input type="number" bind:value={seasonMaxRank} min=1 max=15001 /> <br/>
+		and you achieve a new rank of <input type="number" bind:value={newMaxRank} min=1 max=15001 /> <br />
+		you will gain <strong>{seasonJewels}</strong> <img class="inline-icon" src={getIcon("icon_item_91001")} /> jewels from season rewards, <br />
+		and a one-time reward of <strong>{oneTimeJewels}</strong> <img class="inline-icon" src={getIcon("icon_item_91001")} /> jewels.</p>
 
-<p>If your current maximum all-time rank achieved is <input type="number" bind:value={currentMaxRank} min=1 max=15001 /> <br/>
-	and your maximum achieved rank this season is <input type="number" bind:value={seasonMaxRank} min=1 max=15001 /> <br/>
-	and you achieve a new rank of <input type="number" bind:value={newMaxRank} min=1 max=15001 /> <br />
-	you will gain <strong>{seasonJewels}</strong> <img class="inline-icon" src="images/item/icon_icon_item_91001.png" /> jewels from season rewards, <br />
-	and a one-time reward of <strong>{oneTimeJewels}</strong> <img class="inline-icon" src="images/item/icon_icon_item_91001.png" /> jewels.</p>
+	<p>If the season were to reset and you had achieved a maximum season rank of <input type="number" bind:value={currentRankAtReset} min=1 max=15001 /> <br />
+		you would miss out on <strong>{missOutJewels}</strong> <img class="inline-icon" src={getIcon("icon_item_91001")} /> potential season rank jewels.</p>
 
-<p>If the season were to reset and you had achieved a maximum season rank of <input type="number" bind:value={currentRankAtReset} min=1 max=15001 /> <br />
-	you would miss out on <strong>{missOutJewels}</strong> <img class="inline-icon" src="images/item/icon_icon_item_91001.png" /> potential season rank jewels.</p>
+	<p>If you are able to hold a rank of <input type="number" bind:value={holdRank} min=1 max=15001 /> <br />
+		for <input type="number" bind:value={holdDays} min=1 max=10000 /> days <br />
+		you will earn <strong>{holdJewels}</strong> <img class="inline-icon" src={getIcon("icon_item_91001")} /> jewels.</p>
 
-<p>If you are able to hold a rank of <input type="number" bind:value={holdRank} min=1 max=15001 /> <br />
-	for <input type="number" bind:value={holdDays} min=1 max=10000 /> days <br />
-	you will earn <strong>{holdJewels}</strong> <img class="inline-icon" src="images/item/icon_icon_item_91001.png" /> jewels.</p>
+	<h3>Reward Tables</h3>
 
-<h3>Reward Tables</h3>
-
-<table class="wrap-table"><tr>
-	{#each rewardTables as rewardTable}
-	<td class="reward-table-cell">
-		<div class="reward-table-wrap">
-			<h3>{rewardTable.header}</h3>
-			<table class="reward-table"><tr><th>Rank(s)</th><th>Reward Jewels</th></tr>
-				{#each rewardTable.rewardData as reward}
-				<tr><td>{reward.rank}</td><td>{reward.jewels}</td></tr>
-				{/each}
-			</table>
-		</div>
-	</td>
-	{/each}
-</tr></table>
+	<table class="wrap-table"><tr>
+		{#each rewardTables as rewardTable}
+		<td class="reward-table-cell">
+			<div class="reward-table-wrap">
+				<h3>{rewardTable.header}</h3>
+				<table class="reward-table"><tr><th>Rank(s)</th><th>Reward Jewels</th></tr>
+					{#each rewardTable.rewardData as reward}
+					<tr><td>{reward.rank}</td><td>{reward.jewels}</td></tr>
+					{/each}
+				</table>
+			</div>
+		</td>
+		{/each}
+	</tr></table>
+</DataComponent>
 
 <style>
 

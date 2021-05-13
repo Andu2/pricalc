@@ -4,7 +4,7 @@
 	import Modal from "@src/components/Modal.svelte";
 	import SideMenu from "@src/components/SideMenu.svelte";
 	import GlobalStyle from "@src/components/GlobalStyle.svelte";
-	import { lastVersion, showMenu, theme, dataSourceServer, dataSourceVersion } from "@src/settings";
+	import { lastVersion, showMenu, theme } from "@src/settings";
 	import { version } from "@src/config";
 	import { stores } from "@sapper/app";
 	import { derived } from "svelte/store";

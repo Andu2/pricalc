@@ -3,7 +3,7 @@ import { lookupRows, getTable } from "@src/data/priconnedb";
 import { onMount } from "svelte";
 import { readable } from "svelte/store";
 import { localStorageStore } from "@src/local-store";
-import { getUnlockedUnits } from "@src/logic/unit";
+import { getUnlockedUnits, getUnitImg } from "@src/logic";
 import DataComponent from "@src/components/DataComponent.svelte";
 
 let requiredTables = [ "unit_data", "notif_data" ];
@@ -97,14 +97,13 @@ function getChoices(notification) {
 
 function getNotificationType(notification) {
 	if (!notification) {
-		return "you are out of questions";
+		return "";
 	}
 	return notificationTypes[notification.notif_type]
 }
 
 function getUnitImage(choice) {
-	let unitIdString = choice.unit_id + "";
-	return "images/unit/unit_icon_unit_" + unitIdString.slice(0, 4) + "11.png";
+	return getUnitImg(choice.unit_id, { rarity: 3 });
 }
 
 function respond(i) {
@@ -179,7 +178,6 @@ function onDataReady() {
 	quizLength = localStorageStore("notifQuiz/quizLength", notifications.length);
 	questionOrder = localStorageStore("notifQuiz/questionOrder", getNewQuestionOrder(notifications));
 	UNLOCKED_UNITS = getUnlockedUnits();
-
 	nextQuestion(true);
 }
 
@@ -188,7 +186,7 @@ function onDataReady() {
 <DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
 	<div class="notification-quiz-wrap">
 		<h1>Notification Quiz</h1>
-		{#if !outOfQuestions}
+		{#if !outOfQuestions && notificationType && notifications.length >= $quizLength}
 		<p class="question">Which character says this notification when {notificationType}?</p>
 		<p class="notification-text">{getNotificationText(notification)}</p>
 		<div>

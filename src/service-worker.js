@@ -6,6 +6,7 @@ const ASSETS = `cache${timestamp}`;
 // `files` is an array of everything in the `static` directory
 const to_cache = shell.concat(files);
 const staticAssets = new Set(to_cache);
+const CDN_HOST = "pricalc.b-cdn.net";
 
 // self.addEventListener('install', event => {
 // 	event.waitUntil(
@@ -60,6 +61,8 @@ self.addEventListener('fetch', event => {
 	const isHttp = url.protocol.startsWith('http');
 	const isDevServerRequest = url.hostname === self.location.hostname && url.port !== self.location.port;
 	const isStaticAsset = url.host === self.location.host && staticAssets.has(url.pathname);
+	// EVERY resource from the CDN will be cached except asset versions; we will bust the cache with query string for latest tables
+	const isCdnAsset = (url.host === CDN_HOST && !(url.pathname.indexOf("asset-versions.json") > -1)); 
 	const skipBecauseUncached = event.request.cache === 'only-if-cached' && !isStaticAsset;
 
 	if (isHttp && !isDevServerRequest && !skipBecauseUncached) {
@@ -68,7 +71,7 @@ self.addEventListener('fetch', event => {
 				// always serve static files and bundler-generated assets from cache.
 				// if your application has other URLs with data that will never change,
 				// set this variable to true for them and they will only be fetched once.
-				const cachedAsset = isStaticAsset && await caches.match(event.request);
+				const cachedAsset = (isStaticAsset || isCdnAsset) && await caches.match(event.request);
 
 				// for pages, you might want to serve a shell `service-worker-index.html` file,
 				// which Sapper has generated for you. It's not right for every

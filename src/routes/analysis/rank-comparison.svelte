@@ -1,34 +1,46 @@
 <script>
-	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
-	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, getUnlockedUnits } from "@src/logic/unit";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data";
+	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, 
+		getUnlockedUnits, getMaxRank, getUnitImg, getMaxLevel, getUnitIdBase, getRankOptions, getCharaCards } from "@src/logic";
+	import { escAttr, round } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
-	import { hideImpossibleRarities } from "@src/settings.js";
+	import DataComponent from "@src/components/DataComponent.svelte";
+	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
+
+	const requiredTables = [ "unit_data", "unit_promotion", "skill_data", "unit_skill_data", "skill_action", "unit_rarity",
+		"unit_promotion_status", "equipment_data", "equipment_enhance_rate", "unit_status_coefficient", "experience_team", 
+		"story_detail", "chara_story_status" ];
 
 	let tableData;
 	let tableColumns;
+	let dataLoaded = false;
+	const MIN_REASONABLE_RANK = 7;
+	// Unfortunately the JP data does not go back forever, and we want to be able to see
+	// the stats at the next partial rank even if it's not relevant for any of the JP versions available
+	const forceOption = {
+		rank: 10,
+		equipment: {
+			slot1: false,
+			slot2: true,
+			slot3: false,
+			slot4: true,
+			slot5: false,
+			slot6: true
+		},
+		numSlots: 3
+	}
 
 	let UNLOCKED_UNITS = [];
+	let RANK_OPTIONS = [];
+	let MAX_LEVEL = 1;
+	let charaCards = {};
+	let maxBondOutfits = false;
 
-	const RANK_OPTIONS = [{
-		rank: 7,
-		slots: [1,2,3,4,5,6]
-	}, {
-		rank: 8,
-		slots: [2,4,6] // TODO: do automatically isntead of manual
-	}, {
-		rank: 8,
-		slots: [2,3,4,5,6] // TODO: do automatically isntead of manual
-	}, {
-		rank: 8,
-		slots: [1,2,3,4,5,6]
-	}, {
-		rank: 9,
-		slots: [2,4,6]
-	}]
-	let rank1 = 4;
-	let rank2 = 3;
+	let rank1 = -1;
+	let rank2 = -1;
 	let rarity = 3;
+	let showPercentages = false;
 
 	const alwaysDisplayCols = ["icon", "name"];
 	let columnConfig = {
@@ -46,24 +58,28 @@
 		"effective_physical_hp": {
 			attr: "effective_physical_hp",
 			displayName: "Effective Physical HP",
-			sort: "default"
+			sort: "default",
+			displayValue: displayPercentages
 		},
 		"effective_magic_hp": {
 			attr: "effective_magic_hp",
 			displayName: "Effective Magic HP",
-			sort: "default"
+			sort: "default",
+			displayValue: displayPercentages
 		},
 		"power": {
 			attr: "power",
 			displayName: "Power",
-			sort: "default"
+			sort: "default",
+			displayValue: displayPercentages
 		}
 	}
 	STAT_NAMES.forEach(function(stat) {
 		columnConfig[stat] = {
 			attr: stat,
 			displayName: STAT_DISPLAY_NAMES[stat],
-			sort: "default"
+			sort: "default",
+			displayValue: displayPercentages
 		}
 	});
 
@@ -88,111 +104,150 @@
 		"power": false // calculated value
 	}
 
-	$: tableData = calculateStatDifferences(rank1, rank2, rarity, $hideImpossibleRarities);
+	$: tableData = calculateStatDifferences(rank1, rank2, rarity, showPercentages, maxBondOutfits, $hideImpossibleRarities, $includeExSkillStats);
 	$: tableColumns = calculateTableColumns(toggleDisplayCols);
 
-	function calculateStatDifferences(rank1, rank2, rarity) {
+	function displayPercentages(row, attr) {
+		if (showPercentages) {
+			return row[attr] + "%"
+		}
+		return row[attr];
+	}
+
+	function calculateStatDifferences(rank1, rank2, rarity, showPercentages, maxBondOutfits) {
+		if (!dataLoaded) return [];
 		let differences = [];
 		UNLOCKED_UNITS.forEach(function(unitData) {
 			if ($hideImpossibleRarities && rarity < unitData.rarity) {
 				return;
 			}
+
+			let bondLevels = {}
+			let unitBaseId = getUnitIdBase(unitData.unit_id);
+			charaCards[unitBaseId].cards.forEach(function(id) {
+				if (id === unitBaseId) {
+					if (rarity >= 6) bondLevels[id] = 12;
+					else if (rarity >= 3) bondLevels[id] = 8;
+					else bondLevels[id] = 4;
+				}
+				else {
+					if (maxBondOutfits) {
+						bondLevels[id] = 12;
+					}
+				}
+			});
+
 			let actor1 = createActor({
 				id: unitData.unit_id,
 				rarity: rarity,
-				level: 1, // doesn't matter
-				bond: {},
+				level: MAX_LEVEL,
+				bond: bondLevels,
 				rank: RANK_OPTIONS[rank1].rank,
 				equipment: {
 					slot1: {
-						equipped: (RANK_OPTIONS[rank1].slots.indexOf(1) > -1),
+						equipped: (RANK_OPTIONS[rank1].equipment["slot" + 1]),
 						refine: 5,
 					},
 					slot2: {
-						equipped: (RANK_OPTIONS[rank1].slots.indexOf(2) > -1),
+						equipped: (RANK_OPTIONS[rank1].equipment["slot" + 2]),
 						refine: 5,
 					},
 					slot3: {
-						equipped: (RANK_OPTIONS[rank1].slots.indexOf(3) > -1),
+						equipped: (RANK_OPTIONS[rank1].equipment["slot" + 3]),
 						refine: 5,
 					},
 					slot4: {
-						equipped: (RANK_OPTIONS[rank1].slots.indexOf(4) > -1),
+						equipped: (RANK_OPTIONS[rank1].equipment["slot" + 4]),
 						refine: 5,
 					},
 					slot5: {
-						equipped: (RANK_OPTIONS[rank1].slots.indexOf(5) > -1),
+						equipped: (RANK_OPTIONS[rank1].equipment["slot" + 5]),
 						refine: 5,
 					},
 					slot6: {
-						equipped: (RANK_OPTIONS[rank1].slots.indexOf(6) > -1),
+						equipped: (RANK_OPTIONS[rank1].equipment["slot" + 6]),
 						refine: 5,
 					}
 				},
 				skills: {
-					union_burst: 1,
-					main_skill_1: 1,
-					main_skill_2: 1,
-					ex_skill_1: 1
-				},
-				includeExSkillStats: false
+					union_burst: MAX_LEVEL,
+					main_skill_1: MAX_LEVEL,
+					main_skill_2: MAX_LEVEL,
+					ex_skill_1: MAX_LEVEL
+				}
+			}, {
+				includeExSkillStats: $includeExSkillStats
 			});
 
 			let actor2 = createActor({
 				id: unitData.unit_id,
 				rarity: rarity,
-				level: 1,
-				bond: {},
+				level: MAX_LEVEL,
+				bond: bondLevels,
 				rank: RANK_OPTIONS[rank2].rank,
 				equipment: {
 					slot1: {
-						equipped: (RANK_OPTIONS[rank2].slots.indexOf(1) > -1),
+						equipped: (RANK_OPTIONS[rank2].equipment["slot" + 1]),
 						refine: 5,
 					},
 					slot2: {
-						equipped: (RANK_OPTIONS[rank2].slots.indexOf(2) > -1),
+						equipped: (RANK_OPTIONS[rank2].equipment["slot" + 2]),
 						refine: 5,
 					},
 					slot3: {
-						equipped: (RANK_OPTIONS[rank2].slots.indexOf(3) > -1),
+						equipped: (RANK_OPTIONS[rank2].equipment["slot" + 3]),
 						refine: 5,
 					},
 					slot4: {
-						equipped: (RANK_OPTIONS[rank2].slots.indexOf(4) > -1),
+						equipped: (RANK_OPTIONS[rank2].equipment["slot" + 4]),
 						refine: 5,
 					},
 					slot5: {
-						equipped: (RANK_OPTIONS[rank2].slots.indexOf(5) > -1),
+						equipped: (RANK_OPTIONS[rank2].equipment["slot" + 5]),
 						refine: 5,
 					},
 					slot6: {
-						equipped: (RANK_OPTIONS[rank2].slots.indexOf(6) > -1),
+						equipped: (RANK_OPTIONS[rank2].equipment["slot" + 6]),
 						refine: 5,
 					}
 				},
 				skills: {
-					union_burst: 1,
-					main_skill_1: 1,
-					main_skill_2: 1,
-					ex_skill_1: 1
-				},
-				includeExSkillStats: false
+					union_burst: MAX_LEVEL,
+					main_skill_1: MAX_LEVEL,
+					main_skill_2: MAX_LEVEL,
+					ex_skill_1: MAX_LEVEL
+				}
+			}, {
+				includeExSkillStats: $includeExSkillStats
 			});
 
-			var unitIdString = actor1.config.id + "";
-			let rarityString = (rarity >= 3) ? "3" : "1";
-			var unitIdWithRarity = unitIdString.slice(0, 4) + rarityString + unitIdString.slice(-1); 
-			var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
+			var charImg = getUnitImg(actor1.config.id, { rarity: rarity });
 
 			let diff = {
-				icon: "<img class=\"table-icon\" src=\"" + charImg + "\" />",
-				name: actor1.unitData.unit_name,
-				power: Math.round(calculatePower(actor1) - calculatePower(actor2)),
-				effective_physical_hp: Math.round(calculateEffectivePhysicalHp(actor1) - calculateEffectivePhysicalHp(actor2)),
-				effective_magic_hp: Math.round(calculateEffectiveMagicHp(actor1) - calculateEffectiveMagicHp(actor2))
-			};
+				icon: "<img class=\"table-icon\" src=\"" + escAttr(charImg) + "\" />",
+				name: actor1.unitData.unit_name
+			}
+			if (showPercentages) {
+				diff.power = round((calculatePower(actor1) / calculatePower(actor2) - 1) * 100, 2);
+				diff.effective_physical_hp = round((calculateEffectivePhysicalHp(actor1) / calculateEffectivePhysicalHp(actor2) - 1) * 100, 2);
+				diff.effective_magic_hp = round((calculateEffectiveMagicHp(actor1) / calculateEffectiveMagicHp(actor2) - 1) * 100, 2);
+				if (isNaN(diff.power)) diff.power = 0;
+				if (isNaN(diff.effective_physical_hp)) diff.effective_physical_hp = 0;
+				if (isNaN(diff.effective_magic_hp)) diff.effective_magic_hp = 0;
+			}
+			else {
+				diff.power = Math.round(calculatePower(actor1) - calculatePower(actor2));
+				diff.effective_physical_hp = Math.round(calculateEffectivePhysicalHp(actor1) - calculateEffectivePhysicalHp(actor2));
+				diff.effective_magic_hp = Math.round(calculateEffectiveMagicHp(actor1) - calculateEffectiveMagicHp(actor2));
+			}
 			STAT_NAMES.forEach(function(stat) {
-				diff[stat] = Math.round(actor1[stat] - actor2[stat]);
+				if (showPercentages) {
+					diff[stat] = round((actor1[stat] / actor2[stat] - 1) * 100, 2);
+					if (isNaN(diff[stat])) diff[stat] = 0;
+				}
+				else {
+					diff[stat] = Math.round(actor1[stat] - actor2[stat]);
+				}
 			})
 			
 			differences.push(diff);
@@ -217,51 +272,70 @@
 		return tableColumns;
 	}
 
+	function onDataReady() {
+		dataLoaded = true;
+
+		UNLOCKED_UNITS = getUnlockedUnits();
+		MAX_LEVEL = getMaxLevel();
+		charaCards = getCharaCards();
+		RANK_OPTIONS = getRankOptions();
+		if (getMaxRank().rank >= forceOption.rank) {
+			RANK_OPTIONS.unshift(forceOption);
+		}
+		rank1 = Math.max(RANK_OPTIONS.length - 1, 0);
+		rank2 = Math.max(RANK_OPTIONS.length - 2, 0);
+	}
+
 </script>
 
 <h2>Equipment Rank Stat Comparison</h2>
-<table id="stats-table-table">
-	<tr>
-		<td id="stats-table-config">
-			<h4>Options</h4> 
-			<table>
-				<tr><td>Rarity:</td>
-					<td><RaritySelect bind:rarity={rarity} /></td>
-				</tr>
-				<tr><td>Compare:</td>
-				<td><select bind:value={rank1}>
-					{#each RANK_OPTIONS as rankOption, i}
-					<option value={i}>{rankOption.rank + "-" + rankOption.slots.length}</option>
-					{/each}
-				</select></td></tr>
-				<tr><td>To:</td>
-				<td><select bind:value={rank2}>
-					{#each RANK_OPTIONS as rankOption, i}
-					<option value={i}>{rankOption.rank + "-" + rankOption.slots.length}</option>
-					{/each}
-				</select></td></tr>
-			</table>
-			<p>Positive numbers mean rank {RANK_OPTIONS[rank1].rank + "-" + RANK_OPTIONS[rank1].slots.length}
-			has a higher value than rank {RANK_OPTIONS[rank2].rank + "-" + RANK_OPTIONS[rank2].slots.length}.</p>
-			<h4>Stats to include</h4>
-			{#each Object.keys(toggleDisplayCols) as attr}
-			<input type="checkbox" bind:checked={toggleDisplayCols[attr]} /> {columnConfig[attr].displayName}<br />
-			{/each}
-			<p>
-				All equipment assumed to be max refined.
-			</p>
-		</td>
-		<td id="stats-table">
-			<div class="table-wrap">
-				<DopeAssTable data={tableData} columns={tableColumns} options={{colorValues: true}} />
-			</div>
-		</td>
-	</tr>
-</table>
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	<table id="stats-table-table">
+		<tr>
+			<td id="stats-table-config">
+				<h4>Options</h4> 
+				<table>
+					<tr><td>Rarity:</td>
+						<td><RaritySelect bind:rarity={rarity} /></td>
+					</tr>
+					<tr><td>Compare:</td>
+					<td><select bind:value={rank1}>
+						{#each RANK_OPTIONS as rankOption, i}
+						<option value={i}>{rankOption.rank + "-" + rankOption.numSlots}</option>
+						{/each}
+					</select></td></tr>
+					<tr><td>To:</td>
+					<td><select bind:value={rank2}>
+						{#each RANK_OPTIONS as rankOption, i}
+						<option value={i}>{rankOption.rank + "-" + rankOption.numSlots}</option>
+						{/each}
+					</select></td></tr>
+				</table>
+				<input type="checkbox" class="input-outside-table" bind:checked={maxBondOutfits} /> <span>Max bond other cards of same character</span><br />
+				<input type="checkbox" class="input-outside-table" bind:checked={showPercentages} /> <span>Show percentages</span>
+				<p>Positive numbers mean rank {RANK_OPTIONS[rank1].rank + "-" + RANK_OPTIONS[rank1].numSlots}
+				has a higher value than rank {RANK_OPTIONS[rank2].rank + "-" + RANK_OPTIONS[rank2].numSlots}.</p>
+				<h4>Stats to include</h4>
+				{#each Object.keys(toggleDisplayCols) as attr}
+				<input type="checkbox" bind:checked={toggleDisplayCols[attr]} /> {columnConfig[attr].displayName}<br />
+				{/each}
+				<p>
+					All equipment assumed to be max refined. Stats are calculated at max level.
+				</p>
+			</td>
+			<td id="stats-table">
+				<div class="table-wrap">
+					<DopeAssTable data={tableData} columns={tableColumns} options={{colorValues: true}} />
+				</div>
+			</td>
+		</tr>
+	</table>
+</DataComponent>
 
 <style>
 td#stats-table-config {
 	width: 180px;
+	padding-right: 8px;
 	border-right: 3px solid #cfe4ff;
 }
 
@@ -276,5 +350,9 @@ td#stats-table {
 
 div.table-wrap {
 	overflow-x: auto;
+}
+
+.input-outside-table {
+	vertical-align: text-bottom;
 }
 </style>

@@ -11,9 +11,8 @@
 	import UnitInput from "@src/components/UnitInput.svelte";
 	import DataComponent from "@src/components/DataComponent.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, WEAPON_TYPES, lookupRows, getTable, isTableLoaded } from "@src/data";
-	import { getMaxRank } from "@src/logic/item";
-	import { getMaxLevel } from "@src/logic/player";
-	import { createActor, getUnitType, getUnitIdBase, isValidUnitConfiguration, getBlankEquipmentSet } from "@src/logic/unit";
+	import { createActor, getUnitType, getUnitIdBase, isValidUnitConfiguration, getBlankEquipmentSet,
+		getMaxRank, getMaxLevel, getPositionClass, getShardType } from "@src/logic";
 	import { hideImpossibleRarities, includeExSkillStats, dataSource } from "@src/settings.js";
 	import { sortByAttr } from "@src/utils"
 
@@ -24,7 +23,8 @@
 			"skill_action", "skill_data", "unit_skill_data", "unit_rarity", "unit_promotion_status",
 			"equipment_data", "equipment_enhance_rate", "story_detail", "unit_status_coefficient",
 			"unit_attack_pattern", "enemy_parameter", "wave_group_data", "unit_enemy_data", "quest_data",
-			"training_quest_data", "resist_data", "ailment_data" ];
+			"training_quest_data", "resist_data", "ailment_data", "fix_lineup_group_set", "quest_reward_data",
+			"experience_unit", "skill_cost" ];
 		let [ dataSourceServer, dataSourceVersion ] = dataSource.split("-");
 		if (dataSourceServer === "en") {
 			return alwaysRequiredTables.concat([ "clan_battle_boss_group" ])
@@ -261,6 +261,7 @@
 	}
 
 	function resetAll() {
+		console.log("RESETTINGGGG")
 		unit = {
 			id: -1,
 			rarity: 1,
@@ -277,8 +278,8 @@
 		resetEquipment()
 	}
 
-	$: validConfig = validateConfig(unit);
-	$: actor = recalculate(unit, validConfig, options);
+	$: validConfig = validateConfig(unit, dataLoaded);
+	$: actor = recalculate(unit, validConfig, options, dataLoaded);
 	$: unitComments = getUnitComments(actor);
 	$: unitName = getName(actor);
 
@@ -317,15 +318,21 @@
 		}
 	}
 
+	function getPrefabId(actor) {
+		if (!actor || !actor.unitData) {
+			return null;
+		}
+		return actor.unitData.prefab_id;
+	}
+
 	function onDataReady() {
 		MAX_LEVEL = getMaxLevel();
 		MAX_RANK = getMaxRank();
 		dataLoaded = true;
-		validateConfig(unit)
-		if (!isValidUnitConfiguration(unit)) {
+		validConfig = validateConfig(unit)
+		if (!validateConfig) {
 			resetAll();
 		}
-		recalculate()
 	}
 </script>
 
@@ -334,7 +341,7 @@
 	<div>
 		<div class="unit-card-header">
 			<div class="unit-card-inputs">
-				<UnitInput bind:unitId={unit.id} rarity={unit.rarity} enemyId={unit.enemyId} />
+				<UnitInput bind:unitId={unit.id} rarity={unit.rarity} prefabId={getPrefabId(actor)} />
 				<div class="unit-card-parameters">
 					<div><strong>{unitName}</strong></div>
 					{#if unitType === "character"}
@@ -380,16 +387,26 @@
 					{/if}
 					<div class="unit-card-miscstats">
 						<table>
-							{#if actor && actor.unitData && actor && actor.unitData.search_area_width}
-							<tr>
-								<td class="stat-label">Range</td>
-								<td class="stat-number">{actor.unitData.search_area_width}</td>
-							</tr>
-							{/if}
-							{#if actor && actor.unitData && actor && actor.unitData.rarity}
+							{#if actor && actor.unitData && actor.unitData.rarity}
 							<tr>
 								<td class="stat-label">Base rarity</td>
 								<td class="stat-number">{actor.unitData.rarity}</td>
+							</tr>
+							{/if}
+							{#if actor && actor.unitData && actor.unitData.search_area_width}
+							<tr>
+								<td class="stat-label">Range</td>
+								<td class="stat-number">{actor.unitData.search_area_width}
+									{#if unitType === "character"}
+									({getPositionClass(actor.unitData.search_area_width)})
+									{/if}
+								</td>
+							</tr>
+							{/if}
+							{#if unitType === "character" && actor && actor.config}
+							<tr>
+								<td class="stat-label">Shard location</td>
+								<td class="stat-number">{getShardType(actor.config.id)}</td>
 							</tr>
 							{/if}
 	<!-- 						<tr>
@@ -457,7 +474,7 @@ div.unit-card-middlerow {
 div.max-all-button-wrap {
 	display: table-cell;
 	min-width: 80px;
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 div.max-all-button {
@@ -466,14 +483,14 @@ div.max-all-button {
 
 div.unit-card-description {
 	display: table-cell;
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 div.unit-card-miscstats {
-	padding: 0 10px;
-	min-width: 130px;
+	padding: 0 6px;
+	min-width: 300px;
 	display: table-cell;
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 td.stat-label {

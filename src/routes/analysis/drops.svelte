@@ -34,7 +34,7 @@
 	}]
 
 	function getQuestDrops(itemId, doubleNormal, doubleHard) {
-		if (!dataLoaded) return [];
+		if (!dataLoaded || itemId < 0) return [];
 		let questDrops = {};
 
 		let quests = getTable("quest_data");
@@ -98,6 +98,7 @@
 
 	function onDataReady() {
 		dataLoaded = true;
+		questDrops = getQuestDrops(itemId, doubleNormal, doubleHard);
 	}
 </script>
 

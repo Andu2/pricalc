@@ -6,13 +6,6 @@ export const hideImpossibleRarities = localStorageStore("hideImpossibleRarities"
 export const dataSource = localStorageStore("dataSource", "en-latest");
 export const theme = localStorageStore("theme", "light");
 
-// For convenient import
-export let dataSourceServer = "en";
-export let dataSourceVersion = "latest";
-dataSource.subscribe(function(value) {
-	[ dataSourceServer, dataSourceVersion ] = value.split("-");
-});
-
 // remember which analysis the user was looking at when switching back
 // export const lastAnalysis = localStorageStore("lastAnalysis", "");
 // export const lastGuide = localStorageStore("lastGuide", "");

@@ -2,47 +2,114 @@ export {default as animationDurations} from "@src/data/animation-durations.json"
 export {default as jpContentHistory} from "@src/data/jp-content-history.json";
 
 import Papa from "papaparse";
+import { isNewCBDataFormat } from "@src/logic/clanBattle";
 import { sortByAttr } from "@src/utils";
 import { dataSource } from "@src/settings";
 import { get } from "svelte/store";
 
 const CDN_URL = "https://pricalc.b-cdn.net";
+export const SERVER_OPTIONS = [ "en", "jp" ];
 
 let loadedTables = {}
+let lookupCache = {};
+let functionCache = {};
 let loadedDataSource = "";
+let loadedAssetVersions = {};
+
+export function getAssetVersions(server) {
+	if (loadedAssetVersions[server]) {
+		return Promise.resolve(loadedAssetVersions[server]);
+	}
+	else {
+		return fetch(CDN_URL + "/" + server + "/masterdata/asset-versions.json", {
+				method: "GET",
+				headers: {
+					// "pragma": "no-cache",
+					// "cache-control": "no-cache"
+				}
+			})
+			.then(function(response) {
+				return response.json()
+			})
+			.then(function(json) {
+				let assetVersions = {
+					server: server,
+					data: json
+				}
+				loadedAssetVersions[server] = assetVersions;
+				return assetVersions;
+			}).catch(function(error) {
+				return { 
+					server: server,
+					data: null
+				};
+			})
+	}
+}
 
 export function loadTables(tables) {
 	let currentDataSource = get(dataSource);
 	if (currentDataSource !== loadedDataSource) {
 		loadedTables = {};
+		if (typeof window !== "undefined") {
+			window.data = loadedTables;
+		}
+		lookupCache = {};
+		for (var key in functionCache) {
+			functionCache[key] = {};
+		}
 	}
 	let [ dataSourceServer, dataSourceVersion ] = currentDataSource.split("-");
-	let tableFetches = tables.map(function(tableName) {
-		let tableUrl = CDN_URL + "/" + dataSourceServer + "/masterdata/extract/" + dataSourceVersion + "/" + tableName + ".csv";
-		return new Promise(function(resolve, reject) {
-			if (loadedTables[tableName] !== undefined) {
-				resolve(loadedTables[tableName]);
+	return getAssetVersions(dataSourceServer).then(function(versionConfig) {
+		// The only assets that can't be fully cached are the latest tables. But, then can be cached if they are the same version.
+		let cacheBust = "";
+		if (dataSourceVersion === "latest" && versionConfig.data) {
+			cacheBust = "?v=" + versionConfig.data.latestVersion;
+		}
+		let tablesToFetch = [];
+		tables.forEach(function(table) {
+			if (table === "{clanBattleBossData}") {
+				if (isNewCBDataFormat()) {
+					tablesToFetch.push("clan_battle_2_boss_data");
+					tablesToFetch.push("clan_battle_2_map_data");
+				}
+				else {
+					tablesToFetch.push("clan_battle_boss_group");
+					tablesToFetch.push("clan_battle_boss_data");
+					tablesToFetch.push("clan_battle_map_data");
+				}
 			}
 			else {
-				Papa.parse(tableUrl, {
-					download: true,
-					header: true,
-					dynamicTyping: true,
-					skipEmptyLines: true,
-					complete: function(result) {
-						let tableData = processTable(tableName, result.data);
-						loadedTables[tableName] = tableData;
-						resolve(tableData);
-					},
-					error: function(error) {
-						//console.warn(error)
-						resolve(null);
-					}
-				})
+				tablesToFetch.push(table);
 			}
 		})
-	});
-	return Promise.all(tableFetches);
+		let tableFetches = tablesToFetch.map(function(tableName) {
+			let tableUrl = CDN_URL + "/" + dataSourceServer + "/masterdata/extract/" + dataSourceVersion + "/" + tableName + ".csv" + cacheBust;
+			return new Promise(function(resolve, reject) {
+				if (loadedTables[tableName] !== undefined) {
+					resolve(loadedTables[tableName]);
+				}
+				else {
+					Papa.parse(tableUrl, {
+						download: true,
+						header: true,
+						dynamicTyping: true,
+						skipEmptyLines: true,
+						complete: function(result) {
+							let tableData = processTable(tableName, result.data);
+							loadedTables[tableName] = tableData;
+							resolve(tableData);
+						},
+						error: function(error) {
+							//console.warn(error)
+							resolve(null);
+						}
+					})
+				}
+			})
+		});
+		return Promise.all(tableFetches);
+	})
 }
 
 function processTable(tableName, tableData) {
@@ -92,7 +159,6 @@ export function getTable(tableName) {
 	return loadedTables[tableName];
 }
 
-let lookupCache = {};
 export function lookupRows(tableName, constraints, calculated = {}, options = {}) {
 	if (loadedTables[tableName] === undefined) {
 		throw Error("Table " + tableName + " needs to be loaded before being used");
@@ -129,6 +195,20 @@ export function lookupRows(tableName, constraints, calculated = {}, options = {}
 	return returnRows;
 }
 
+export function cacheFunction(func) {
+	if (!func.name) throw Error("Cached functions cannot be anonymous")
+	functionCache[func.name] = {};
+	return function runCacheFunction() {
+		let cacheKey = JSON.stringify(arguments);
+		if (functionCache[func.name][cacheKey] !== undefined) {
+			return functionCache[func.name][cacheKey];
+		}
+		let returnVal = func.apply(null, arguments);
+		functionCache[func.name][cacheKey] = returnVal;
+		return returnVal;
+	}
+}
+
 export const STAT_NAMES = ["hp", "atk", "magic_str", "def", "magic_def", "physical_critical", "magic_critical", 
 	"wave_hp_recovery", "wave_energy_recovery", "dodge", //"physical_penetrate", "magic_penetrate",
 	"life_steal", "hp_recovery_rate", "energy_recovery_rate", "energy_reduce_rate", "accuracy"];
@@ -148,7 +228,8 @@ export const STAT_DISPLAY_NAMES = {
 	"hp_recovery_rate": "HP Recovery Boost",
 	"energy_recovery_rate": "TP Boost",
 	"energy_reduce_rate": "TP Retain",
-	"accuracy": "Accuracy"
+	"accuracy": "Accuracy",
+	"movementSpeed": "Movement Speed"
 }
 
 export const SKILL_NAMES = ["union_burst", "main_skill_1", "main_skill_2", "ex_skill_1"];
@@ -181,7 +262,7 @@ export const BUFF_NUMBER_TO_STAT = {
 	8: "dodge",
 	9: "life_steal",
 	10: "wave_hp_recovery",
-	11: "wave_energy_recovery",
+	11: "movementSpeed",
 	14: "don't know"
 }
 

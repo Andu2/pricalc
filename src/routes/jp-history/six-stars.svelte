@@ -1,5 +1,7 @@
 <script>
-	import { jpContentHistory } from "@src/data/priconnedb";
+	import { jpContentHistory } from "@src/data";
+	import { getUnitImg } from "@src/logic";
+	import { escAttr} from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
 	import JPContentFooter from "@src/components/JPContentFooter.svelte";
@@ -34,10 +36,7 @@
 		return unitsAdded.map(function(unitAdded) {
 			let iconHtml = "";
 			if (unitAdded.unitId > -1) {
-				var unitIdString = unitAdded.unitId + "";
-				var unitIdWithRarity = unitIdString.slice(0, 4) + "6" + unitIdString.slice(-1); 
-				var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
-				iconHtml = "<img class=\"table-icon\" src=\"" + charImg + "\" />";
+				iconHtml = "<img class=\"table-icon\" src=\"" + escAttr(getUnitImg(unitAdded.unitId, { rarity: 3, server: "jp" })) + "\" />";
 			}
 			
 			return {

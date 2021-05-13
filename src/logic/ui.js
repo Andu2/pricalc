@@ -1,9 +1,15 @@
 import { getUnitType } from "@src/logic/unit";
 import { getItemType } from "@src/logic/item";
-import { dataSourceServer } from "@src/settings";
+import { dataSource } from "@src/settings";
 import { get } from "svelte/store";
 
 export const CDN_URL = "https://pricalc.b-cdn.net";
+
+let dataSourceServer = "en";
+let dataSourceVersion = "latest";
+dataSource.subscribe(function(value) {
+	[ dataSourceServer, dataSourceVersion ] = value.split("-");
+});
 
 export function getUnitImg(unitId, options = {}) {
 	if (options.rarity === undefined) options.rarity = 1;
@@ -27,6 +33,9 @@ export function getUnitImg(unitId, options = {}) {
 			return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_shadow_" + (unitId - 500000 + 10) + ".png";
 		}
 		else {
+			if (options.prefabId) {
+				return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_" + options.prefabId + ".png";
+			}
 			return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_" + unitId + ".png";
 		}
 	}
@@ -40,12 +49,16 @@ export function getUnitImg(unitId, options = {}) {
 	}
 }
 
+const substituteImgIds = {
+	"91002": "91001"
+}
 export function getItemImg(itemId, options = {}) {
 	if (options.invalid === undefined) options.invalid = false;
 	if (options.server === undefined) options.server = dataSourceServer;
 	if (itemId > -1) {
 		let itemType = getItemType(itemId);
 		let itemIdString = itemId + "";
+		itemIdString = substituteImgIds[itemIdString] || itemIdString;
 		if (options.invalid) {
 			itemIdString = "invalid_" + itemId;
 		}

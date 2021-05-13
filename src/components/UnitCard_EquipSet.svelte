@@ -208,7 +208,7 @@
 <style>
 	div.card-section {
 		min-width: 210px;
-		max-width: 250px;
+		/*max-width: 250px;*/
 		flex-grow: 1;
 		text-align: center;
 	}

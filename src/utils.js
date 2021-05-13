@@ -40,3 +40,7 @@ export function round(number, decimalPlaces) {
 	let multFactor = Math.pow(10, decimalPlaces);
 	return Math.round(number * multFactor) / multFactor;
 }
+
+export function escAttr(attrValue) {
+	return attrValue.replace(/'/g, "&#x27;").replace(/"/g, "&#x22;")
+}

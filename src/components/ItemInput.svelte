@@ -57,6 +57,6 @@ div.item-image-wrap:hover img.item-image {
 }
 
 div.item-image-wrap:hover div.icon-pencil {
-	color: var(--funkyHighlight);
+	color: var(--linkHover);
 }
 </style>

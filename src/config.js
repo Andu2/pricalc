@@ -97,8 +97,8 @@ export const pages = [
 		icon: "jp/icon/extract/latest/icon_item_99002.png"
 	}, {
 		path: "units",
-		category: "Reference",
-		displayName: "Unit Data",
+		category: "Analysis",
+		displayName: "Unit Viewer",
 		description: "View character, enemy, and boss details, including stats and detailed skill descriptions.",
 		icon: "jp/unit/extract/latest/icon_unit_101211.png"
 	}, {
@@ -178,11 +178,12 @@ export const pages = [
 
 export const changeLog = [{
 		version: "0.5",
-		date: "???",
+		date: "2021-05-13",
 		notes: [
 			"Added ability to select data source, including JP data and old data",
-			"Added dark mode",
-			"Unit viewer changes: Added mana cost, equipment cost, shard location"
+			"Unit viewer: Added skill mana cost, shard location, total exp",
+			"Added rarity and rank selection to max stat table",
+			"Added number of cards and next three birthdays to character profile page"
 		]
 	}, {
 		version: "0.4",

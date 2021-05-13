@@ -1,22 +1,29 @@
 <script>
 	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
-	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, getUnitIdBase, getUnlockedUnits } from "@src/logic/unit";
+	import { createActor, calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, 
+		getUnlockedUnits, getMaxRank, getUnitImg, getMaxLevel, getUnitIdBase, getRankOptions, getCharaCards } from "@src/logic";
+	import { escAttr, round, shortNumber } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
-	import { includeExSkillStats } from "@src/settings.js";
+	import DataComponent from "@src/components/DataComponent.svelte";
+	import RaritySelect from "@src/components/RaritySelect.svelte";
+	import { hideImpossibleRarities, includeExSkillStats } from "@src/settings.js";
+
+	const requiredTables = [ "unit_data", "unit_promotion", "skill_data", "unit_skill_data", "skill_action", "unit_rarity",
+		"unit_promotion_status", "equipment_data", "equipment_enhance_rate", "unit_status_coefficient", "experience_team", 
+		"story_detail", "chara_story_status" ];
 
 	let tableData;
 	let tableColumns;
+	let dataLoaded = false;
 
 	let UNLOCKED_UNITS = [];
-	let MAX_LEVEL = 10;
-	let MAX_RANK = 2;
+	let RANK_OPTIONS = [];
+	let MAX_LEVEL = 1;
+	let charaCards = {};
 
-	// Fuck it, add every character bond
-	let maxedBonds = {};
-	UNLOCKED_UNITS.forEach(function(unitData) {
-		let unitIdBase = getUnitIdBase(unitData.unit_id);
-		maxedBonds[unitIdBase] = 8;
-	});
+	let rank = -1;
+	let rarity = 5;
+	let maxBondOutfits = false;
 
 	const alwaysDisplayCols = ["icon", "name"];
 	let columnConfig = {
@@ -34,12 +41,18 @@
 		"effective_physical_hp": {
 			attr: "effective_physical_hp",
 			displayName: "Effective Physical HP",
-			sort: "default"
+			sort: "default",
+			displayValue: function(row, attr) {
+				return shortNumber(row[attr]);
+			}
 		},
 		"effective_magic_hp": {
 			attr: "effective_magic_hp",
 			displayName: "Effective Magic HP",
-			sort: "default"
+			sort: "default",
+			displayValue: function(row, attr) {
+				return shortNumber(row[attr]);
+			}
 		},
 		"power": {
 			attr: "power",
@@ -61,14 +74,14 @@
 		"def": true,
 		"magic_str": true, 
 		"magic_def": true,
-		"physical_critical": false,
-		"magic_critical": false, 
+		"physical_critical": true,
+		"magic_critical": true, 
 		"wave_hp_recovery": false,
 		"wave_energy_recovery": false,
-		"dodge": false,
+		"dodge": true,
 		"life_steal": false,
-		"hp_recovery_rate": false,
-		"energy_recovery_rate": false,
+		"hp_recovery_rate": true,
+		"energy_recovery_rate": true,
 		"energy_reduce_rate": false,
 		"accuracy": false,
 		"effective_physical_hp": true, // calculated value
@@ -76,41 +89,57 @@
 		"power": false // calculated value
 	}
 
-	let maxedActors = calculateMaxedActors();
-	tableData = calculateTableData(maxedActors);
+	$: maxedActors = calculateMaxedActors(rank, rarity, maxBondOutfits);
+	$: tableData = calculateTableData(maxedActors);
 	$: tableColumns = calculateTableColumns(toggleDisplayCols);
 
-	function calculateMaxedActors() {
-		return UNLOCKED_UNITS.map(function(unitData) {
+	function calculateMaxedActors(rank, rarity, maxBondOutfits) {
+		return UNLOCKED_UNITS.filter(function(unitData) {
+			return !($hideImpossibleRarities && rarity < unitData.rarity)
+		}).map(function(unitData) {
+			let bondLevels = {}
+			let unitBaseId = getUnitIdBase(unitData.unit_id);
+			charaCards[unitBaseId].cards.forEach(function(id) {
+				if (id === unitBaseId) {
+					if (rarity >= 6) bondLevels[id] = 12;
+					else if (rarity >= 3) bondLevels[id] = 8;
+					else bondLevels[id] = 4;
+				}
+				else {
+					if (maxBondOutfits) {
+						bondLevels[id] = 12;
+					}
+				}
+			});
 			return createActor({
 				id: unitData.unit_id,
-				rarity: 5,
+				rarity: rarity,
 				level: MAX_LEVEL,
-				bond: maxedBonds,
-				rank: MAX_RANK,
+				bond: bondLevels,
+				rank: RANK_OPTIONS[rank].rank,
 				equipment: {
 					slot1: {
-						equipped: true,
+						equipped: (RANK_OPTIONS[rank].equipment["slot" + 1]),
 						refine: 5,
 					},
 					slot2: {
-						equipped: true,
+						equipped: (RANK_OPTIONS[rank].equipment["slot" + 2]),
 						refine: 5,
 					},
 					slot3: {
-						equipped: true,
+						equipped: (RANK_OPTIONS[rank].equipment["slot" + 3]),
 						refine: 5,
 					},
 					slot4: {
-						equipped: true,
+						equipped: (RANK_OPTIONS[rank].equipment["slot" + 4]),
 						refine: 5,
 					},
 					slot5: {
-						equipped: true,
+						equipped: (RANK_OPTIONS[rank].equipment["slot" + 5]),
 						refine: 5,
 					},
 					slot6: {
-						equipped: true,
+						equipped: (RANK_OPTIONS[rank].equipment["slot" + 6]),
 						refine: 5,
 					}
 				},
@@ -143,12 +172,9 @@
 
 	function calculateTableData() {
 		return maxedActors.map(function(actor) {
-			var unitIdString = actor.config.id + "";
-			var unitIdWithRarity = unitIdString.slice(0, 4) + "3" + unitIdString.slice(-1); 
-			var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
-
+			var charImg = getUnitImg(actor.config.id, { rarity: rarity });
 			var row = {
-				icon: "<img class=\"table-icon\" src=\"" + charImg + "\" />",
+				icon: "<img class=\"table-icon\" src=\"" + escAttr(charImg) + "\" />",
 				name: actor.unitData.unit_name,
 				power: Math.round(calculatePower(actor)),
 				effective_physical_hp: Math.round(calculateEffectivePhysicalHp(actor)),
@@ -162,33 +188,53 @@
 		});
 	}
 
+	function onDataReady() {
+		dataLoaded = true;
+
+		UNLOCKED_UNITS = getUnlockedUnits();
+		MAX_LEVEL = getMaxLevel();
+		charaCards = getCharaCards();
+		RANK_OPTIONS = getRankOptions();
+		rank = Math.max(RANK_OPTIONS.length - 1, 0);
+	}
+
 </script>
 <h2>Max Stat Table</h2>
-
-<table id="stats-table-table">
-	<tr>
-		<td id="stats-table-config">
-			<p>Stats listed are for 5* rarity at the maximum current rank.
-			</p>
-			<h4>Stats to include</h4>
-			{#each Object.keys(toggleDisplayCols) as attr}
-			<input type="checkbox" bind:checked={toggleDisplayCols[attr]} /> {columnConfig[attr].displayName}<br />
-			{/each}
-		</td>
-		<td id="stats-table">
-			<div class="table-wrap">
-				<DopeAssTable data={tableData} columns={tableColumns} />
-			</div>
-		</td>
-	</tr>
-</table>
-<p>
-
-</p>
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	<table id="stats-table-table">
+		<tr>
+			<td id="stats-table-config">
+				<h4>Options</h4> 
+				<table>
+					<tr><td>Rarity:</td>
+						<td><RaritySelect bind:rarity={rarity} /></td>
+					</tr>
+					<tr><td>Rank:</td>
+					<td><select bind:value={rank}>
+						{#each RANK_OPTIONS as rankOption, i}
+						<option value={i}>{rankOption.rank + "-" + rankOption.numSlots}</option>
+						{/each}
+					</select></td></tr>
+				</table>
+				<input type="checkbox" class="input-outside-table" bind:checked={maxBondOutfits} /> <span>Max bond other cards of same character</span>
+				<h4>Stats to include</h4>
+				{#each Object.keys(toggleDisplayCols) as attr}
+				<input type="checkbox" bind:checked={toggleDisplayCols[attr]} /> {columnConfig[attr].displayName}<br />
+				{/each}
+			</td>
+			<td id="stats-table">
+				<div class="table-wrap">
+					<DopeAssTable data={tableData} columns={tableColumns} />
+				</div>
+			</td>
+		</tr>
+	</table>
+</DataComponent>
 
 <style>
 td#stats-table-config {
 	width: 180px;
+	padding-right: 8px;
 	border-right: 3px solid #cfe4ff;
 }
 
@@ -203,5 +249,9 @@ td#stats-table {
 
 div.table-wrap {
 	overflow-x: auto;
+}
+
+.input-outside-table {
+	vertical-align: text-bottom;
 }
 </style>

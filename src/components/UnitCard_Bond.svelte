@@ -19,7 +19,7 @@ function getRelevantStoryGroups(unitId) {
 		}
 	});
 	return relevantStoryIds.map(function(storyId) {
-		return Math.floor(storyId / 1000) + ""; // Need to force string keys. Number keys makes weird things happen
+		return Math.floor(storyId / 1000) + "";
 	});
 }
 

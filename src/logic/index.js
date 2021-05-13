@@ -6,3 +6,4 @@ export * from "@src/logic/quest";
 export * from "@src/logic/skill";
 export * from "@src/logic/ui";
 export * from "@src/logic/unit";
+export * from "@src/logic/clanBattle";

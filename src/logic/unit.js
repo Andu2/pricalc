@@ -1,5 +1,6 @@
-import { getTable, lookupRows, STAT_NAMES, NUMBER_TO_STAT } from "@src/data/priconnedb";
+import { getTable, lookupRows, STAT_NAMES, NUMBER_TO_STAT, cacheFunction } from "@src/data";
 import { getUnitSkills } from "@src/logic/skill"
+import { getMaxRank } from "@src/logic/item"
 import { sortByAttr } from "@src/utils";
 
 export function isValidUnitConfiguration(unitConfig) {
@@ -18,9 +19,15 @@ export function isValidUnitConfiguration(unitConfig) {
 	}
 
 	if (unitType === "character" || unitType === "summon") {
-		if (lookupRows("unit_data", { unit_id: unitConfig.id }).length === 0) {
-			return false;
+		let unlockedUnits = getUnlockedUnits();
+		let found = false;
+		for (var i = 0; i < unlockedUnits.length; i++) {
+			if (unlockedUnits[i].unit_id === unitConfig.id) {
+				found = true;
+				break;
+			}
 		}
+		if (!found) return false;
 	}
 	else {
 		if (lookupRows("unit_enemy_data", { unit_id: unitConfig.id }).length === 0) {
@@ -151,7 +158,7 @@ export function createActor(unitConfig, options = {}) {
 		let resistData = lookupRows("resist_data", { resist_status_id: enemyData.resist_status_id })[0];
 		actor.resist = resistData;
 	}
-	if (unitData === undefined) {
+	if (!unitData) {
 		throw Error("Unable to find unit id " + config.id);
 	}
 	actor.unitData = unitData;
@@ -266,13 +273,13 @@ function getBondStats(config) {
 	let stats = {};
 	for (var baseUnitIdString in config.bond) {
 		let baseUnitId = baseUnitIdString * 1;
-		var bondStories = lookupRows("story_detail", { story_group_id: baseUnitId });
+		var bondStories = lookupRows("story_detail", { story_group_id: baseUnitId }, {}, { cache: true });
 		var unlockedStoryIds = bondStories.filter(function(story) {
 			return (story.love_level <= config.bond[baseUnitId])
 		}).map(function(story) {
 			return story.story_id;
 		});
-		var storyStatData = lookupRows("chara_story_status", { story_id: unlockedStoryIds });
+		var storyStatData = lookupRows("chara_story_status", { story_id: unlockedStoryIds }, {}, { cache: true });
 		storyStatData.forEach(function(storyStatus) {
 			if (!storyAffectsUnit(storyStatus, config.id)) return;
 			for (var i = 1; i <= 5; i++) {
@@ -449,20 +456,20 @@ export function getUnitIdBase(unitId) {
 	}
 }
 
-export function getUnlockedUnits() {
+export const getUnlockedUnits = cacheFunction(function getUnlockedUnits() {
 	return getTable("unit_data").filter(function(unitData) {
-		return unitData.cutin_1 !== 0 && unitData.unit_id < 200000;
+		return unitData.cutin_1 !== 0 && unitData.unit_id < 190000;
 	}).sort(sortByAttr("unit_name"));
-}
+});
 
-export function getSummonUnits() {
+export const getSummonUnits = cacheFunction(function getSummonUnits() {
 	return getTable("unit_data").filter(function(unitData) {
 		// Summons: manual...there are copies of sylph that I don't want to include
 		if (unitData.unit_id === 404201 || unitData.unit_id === 403101) {// summon
 			return true;
 		}
 	}).sort(sortByAttr("unit_name"))
-}
+});
 
 export function getBlankEquipmentSet() {
 	return {
@@ -491,4 +498,96 @@ export function getBlankEquipmentSet() {
 			refine: 0
 		}
 	}
+}
+
+// Get unit ids that are associated with the same character. Uses base ids. 
+// Requires table chara_story_status and unit_data
+export const getCharaCards = cacheFunction(function getCharaCards() {
+	let charaStoryStatus = getTable("chara_story_status");
+	let baseCards = {};
+	let charaCards = {}; // will map to a baseCard object
+
+	let unlockedBaseIds = getUnlockedUnits().map(function(unitData) {
+		return getUnitIdBase(unitData.unit_id);
+	});
+
+	// This assumes base cards come before outfits
+	charaStoryStatus.forEach(function(storyStatus) {
+		let baseId = storyStatus.chara_id_1;
+		if (unlockedBaseIds.indexOf(baseId) === -1) return;
+		let baseIdText = baseId + "";
+		if (Object.keys(charaCards).indexOf(baseIdText) === -1) {
+			baseCards[baseIdText] = {
+				baseCard:  baseId,
+				cards: [baseId]
+			}
+			charaCards[baseIdText] = baseCards[baseIdText];
+		}
+		for (var i = 2; i <= 10; i++) {
+			let charId = storyStatus["chara_id_" + i];
+			let charIdText = charId + "";
+			if (charId === 0) break;
+			if (unlockedBaseIds.indexOf(charId) === -1) continue;
+			if (Object.keys(charaCards).indexOf(charIdText) === -1) {
+				charaCards[charIdText] = baseCards[baseIdText];
+				baseCards[baseIdText].cards.push(charId);
+			}
+		}
+	});
+
+	return charaCards;
+});
+
+export const getRankOptions = cacheFunction(function getRankOptions() {
+	let maxRank = getMaxRank();
+
+	const MIN_REASONABLE_RANK = 7;
+
+	let rankOptions = [];
+	for (var rank = MIN_REASONABLE_RANK; rank < maxRank.rank; rank++) {
+		rankOptions.push({
+			rank: rank,
+			equipment: {
+				slot1: true,
+				slot2: true,
+				slot3: true,
+				slot4: true,
+				slot5: true,
+				slot6: true
+			},
+			numSlots: 6
+		});
+	}
+
+	let numSlotsMaxRank = 0;
+	for (var slot in maxRank.equipment) {
+		if (maxRank.equipment[slot]) {
+			numSlotsMaxRank++;
+		}
+	}
+	rankOptions.push({
+		rank: maxRank.rank,
+		equipment: maxRank.equipment,
+		numSlots: numSlotsMaxRank
+	});
+
+	return rankOptions;
+});
+
+export function getPositionClass(range) {
+	if (range >= 600) {
+		return "Back";
+	}
+	else if (range >= 300) {
+		return "Middle";
+	}
+	else {
+		return "Front";
+	}
+}
+
+export function getTotalExp(level) {
+	let expTable = getTable("experience_unit");
+	if (!expTable[level - 1]) return 0;
+	return expTable[level - 1].total_exp;
 }

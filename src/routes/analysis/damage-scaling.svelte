@@ -93,9 +93,8 @@
 	
 </script>
 
+<h2>Damage Scaling</h2>
 <DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
-	<h2>Damage Scaling</h2>
-
 	<p>
 	Damaging skills scale both by skill level and the user's attack stat. This chart shows the relationship between skill level scaling and attack scaling.
 	</p>

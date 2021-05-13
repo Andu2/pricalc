@@ -2,19 +2,22 @@
 	export let requiredTables = [];
 	export let onDataReady = function(){};
 
-	import { loadTables } from "@src/data/priconnedb";
+	import { loadTables, getAssetVersions } from "@src/data";
 	import { onMount, onDestroy } from "svelte";
 	import { dataSource } from "@src/settings";
 
 	let loaded = false;
 	let failed = false;
+
+	let dataSourceServer = "en";
+	let dataSourceVersion = "latest";
 	const dataUnsubscribe = dataSource.subscribe(function(value) {
+		[ dataSourceServer, dataSourceVersion ] = value.split("-");
 		if (loaded || failed) {
 			mountFunction();
 		}
 	});
-
-	$: [ dataSourceServer, dataSourceVersion ] = $dataSource.split("-");
+	let dataDate = null;
 
 	function mountFunction() {
 		loaded = false;
@@ -33,6 +36,20 @@
 			else {
 				failed = true;
 			}
+
+			getAssetVersions(dataSourceServer).then(function(versionInfo) {
+				dataDate = null;
+				if (versionInfo.data !== null) {
+					let fileName = Object.keys(versionInfo.data.files)[0];
+					let versionToCheck = dataSourceVersion;
+					if (dataSourceVersion === "latest") {
+						versionToCheck = versionInfo.data.latestVersion;
+					}
+					if (versionInfo.data.files[fileName].versions[versionToCheck]) {
+						dataDate = new Date(versionInfo.data.files[fileName].versions[versionToCheck].date);
+					}
+				}
+			});
 		});
 	}
 
@@ -49,7 +66,11 @@
 	{#if loaded}
 		{#if $dataSource !== "en-latest"}
 		<div id="data-source-disclaimer">
+			{#if dataDate}
+			DATA SOURCE IS {$dataSource} ({dataDate.toLocaleDateString()}).
+			{:else}
 			DATA SOURCE IS {$dataSource}.
+			{/if}
 			{#if dataSourceServer !== "en"}
 			Analysis for JP data sources is not guaranteed to be accurate, especially regarding content that has not yet been added to EN.
 			{/if}

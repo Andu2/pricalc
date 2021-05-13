@@ -1,14 +1,14 @@
 <script>
-	import { lookupRows, getTable } from "@src/data/priconnedb";
-	import { getUnlockedUnits } from "@src/logic/unit";
-	import { getUnitImg } from "@src/logic/ui";
+	import { lookupRows, getTable } from "@src/data";
+	import { getUnlockedUnits, getUnitImg, getCharaCards, getUnitIdBase } from "@src/logic";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import Doughnut from "svelte-chartjs/src/Doughnut.svelte";
 	import DataComponent from "@src/components/DataComponent.svelte";
 
-	const requiredTables = [ "unit_data", "unit_profile" ];
+	const requiredTables = [ "unit_data", "unit_profile", "chara_story_status" ];
 
 	let profileData = [];
+	let nextBirthdayText = "";
 
 	let columns = [{
 		attr: "icon",
@@ -20,11 +20,17 @@
 		displayName: "Character",
 		sort: "default"
 	}, {
+		attr: "cards",
+		displayName: "Num Cards",
+		sort: "numeric"
+	}, {
 		attr: "age",
 		displayName: "Age",
 		sort: function(row1, row2) {
 			let row1Numeric = row1.age * 1;
 			let row2Numeric = row2.age * 1;
+			if (isNaN(row1Numeric)) row1Numeric = Infinity;
+			if (isNaN(row2Numeric)) row2Numeric = Infinity;
 			if (row1Numeric < row2Numeric) return -1;
 			else if (row1Numeric > row2Numeric) return 1;
 			else return birthdaySort(row2, row1);
@@ -65,7 +71,10 @@
 		sort: "default"
 	}];
 
+	let emiliaBringsTheAverageOver18SoWeDontLookLikePedos = false;
+
 	function convertCmToFeetString(cm) {
+		if (isNaN(cm * 1)) return cm;
 		let inches = Math.round(cm / 2.54);
 		let feet = Math.floor(inches / 12);
 		let leftoverInches = inches - feet * 12;
@@ -73,27 +82,40 @@
 	}
 
 	function convertKgToPoundsString(kg) {
+		if (isNaN(kg * 1)) return kg;
 		return Math.round(kg) + "kg (" + Math.round(kg * 2.20462) + " pounds)";
 	}
 
+	// Avoid recalculating repeatedly
+	let currentDate = new Date();
+	let currentYear = currentDate.getFullYear();
+	let currentMonth = currentDate.getMonth();
+	let currentDay = currentDate.getDate();
+
 	function birthdaySort(row1, row2) {
-		let sortVal1 = getBirthdaySortVal(row1);
-		let sortVal2 = getBirthdaySortVal(row2);
+		let sortVal1 = getBirthdaySortVal(row1, 0, 1);
+		let sortVal2 = getBirthdaySortVal(row2, 0, 1);
 		if (sortVal1 < sortVal2) return -1;
 		else if (sortVal1 > sortVal2) return 1;
 		else return 0;
 	}
 
-	function getBirthdaySortVal(row) {
-		let sortVal = "";
-		if (row.birth_month < 10) {
-			sortVal += "0"
+	function birthdaySortAfterCurrent(row1, row2) {
+		let sortVal1 = getBirthdaySortVal(row1, currentMonth, currentDay);
+		let sortVal2 = getBirthdaySortVal(row2, currentMonth, currentDay);
+		if (sortVal1 < sortVal2) return -1;
+		else if (sortVal1 > sortVal2) return 1;
+		else return 0;
+	}
+	
+	function getBirthdaySortVal(row, afterMonth = 0, afterDay = 1) {
+		if (isNaN(row.birth_day * 1) || isNaN(row.birth_month * 1)) return Infinity;
+		let hasBirthdayPassed = (row.birth_month - 1 < afterMonth 
+			|| (row.birth_month - 1 === afterMonth && row.birth_day < afterDay));
+		let sortVal = row.birth_month * 100 + row.birth_day;
+		if (hasBirthdayPassed) {
+			sortVal += 10000;
 		}
-		sortVal += row.birth_month;
-		if (row.birth_day < 10) {
-			sortVal += "0"
-		}
-		sortVal += row.birth_day;
 		return sortVal;
 	}
 
@@ -149,7 +171,11 @@
 		"rgba(255, 50, 50, 0.5)", 
 		"rgba(50, 210, 210, 0.5)",
 		"rgba(50, 50, 255, 0.5)",
-		"rgba(210, 50, 255, 0.5)"
+		"rgba(210, 50, 255, 0.5)",
+		"rgba(60, 230, 50, 0.5)",
+		"rgba(255, 210, 50, 0.5)",
+		"rgba(150, 150, 150, 0.5)",
+		"rgba(150, 50, 255, 0.5)"
 	]
 
 	let raceChartData = {
@@ -181,7 +207,23 @@
 	};
 
 	function onDataReady() {
-		let unlockedIds = getUnlockedUnits().map(function(unitData) {
+		let emiliaExists = false;
+		let someoneElseIsOld = false;
+
+		let UNLOCKED_UNITS = getUnlockedUnits();
+		let charaCards = getCharaCards();
+
+		let baseCards = UNLOCKED_UNITS.filter(function(unitData) {
+			let baseId = getUnitIdBase(unitData.unit_id);
+			let isOutfit = (charaCards[baseId] && charaCards[baseId].baseCard !== baseId);
+			return !isOutfit;
+		}).map(function(unitData) {
+			if (unitData.unit_id === 109901) {
+				emiliaExists = true;
+			}
+			else if (unitData.age >= 100) {
+				someoneElseIsOld = true;
+			}
 			return unitData.unit_id;
 		});
 
@@ -191,16 +233,25 @@
 			profileCopy.birth_date = getMonth(profileCopy.birth_month) + " " + profileCopy.birth_day;
 			profileCopy.race = profileCopy.race.slice(0, 1).toUpperCase() + profileCopy.race.slice(1);
 			profileCopy.icon = "<img class=\"table-icon\" src=\"" + getUnitImg(profileCopy.unit_id) + "\" />";
+			profileCopy.cards = 0;
+			if (charaCards[getUnitIdBase(profile.unit_id)]) {
+				profileCopy.cards = charaCards[getUnitIdBase(profile.unit_id)].cards.length;
+			}
 			return profileCopy;
 		});
 
 		profileData = profileData.filter(function(profile) {
-			return (unlockedIds.indexOf(profile.unit_id) > -1)
+			return (baseCards.indexOf(profile.unit_id) > -1)
 		}).sort(function(a, b) {
 			if (a.unit_name > b.unit_name) return 1;
 			else if (a.unit_name < b.unit_name) return -1;
 			else return 0;
 		});
+
+		let nextBirthdays = [...profileData].sort(birthdaySortAfterCurrent).map(function(profile) {
+			return profile.unit_name + " (" + profile.birth_date + ")";
+		});
+		nextBirthdayText = nextBirthdays.slice(0, 3).join(", ");
 
 		averageAge = getAverage(profileData, "age");
 		averageHeight = getAverage(profileData, "height");
@@ -208,14 +259,20 @@
 		raceCount = getCount(profileData, "race");
 		bloodCount = getCount(profileData, "blood_type");
 
+		raceChartData.datasets[0].data = [];
+		raceChartData.labels = [];
 		for (var race in raceCount) {
 			raceChartData.datasets[0].data.push(raceCount[race]);
 			raceChartData.labels.push(race);
 		}
+		bloodChartData.datasets[0].data = [];
+		bloodChartData.labels = [];
 		for (var blood in bloodCount) {
 			bloodChartData.datasets[0].data.push(bloodCount[blood]);
 			bloodChartData.labels.push(blood);
 		}
+
+		emiliaBringsTheAverageOver18SoWeDontLookLikePedos = (emiliaExists && !someoneElseIsOld && averageAge >= 18)
 	}
 
 </script>
@@ -223,14 +280,22 @@
 <DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
 	<h2>Character Profiles</h2>
 
-	<p>Next birthday: </p>
+	{#if nextBirthdayText}
+	<p>
+		Next birthdays: {nextBirthdayText}
+	</p>
+	{/if}
 
 	<div class="table-wrap">
 		<DopeAssTable data={profileData} columns={columns} />
 	</div>
 	<h2>Statistics</h2>
 	<p>
-		Average age: {Math.round(averageAge * 100) / 100} <br />
+		Average age: {Math.round(averageAge * 100) / 100} 
+		{#if emiliaBringsTheAverageOver18SoWeDontLookLikePedos}
+		<span class="soft">thanks Emilia</span>
+		{/if}
+		<br />
 		Average height: {convertCmToFeetString(averageHeight)} <br />
 		Average weight: {convertKgToPoundsString(averageWeight)}
 	</p>
@@ -249,5 +314,11 @@
 table.charts {
 	table-layout: fixed;
 	width: 80%;
+}
+
+.soft {
+	font-size: 10pt;
+	color: #636c86;
+	font-style: italic;
 }
 </style>

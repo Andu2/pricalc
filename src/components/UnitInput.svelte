@@ -4,10 +4,10 @@ import UnitSelect from "@src/components/UnitSelect.svelte";
 import { showModal, closeModal } from "@src/components/Modal.svelte";
 
 export let unitId;
-export let enemyId;
+export let prefabId = null;
 export let rarity;
 
-$: charImg = getUnitImg(unitId, { rarity: rarity, useMissingImage: false }, enemyId);
+$: charImg = getUnitImg(unitId, { rarity: rarity, useMissingImage: false, prefabId: prefabId });
 
 function selectUnit(id) {
 	unitId = id;
@@ -52,7 +52,7 @@ img.char-image {
 	height: 128px;
 	border-radius: 10px;
 	box-shadow: 0 1px 3px 1px #163b5a;
-	background-color: lightgray;
+	background-color: #e7eef7;
 }
 
 div.char-image-wrap:hover img.char-image {

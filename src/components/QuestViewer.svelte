@@ -4,7 +4,8 @@
 	export let playerLevel = 1;
 	export let variant = 1;
 
-	import { lookupRows } from "@src/data/priconnedb";
+	import { lookupRows } from "@src/data";
+	import { getItemImg, getUnitImg, getIcon } from "@src/logic";
 	import { sortByAttr } from "@src/utils";
 
 	$: waves = getWaveData(questData, isEvent, playerLevel, variant);
@@ -150,24 +151,6 @@
 		return dropList;
 	}
 
-	function getItemIcon(id) {
-		if (id >= 100000) {
-			return "images/equipment/icon_icon_equipment_" + id + ".png";
-		}
-		else {
-			return "images/item/icon_icon_item_" + id + ".png";
-		}
-	}
-
-	function getUnitIcon(id) {
-		if (Math.floor(id / 100000) === 6) {
-			return "images/unit/unit_icon_shadow_" + (id - 500000 + 10) + ".png"
-		}
-		else {
-			return "images/unit/unit_icon_unit_" + id + ".png";
-		}
-	}
-
 	function getItemName(id) {
 		if (id === 94002) id = 94001; // collapse mana ids
 		if (id >= 100000) {
@@ -196,7 +179,7 @@
 {:else}
 	<table class="quest-viewer"><tr><td class="card-section quest-overview">
 		<div class="centered">
-			<img src="images/map/icon_icon_map_{questData.icon_id}.png" />
+			<img src={getIcon("icon_map_" + questData.icon_id)} />
 			<h3>{questName}</h3>
 		</div>
 		<table>
@@ -216,7 +199,7 @@
 		<table>
 			{#each expectedDrops as drop}
 			<tr><td>
-				<img class="drop-icon" src={getItemIcon(drop.id)} />
+				<img class="drop-icon" src={getItemImg(drop.id)} />
 			</td><td class="drop-label">
 				{getItemName(drop.id)}
 			</td><td class="drop-amount">
@@ -231,14 +214,14 @@
 				<td class="wave-label">Wave {waveNum + 1}</td>
 				{#each waveEnemies as waveEnemy}
 				<td class="wave-enemy">
-					<img class="enemy-icon" src={getUnitIcon(waveEnemy.enemyData.unit_id)} /><br />
+					<img class="enemy-icon" src={getUnitImg(waveEnemy.enemyData.unit_id)} /><br />
 					<div class="enemy-details">
 						<div class="level">Level {waveEnemy.enemyData.level}</div>
 						{#if waveEnemy.mana}
-						<div class="drop"><img class="drop-icon" src="images/item/icon_icon_item_94002.png" /> {waveEnemy.mana}</div>
+						<div class="drop"><img class="drop-icon" src={getItemImg(94002)} /> {waveEnemy.mana}</div>
 						{/if}
 						{#each waveEnemy.drops as drop}
-						<div class="drop"><img class="drop-icon" src={getItemIcon(drop.id)} /> {drop.odds}%</div>
+						<div class="drop"><img class="drop-icon" src={getItemImg(drop.id)} /> {drop.odds}%</div>
 						{/each}
 					</div>
 				</td>

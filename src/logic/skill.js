@@ -1,4 +1,5 @@
-import { getTable, NUMBER_TO_STAT, BUFF_NUMBER_TO_STAT, STAT_DISPLAY_NAMES, SKILL_NAMES, lookupRows } from "@src/data/priconnedb";
+import { getTable, NUMBER_TO_STAT, BUFF_NUMBER_TO_STAT, STAT_DISPLAY_NAMES, SKILL_NAMES, 
+	lookupRows, cacheFunction } from "@src/data/priconnedb";
 
 // action 8 is speed manip
 const action8Detail = {
@@ -518,12 +519,7 @@ function pluralize(side) {
 }
 
 // Shorthand for complex skills/actions lookup
-let cachedUnitSkills = {}
-export function getUnitSkills(unitId) {
-	if (cachedUnitSkills[unitId] !== undefined) {
-		return cachedUnitSkills[unitId];
-	}
-
+export const getUnitSkills = cacheFunction(function getUnitSkills(unitId) {
 	let skill_data = getTable("skill_data");
 	let skill_action = getTable("skill_action");
 
@@ -573,7 +569,16 @@ export function getUnitSkills(unitId) {
 		}
 	});
 
-	cachedUnitSkills[unitId] = unitSkills;
-
 	return unitSkills;
+});
+
+export function getSkillCost(level) {
+	let costTable = getTable("skill_cost");
+	let cost = 0;
+	for (var i = 0; i < level; i++) {
+		if (costTable[i]) {
+			cost += costTable[i].cost;
+		}
+	}
+	return cost;
 }

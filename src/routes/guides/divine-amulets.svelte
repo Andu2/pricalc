@@ -1,9 +1,13 @@
 <script>
-	import { lookupRows } from "@src/data/priconnedb";
+	import { lookupRows, getTable } from "@src/data";
+	import { getIcon } from "@src/logic";
 	import RaritySelect from "@src/components/RaritySelect.svelte";
+	import DataComponent from "@src/components/DataComponent.svelte";
 
-	const amuletCosts = lookupRows("shop_static_price_group", {});
-	const rarityCostSample = lookupRows("unit_rarity", { unit_id: 100101 });
+	const requiredTables = [ "shop_static_price_group", "unit_rarity" ];
+
+	let amuletCosts = [];
+	let rarityCostSample = [];
 
 	let initialRarity = 3;
 	let desiredRarity = 5;
@@ -13,6 +17,7 @@
 	$: costs = calculateCost(initialRarity, desiredRarity, currentShards, shardsBought);
 
 	function calculateCost(initialRarity, desiredRarity, currentShards, shardsBought) {
+		if (amuletCosts.length === 0) return 0;
 		let shardsNeeded = 0;
 		rarityCostSample.forEach(function(costData) {
 			if (costData.rarity <= desiredRarity && costData.rarity > initialRarity) {
@@ -44,41 +49,48 @@
 		response.amulets = amuletsNeeded;
 		return response;
 	}
+
+	function onDataReady() {
+		amuletCosts = getTable("shop_static_price_group");
+		rarityCostSample = lookupRows("unit_rarity", { unit_id: 100101 });
+		costs = calculateCost(initialRarity, desiredRarity, currentShards, shardsBought);
+	}
 </script>
 
 <div id="header">
-	<img class="header-image" src="images/item/icon_icon_item_90005.png" />
+	<img class="header-image" src={getIcon("icon_item_90005")} />
 
 	<h2>Memory Shard Divine Amulet Costs</h2>
 
 	<p>Memory shards of characters you already own can be purchased with divine amulets. The divine amulet cost goes up as you buy more shards, up to a maximum of five divine amulets per shard. You can use this calculator to see how many divine amulets you'll need to reach a desired rarity.</p>
 </div>
-
-<div id="reference-tables">
-	<div class="info-column">
-		<table class="info-table">
-			<tr><th>Shard From</th><th>Shard To</th><th>Amulet Cost</th></tr>
-			{#each amuletCosts as costData, i}
-			<tr class:even={i % 2 === 0}>
-				<td>{costData.buy_count_from}</td>
-				<td>{costData.buy_count_to === -1 ? "∞" : costData.buy_count_to}</td>
-				<td>{costData.count}</td>
-			</tr>
-			{/each}
-		</table>
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	<div id="reference-tables">
+		<div class="info-column">
+			<table class="info-table">
+				<tr><th>Shard From</th><th>Shard To</th><th>Amulet Cost</th></tr>
+				{#each amuletCosts as costData, i}
+				<tr class:even={i % 2 === 0}>
+					<td>{costData.buy_count_from}</td>
+					<td>{costData.buy_count_to === -1 ? "∞" : costData.buy_count_to}</td>
+					<td>{costData.count}</td>
+				</tr>
+				{/each}
+			</table>
+		</div>
+		<div class="info-column">
+			<table class="info-table">
+				<tr><th>Unit Rarity</th><th>Shard Cost</th></tr>
+				{#each rarityCostSample as costData, i}
+				<tr class:even={i % 2 === 0}>
+					<td>{costData.rarity}</td>
+					<td>{costData.consume_num}</td>
+				</tr>
+				{/each}
+			</table>
+		</div>
 	</div>
-	<div class="info-column">
-		<table class="info-table">
-			<tr><th>Unit Rarity</th><th>Shard Cost</th></tr>
-			{#each rarityCostSample as costData, i}
-			<tr class:even={i % 2 === 0}>
-				<td>{costData.rarity}</td>
-				<td>{costData.consume_num}</td>
-			</tr>
-			{/each}
-		</table>
-	</div>
-</div>
+</DataComponent>
 
 <table class="input-table">
 	<tr><td class="label-cell">Current rarity:</td><td class="input-cell"><RaritySelect bind:rarity={initialRarity} /></td></tr>
@@ -87,7 +99,7 @@
 	<tr><td class="label-cell">Shards previously bought:</td><td class="input-cell"><input type="number" min=0 max=999 bind:value={shardsBought} /></td></tr>
 </table>
 
-<p>Reaching the desired rarity will cost <strong>{costs.shards}</strong> shards, which will cost <strong>{costs.amulets}</strong> <img class="inline-icon" src="images/item/icon_icon_item_90005.png" /> divine amulets.</p>
+<p>Reaching the desired rarity will cost <strong>{costs.shards}</strong> shards, which will cost <strong>{costs.amulets}</strong> <img class="inline-icon" src={getIcon("icon_item_90005")} /> divine amulets.</p>
 
 <style>
 	div#header {

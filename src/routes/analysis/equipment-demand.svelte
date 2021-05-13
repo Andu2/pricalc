@@ -1,38 +1,35 @@
 <script>
 import DopeAssTable from "@src/components/DopeAssTable.svelte";
+import DataComponent from "@src/components/DataComponent.svelte";
 import CharacterFilter from "@src/components/CharacterFilter.svelte";
-import { lookupRows } from "@src/data";
-import { getMaxRefine, getUnlockedUnits, isFragment, isHardQuest } from "@src/logic";
-import { sortByAttr } from "@src/utils";
+import { lookupRows, cacheFunction, getTable } from "@src/data";
+import { getMaxRefine, getUnlockedUnits, isFragment, isHardQuest, getItemImg } from "@src/logic";
+import { sortByAttr, escAttr } from "@src/utils";
 
-export const requiredTables = [ "quest_data", "wave_group_data", "item_data", "equipment_data", "enemy_reward_data" ];
+export const requiredTables = [ "unit_data", "unit_promotion", "quest_data", "wave_group_data", 
+	"item_data", "equipment_data", "enemy_reward_data", "equipment_craft" ];
 
 let unitIds = {};
-let UNLOCKED_UNITS = [];
-UNLOCKED_UNITS.forEach(function(unit) {
-	unitIds[unit.unit_id] = true;
-});
-let equipment = lookupRows("equipment_data", {});
-let equipmentSets = lookupRows("unit_promotion", {});
-let craftData = lookupRows("equipment_craft", {})
-let quests = lookupRows("quest_data", {});
+let dataLoaded = false;
+
+let equipment = [];
+let equipmentSets = [];
+let craftData = [];
+let quests = [];
 
 let demand = {};
 let craftDemand = {};
 let flattenedCraftData = {};
 
-craftData.forEach(function(craft) {
-	flattenedCraftData[craft.equipment_id] = getFlattenedCrafts(craft);
-});
-
 function getFlattenedCrafts(craft) {
 	let flattenedCraft = {};
-	// 1st piece always fragments
-	for (var i = 2; i <= 10; i++) {
+	for (var i = 1; i <= 10; i++) {
 		let craftId = craft["condition_equipment_id_" + i];
 		if (craftId <= 0) break;
-		flattenedCraft[craftId] = craft["consume_num_" + i];
+		let childData = lookupRows("equipment_data", { equipment_id: craftId }, {}, { cache: true })[0];
+		if (isFragment(childData)) continue;
 		let childCraftData = lookupRows("equipment_craft", { equipment_id: craftId }, {}, { cache: true })[0];
+		flattenedCraft[craftId] = craft["consume_num_" + i];
 		if (childCraftData) {
 			let childFlattenedCraft = getFlattenedCrafts(childCraftData);
 			for (var equipId in childFlattenedCraft) {
@@ -47,6 +44,7 @@ function getFlattenedCrafts(craft) {
 }
 
 function generateDemand(unitIds) {
+	if (!dataLoaded) return;
 	for (var key in demand) {
 		demand[key] = 0;
 	}
@@ -74,25 +72,30 @@ function generateDemand(unitIds) {
 	});
 }
 
-let questCountCache = {};
-function getQuestCount(itemId, isHard = false) {
-	let cacheKey = itemId + (isHard ? "H" : "N");
-	if (questCountCache[cacheKey] !== undefined) {
-		return questCountCache[cacheKey];
-	}
-
+const getDemandQuestCount = cacheFunction(function getDemandQuestCount(itemId, isHard = false) {
 	let questCount = 0;
 	let standardOdds = isHard ? 72 : 36;
+
+	// Turn this into a lookup table for performance
+	let waveLookup = {};
+	getTable("wave_group_data").forEach(function(waveData) {
+		waveLookup[waveData.wave_group_id] = waveData;
+	});
+
+	let dropLookup = {};
+	getTable("enemy_reward_data").forEach(function(dropData) {
+		dropLookup[dropData.drop_reward_id] = dropData;
+	});
 
 	// What a beautiful code pyramid
 	quests.forEach(function(questData) {
 		if (isHardQuest(questData) === isHard) {
 			for (var wave = 1; wave <= 3; wave++) {
 				let waveId = questData["wave_group_id_" + wave];
-				let waveData = lookupRows("wave_group_data", { wave_group_id: waveId }, {}, { cache: true })[0];
+				let waveData = waveLookup[waveId];
 				for (var enemy = 1; enemy <= 5; enemy++) {
 					if (waveData["enemy_id_" + enemy] && waveData["drop_reward_id_" + enemy]) {
-						let dropData = lookupRows("enemy_reward_data", { drop_reward_id: waveData["drop_reward_id_" + enemy]}, {}, { cache: true })[0];
+						let dropData = dropLookup[waveData["drop_reward_id_" + enemy]];
 						for (var drop = 1; drop <= 5; drop++) {
 							if (dropData["reward_type_" + drop] && dropData["reward_id_" + drop] === itemId) {
 								questCount += dropData["reward_num_" + drop] * dropData["odds_" + drop] / standardOdds;
@@ -104,9 +107,8 @@ function getQuestCount(itemId, isHard = false) {
 		}
 	})
 
-	questCountCache[cacheKey] = questCount;
 	return questCount;
-}
+});
 
 $: generateDemand(unitIds);
 $: data = getDemandTableData(unitIds);
@@ -116,12 +118,13 @@ function isNotFragment(data) {
 }
 
 function getDemandTableData() {
+	if (!dataLoaded) return [];
 	return equipment.filter(isNotFragment).filter(function(equipData) {
 		// hide zero demand
 		return (demand[equipData.equipment_id] || craftDemand[equipData.equipment_id])
 	}).map(function(equipData) {
 		let rowData = {
-			icon: "<img class=\"table-icon\" src=\"images/equipment/icon_icon_equipment_" + equipData.equipment_id + ".png\">",
+			icon: "<img class=\"table-icon\" src=\"" + escAttr(getItemImg(equipData.equipment_id)) + "\">",
 			name: equipData.equipment_name,
 			demand: demand[equipData.equipment_id] || 0,
 			craftDemand: craftDemand[equipData.equipment_id] || 0,
@@ -144,8 +147,8 @@ function getDemandTableData() {
 			}
 		}
 
-		rowData.normalQuests = Math.round(getQuestCount(dropId, false) * 100) / 100;
-		rowData.hardQuests = Math.round(getQuestCount(dropId, true) * 100) / 100;
+		rowData.normalQuests = Math.round(getDemandQuestCount(dropId, false) * 100) / 100;
+		rowData.hardQuests = Math.round(getDemandQuestCount(dropId, true) * 100) / 100;
 
 		rowData.totalDemand = rowData.demand + rowData.craftDemand;
 		if (rowData.fragments > 0) {
@@ -208,7 +211,24 @@ let columns = [
 ];
 
 function onDataReady() {
-	
+	dataLoaded = true;
+	unitIds = {};
+	getUnlockedUnits().forEach(function(unitData) {
+		unitIds[unitData.unit_id] = true;
+	})
+
+	equipment = getTable("equipment_data");
+	equipmentSets = getTable("unit_promotion");
+	craftData = getTable("equipment_craft")
+	quests = getTable("quest_data");
+
+	demand = {};
+	craftDemand = {};
+	flattenedCraftData = {};
+
+	craftData.forEach(function(craft) {
+		flattenedCraftData[craft.equipment_id] = getFlattenedCrafts(craft);
+	});
 }
 
 </script>
@@ -225,6 +245,9 @@ function onDataReady() {
 			</td>
 		</tr>
 	</table>
+	<p>
+		Equipment demand is calculated for max rank. To see equipment demand for lower ranks for individual cards, check the unit viewer.
+	</p>
 </DataComponent>
 
 <style>

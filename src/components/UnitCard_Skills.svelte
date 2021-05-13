@@ -211,7 +211,7 @@
 
 	function getSkillAnimationDuration(skill, unitId) {
 		let animationName = unitId + "_" + skillAnimationIds[skill];
-		let times = [0];
+		let times = ["?"];
 		if (animationDurations[animationName]) {
 			times = [Math.round(animationDurations[animationName] * 100) / 100];
 		}

@@ -1,4 +1,4 @@
-import { getTable, lookupRows } from "@src/data/priconnedb";
+import { getTable, lookupRows, cacheFunction } from "@src/data/priconnedb";
 
 export function getItemType(itemId) {
 	if (itemId / 100000 < 1) return "item";
@@ -22,7 +22,19 @@ export function getItemName(itemId) {
 }
 
 export function isFragment(equipData) {
-	return (equipData.equipment_name.indexOf("Blueprint") > -1 || equipData.equipment_name.indexOf("Fragment") > -1);
+	if (!equipData || !equipData.equipment_id) return false;
+	let fragmentWords = [
+		"Fragment",
+		"Blueprint",
+		"欠片", // fragment
+		"の設計図" // blueprint
+	]
+	for (var i = 0; i < fragmentWords.length; i++) {
+		if (equipData.equipment_name.indexOf(fragmentWords[i]) > -1) {
+			return true;
+		}
+	}
+	return false;
 }
 
 export function getMaxRank() {
@@ -42,12 +54,7 @@ export function getMaxRank() {
 	}
 }
 
-let cachedDroppableItems = null;
-export function getDroppableItems() {
-	if (cachedDroppableItems) {
-		return cachedDroppableItems;
-	}
-
+export const getDroppableItems = cacheFunction(function getDroppableItems() {
 	let items = [];
 
 	let quests = getTable("quest_data");
@@ -70,8 +77,35 @@ export function getDroppableItems() {
 
 	// Mana is special - make a dummy row for it
 	items.push(94001);
-
-	cachedDroppableItems = items;
-
 	return items;
+});
+
+export function getShardType(unitId) {
+	let unitRarity = lookupRows("unit_rarity", { unit_id: unitId })[0];
+	if (!unitRarity) return "unknown";
+	let shardId = unitRarity.unit_material_id;
+
+	let shopLineupIds = {
+		"Dungeon shop": 1204001,
+		"Arena shop": 1202001,
+		"Princess Arena shop": 1203001,
+		"Clan Battle shop": 1205001
+	}
+
+	for (var shop in shopLineupIds) {
+		let shopItemsMaxLevel = lookupRows("fix_lineup_group_set", { lineup_group_set_id: shopLineupIds[shop], team_level_to: -1 }, {}, { cache: true})[0];
+		for (var i = 1; i <= 10; i++) {
+			if (shopItemsMaxLevel["reward_id_" + i] === shardId) {
+				return shop;
+			}
+		}
+	}
+
+	// To simplify lookup, just check the third reward id among all rewards and assume it's our hard node
+	let questReward = lookupRows("quest_reward_data", { reward_id_3: shardId });
+	if (questReward.length > 0) {
+		return "Hard quests"
+	}
+
+	return "Not farmable"
 }

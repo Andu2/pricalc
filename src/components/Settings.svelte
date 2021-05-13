@@ -1,10 +1,11 @@
 <script>
 	import { includeExSkillStats, hideImpossibleRarities, dataSource, theme } from "@src/settings.js";
-	import { onMount } from "svelte";
+	import { getAssetVersions, SERVER_OPTIONS } from "@src/data";
+	import { onMount, onDestroy } from "svelte";
 	import { closeModal } from "@src/components/Modal.svelte";
 	import themes from "@src/../themes.json";
 
-	const serverOptions = [ "en", "jp" ];
+	// This is not reactive. It will save to dataSource when settings is closed.
 	let [ dataSourceServer, dataSourceVersion ] = [...$dataSource.split("-")];
 	let versionConfig = {};
 	const namedVersions = {
@@ -19,8 +20,14 @@
 		}
 	}
 
+	const preferredVersion = {
+		"en": "latest",
+		// "jp": "10010810"
+		"jp": "latest"
+	}
+
 	$: versionOptions = getVersionOptions(dataSourceServer, versionConfig);
-	$: $dataSource = getDataSource(dataSourceServer, dataSourceVersion);
+	//$: $dataSource = getDataSource(dataSourceServer, dataSourceVersion);
 
 	function getDataSource(dataSourceServer, dataSourceVersion) {
 		return dataSourceServer + "-" + dataSourceVersion;
@@ -44,16 +51,11 @@
 			});
 
 			options.sort(function(a, b) {
-				if (a.version === "latest") return -1;
-				if (b.version === "latest") return 1;
+				if (a.version === preferredVersion[server]) return -1;
+				if (b.version === preferredVersion[server]) return 1;
 
 				if (a.name && !b.name) return -1;
 				if (!a.name && b.name) return 1;
-				if (a.name && b.name) {
-					if (a.name < b.name) return -1;
-					else if (a.name > b.name) return 1;
-					else return 0;
-				}
 
 				if (a.version < b.version) return -1;
 				else if (a.version > b.version) return 1;
@@ -68,7 +70,7 @@
 			});
 
 			if (!selectedVersionInList) {
-				dataSourceVersion = options[0].version;
+				dataSourceVersion = preferredVersion[server];
 			}
 
 			return options;
@@ -76,23 +78,7 @@
 	}
 
 	onMount(function() {
-		Promise.all(serverOptions.map(function(server) {
-			return fetch("https://pricalc.b-cdn.net/" + server + "/masterdata/asset-versions.json")
-				.then(function(response) {
-					return response.json()
-				})
-				.then(function(json) {
-					return {
-						server: server,
-						data: json
-					}
-				}).catch(function(error) {
-					return { 
-						server: server,
-						data: null
-					};
-				})
-		})).then(function(assetVersions) {
+		Promise.all(SERVER_OPTIONS.map(getAssetVersions)).then(function(assetVersions) {
 			versionConfig = {};
 			assetVersions.forEach(function(versionInfo) {
 				if (versionInfo.data !== null) {
@@ -105,43 +91,76 @@
 			});
 		});
 	});
+
+	onDestroy(function() {
+		$dataSource = getDataSource(dataSourceServer, dataSourceVersion);
+	});
 </script>
 
 <h2>Settings</h2>
 
 <div>
-	<input type="checkbox" bind:checked={$includeExSkillStats} /> Include EX skill in stat calculations <br />
-	<input type="checkbox" bind:checked={$hideImpossibleRarities} /> Hide 1* and 2* versions of units that are impossible to acquire <br />
-	Theme: <select bind:value={$theme}>
-		{#each Object.keys(themes) as theme}
-		<option value={theme}>{themes[theme].name}</option>
-		{/each}
-	</select><br />
-	Data source server:
-	<select bind:value={dataSourceServer}>
-		{#each serverOptions as server}
-		<option value={server}>{server.toUpperCase()}</option>
-		{/each}
-	</select><br />
-	Data source version:
-	<select bind:value={dataSourceVersion}>
-		{#each versionOptions as versionOpt}
-		<option value={versionOpt.version}>
-			{versionOpt.version}
-			{#if versionOpt.name}
-			 ({versionOpt.name})
-			{/if}
-			{#if versionOpt.date}
-			 - {versionOpt.date.toLocaleDateString()}
-			{/if}
-		</option>
-		{/each}
-	</select>
+	<table>
+		<tr><td>
+			<input type="checkbox" bind:checked={$includeExSkillStats} /> Include EX skill in stat calculations
+		</td></tr>
+		<tr><td>
+			<input type="checkbox" bind:checked={$hideImpossibleRarities} /> Hide 1* and 2* versions of units that are impossible to acquire
+		</td></tr>
+<!-- 		<tr><td>
+			Theme: <select bind:value={$theme}>
+				{#each Object.keys(themes) as theme}
+				<option value={theme}>{themes[theme].name}</option>
+				{/each}
+			</select>
+		</td></tr> -->
+	</table>
+
+	<h3>Data Source</h3>
+
+	<table>
+		<tr><td>
+			Data source server:
+		</td><td>
+			<select bind:value={dataSourceServer}>
+				{#each SERVER_OPTIONS as server}
+				<option value={server}>{server.toUpperCase()}</option>
+				{/each}
+			</select><br />
+		</td>
+		</tr><tr><td>
+			Data source version:
+		</td><td>
+			<select bind:value={dataSourceVersion}>
+				{#each versionOptions as versionOpt}
+				<option value={versionOpt.version}>
+					{versionOpt.version}
+					{#if versionOpt.name}
+					 ({versionOpt.name})
+					{/if}
+					{#if versionOpt.date}
+					 - {versionOpt.date.toLocaleDateString()}
+					{/if}
+				</option>
+				{/each}
+			</select>
+		</td></tr>
+	</table>
 	<div class="button" on:click={closeModal}>OK</div>
 </div>
 
 <style>
 	h2 {
 		text-align: center;
+	}
+
+	h3 {
+		margin-bottom: 6px;
+	}
+
+	div.button {
+		margin-top: 16px;
+		margin-left: 150px;
+		margin-right: 150px;
 	}
 </style>

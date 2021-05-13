@@ -21,6 +21,7 @@
 	};
 
 	$: resort(sort, data);
+	$: displayValues = getDisplayValues(data, columns, options);
 
 	function changeSort(column) {
 		return function() {
@@ -47,6 +48,8 @@
 			data.sort(function(row1, row2) {
 				let row1Numeric = row1[sort.attr] * 1;
 				let row2Numeric = row2[sort.attr] * 1;
+				if (isNaN(row1Numeric)) row1Numeric = Infinity;
+				if (isNaN(row2Numeric)) row2Numeric = Infinity;
 				if (row1Numeric > row2Numeric) return 1;
 				else if (row1Numeric < row2Numeric) return -1;
 				else return 0;
@@ -67,6 +70,28 @@
 		// This is to force svelte to update
 		data = data.slice();
 	}
+
+	function getDisplayValues(data, columns, options) {
+		return data.map(function(row) {
+			let displayRow = {};
+			for (var column in columns) {
+				let colData = {
+					value: row[columns[column].attr],
+					classes: []
+				}
+				if (typeof columns[column].displayValue === "function") {
+					colData.value = columns[column].displayValue(row, columns[column].attr)
+				}
+				if (options.colorValues && typeof row[columns[column].attr] === "number") {
+					if (isNaN(row[columns[column].attr])) colData.classes.push("nan");
+					else if (row[columns[column].attr] > 0) colData.classes.push("positive");
+					else if (row[columns[column].attr] < 0) colData.classes.push("negative");
+				}
+				displayRow[columns[column].attr] = colData;
+			}
+			return displayRow;
+		});
+	}
 </script>
 
 <div class="table-wrap" class:scroll={scroll}>
@@ -75,23 +100,29 @@
 		{#each columns as column}
 			<th class="heading" class:top={!!column.helpText} on:click={changeSort(column)}>
 				{column.displayName}
+				{#if sort.attr === column.attr}
+					{#if sort.ascending}
+					▲
+					{:else}
+					▼
+					{/if}
+				{/if}
 				{#if column.helpText}
 				<Tooltip header={column.displayName} text={column.helpText} />
 				{/if}
 			</th>
 		{/each}
 		</tr>
-		{#each data as row, i}
+		{#each displayValues as row, i}
 		<tr class:odd={i % 2 === 1} class:even={i % 2 === 0}>
 			{#each columns as column}
+				<td class={row[column.attr].classes.join(" ")} >
 				{#if column.html}
-				<td>{@html row[column.attr]}</td>
-				{:else if typeof column.displayValue === "function"}
-				<td>{@html column.displayValue(row)}</td>
+					{@html row[column.attr].value}
 				{:else}
-				<td class:positive={options.colorValues && typeof row[column.attr] === "number" && row[column.attr] > 0}
-					class:negative={options.colorValues && typeof row[column.attr] === "number" && row[column.attr] < 0}>{row[column.attr]}</td>
+					{row[column.attr].value}
 				{/if}
+				</td>
 			{/each}
 		</tr>
 		{/each}
@@ -110,6 +141,11 @@ th {
 	top: 0;
 	border-bottom: 2px solid #566590;
 }
+
+th:hover {
+	color: #566590
+}
+
 td.imgcell {
 	/*white-space: nowrap;*/
 }

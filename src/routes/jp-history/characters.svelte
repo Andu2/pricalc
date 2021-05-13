@@ -1,18 +1,18 @@
 <script>
-	import { jpContentHistory } from "@src/data/priconnedb";
-	import { getUnlockedUnits } from "@src/logic/unit";
+	import { jpContentHistory } from "@src/data";
+	import { getUnlockedUnits, getUnitImg } from "@src/logic";
+	import { escAttr } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
+	import DataComponent from "@src/components/DataComponent.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
 	import JPContentFooter from "@src/components/JPContentFooter.svelte";
 
-	let hideUnlockedUnits = true;
+	const requiredTables = [ "unit_data" ];
 
-	let UNLOCKED_UNITS = [];
+	let hideUnlockedUnits = true;
+	let unlockedIds = [];
 
 	const jpLaunchDate = new Date(jpContentHistory.jpLaunchDate);
-	const unlockedIds = UNLOCKED_UNITS.map(function(unitData) {
-		return unitData.unit_id;
-	});
 
 	$: data = getData(hideUnlockedUnits);
 
@@ -51,10 +51,7 @@
 		return unitsAdded.map(function(unitAdded) {
 			let iconHtml = "";
 			if (unitAdded.unitId > -1) {
-				var unitIdString = unitAdded.unitId + "";
-				var unitIdWithRarity = unitIdString.slice(0, 4) + "3" + unitIdString.slice(-1); 
-				var charImg = "images/unit/unit_icon_unit_" + unitIdWithRarity + ".png";
-				iconHtml = "<img class=\"table-icon\" src=\"" + charImg + "\" />";
+				iconHtml = "<img class=\"table-icon\" src=\"" + escAttr(getUnitImg(unitAdded.unitId, { rarity: 3, server: "jp" })) + "\" />";
 			}
 			
 			return {
@@ -70,14 +67,22 @@
 	function capitalize(str) {
 		return str.slice(0, 1).toUpperCase() + str.slice(1);
 	}
+
+	function onDataReady() {
+		unlockedIds = getUnlockedUnits().map(function(unitData) {
+			return unitData.unit_id;
+		});
+		data = getData(hideUnlockedUnits);
+	}
 </script>
 
 <h2>JP Characters Added Timeline</h2>
+<DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
+	<JPContentHeader />
 
-<JPContentHeader />
+	<p><input type="checkbox" bind:checked={hideUnlockedUnits} /> Hide characters that are already in EN</p>
 
-<p><input type="checkbox" bind:checked={hideUnlockedUnits} /> Hide characters that are already in global edition</p>
+	<DopeAssTable data={data} columns={columns} scroll={false} />
 
-<DopeAssTable data={data} columns={columns} scroll={false} />
-
-<JPContentFooter />
+	<JPContentFooter />
+</DataComponent>

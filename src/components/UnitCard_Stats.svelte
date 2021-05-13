@@ -1,8 +1,8 @@
 <script>
 	import Tooltip from "@src/components/Tooltip.svelte";
-	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data/priconnedb";
-	import { calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, getUnitType } from "@src/logic/unit";
-	import { getIcon } from "@src/logic/ui";
+	import { STAT_NAMES, STAT_DISPLAY_NAMES } from "@src/data";
+	import { calculatePower, calculateEffectivePhysicalHp, calculateEffectiveMagicHp, getUnitType, getIcon,
+		getTotalExp, getSkillCost } from "@src/logic";
 	import { shortNumber } from "@src/utils";
 
 	export let actor;
@@ -37,6 +37,20 @@
 		return "???";
 	}
 
+	function getExp(actor) {
+		if (!actor || !actor.config) return 0;
+		return shortNumber(getTotalExp(actor.config.level));
+	}
+
+	function getAllSkillCost(actor) {
+		if (!actor || !actor.config) return 0;
+		let totalCost = 0;
+		for (var skillName in actor.config.skills) {
+			totalCost += getSkillCost(actor.config.skills[skillName])
+		}
+		return shortNumber(totalCost);
+	}
+
 	let effectivePhysHpTooltip = "Effective physical HP represents the average amount of raw physical damage a unit can expect to take before dying, after accounting for defense and dodge. It does NOT account for HP drain or skills.";
 	let effectiveMagHpTooltip = "Effective magic HP represents the average amount of raw magic damage a unit can expect to take before dying, after accounting for magic defense. It does NOT account for HP drain or skills.";
 </script>
@@ -58,11 +72,10 @@
 				{shortNumber(Math.round(effectiveMagicHp))}
 			</td></tr>
 			{#if unitType === "character"}
-			<tr class="cost"><td class="stat-label">Equipment Mana Cost</td><td class="stat-value">{shortNumber(50)}</td></tr>
-			<tr class="cost"><td class="stat-label">Skill Mana Cost</td><td class="stat-value">{shortNumber(50)}</td></tr>
-			<tr class="cost"><td class="stat-label">Mana Cost Total</td><td class="stat-value">{shortNumber(50)}</td></tr>
-			<tr class="cost"><td class="stat-label">Exp Cost</td><td class="stat-value">{shortNumber(50)}</td></tr>
-			<tr class="cost"><td class="stat-label">Shards</td><td class="stat-value">{shortNumber(50)}</td></tr>
+<!-- 			<tr class="cost"><td class="stat-label">Equipment Mana Cost</td><td class="stat-value">{shortNumber(50)}</td></tr> -->
+			<tr class="cost"><td class="stat-label">Skill Mana Cost</td><td class="stat-value">{getAllSkillCost(actor)}</td></tr>
+<!-- 			<tr class="cost"><td class="stat-label">Mana Cost Total</td><td class="stat-value">{shortNumber(50)}</td></tr> -->
+			<tr class="cost"><td class="stat-label">Exp</td><td class="stat-value">{getExp(actor)}</td></tr>
 			{/if}
 		</table>
 	</div>
@@ -71,7 +84,7 @@
 <style>
 div.card-section {
 	min-width: 240px;
-	max-width: 280px;
+	/*max-width: 280px;*/
 	flex-grow: 1;
 }
 
@@ -93,7 +106,7 @@ img.stat-icon {
 }
 
 tr.calculated {
-	color: blue;
+	color: #477aca;
 }
 
 tr.calculated td.stat-label {
@@ -102,6 +115,10 @@ tr.calculated td.stat-label {
 
 tr.cost {
 	color: #0ab770;
+}
+
+tr.cost td.stat-label {
+	font-weight: bold;
 }
 
 td.stat-value {
