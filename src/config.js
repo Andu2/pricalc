@@ -183,7 +183,8 @@ export const changeLog = [{
 			"Added ability to select data source, including JP data and old data",
 			"Unit viewer: Added skill mana cost, shard location, total exp",
 			"Added rarity and rank selection to max stat table",
-			"Added number of cards and next three birthdays to character profile page"
+			"Added number of cards and next three birthdays to character profile page",
+			"Fixed bug with effective health in rank comparison (will now assume max level, which affects calculations)"
 		]
 	}, {
 		version: "0.4",
