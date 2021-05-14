@@ -29,4 +29,5 @@ html, body, div#sapper {
     right: 0;
     bottom: 0;
     overflow: auto;*/
+    min-width: 1000px;
 }
