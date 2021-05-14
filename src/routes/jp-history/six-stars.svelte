@@ -36,7 +36,7 @@
 		return unitsAdded.map(function(unitAdded) {
 			let iconHtml = "";
 			if (unitAdded.unitId > -1) {
-				iconHtml = "<img class=\"table-icon\" src=\"" + escAttr(getUnitImg(unitAdded.unitId, { rarity: 3, server: "jp" })) + "\" />";
+				iconHtml = "<img class=\"table-icon\" src=\"" + escAttr(getUnitImg(unitAdded.unitId, { rarity: 6, server: "jp" })) + "\" />";
 			}
 			
 			return {

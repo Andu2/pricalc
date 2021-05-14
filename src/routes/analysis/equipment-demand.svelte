@@ -93,12 +93,14 @@ const getDemandQuestCount = cacheFunction(function getDemandQuestCount(itemId, i
 			for (var wave = 1; wave <= 3; wave++) {
 				let waveId = questData["wave_group_id_" + wave];
 				let waveData = waveLookup[waveId];
-				for (var enemy = 1; enemy <= 5; enemy++) {
-					if (waveData["enemy_id_" + enemy] && waveData["drop_reward_id_" + enemy]) {
-						let dropData = dropLookup[waveData["drop_reward_id_" + enemy]];
-						for (var drop = 1; drop <= 5; drop++) {
-							if (dropData["reward_type_" + drop] && dropData["reward_id_" + drop] === itemId) {
-								questCount += dropData["reward_num_" + drop] * dropData["odds_" + drop] / standardOdds;
+				if (waveData) {
+					for (var enemy = 1; enemy <= 5; enemy++) {
+						if (waveData["enemy_id_" + enemy] && waveData["drop_reward_id_" + enemy]) {
+							let dropData = dropLookup[waveData["drop_reward_id_" + enemy]];
+							for (var drop = 1; drop <= 5; drop++) {
+								if (dropData["reward_type_" + drop] && dropData["reward_id_" + drop] === itemId) {
+									questCount += dropData["reward_num_" + drop] * dropData["odds_" + drop] / standardOdds;
+								}
 							}
 						}
 					}

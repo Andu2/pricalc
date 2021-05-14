@@ -7,7 +7,7 @@ export let unitId;
 export let prefabId = null;
 export let rarity;
 
-$: charImg = getUnitImg(unitId, { rarity: rarity, useMissingImage: false, prefabId: prefabId });
+$: charImg = getUnitImg(unitId, { rarity: rarity, useMissingImage: false, usePrefabId: true });
 
 function selectUnit(id) {
 	unitId = id;

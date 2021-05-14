@@ -214,7 +214,7 @@
 				<td class="wave-label">Wave {waveNum + 1}</td>
 				{#each waveEnemies as waveEnemy}
 				<td class="wave-enemy">
-					<img class="enemy-icon" src={getUnitImg(waveEnemy.enemyData.unit_id)} /><br />
+					<img class="enemy-icon" src={getUnitImg(waveEnemy.enemyData.unit_id, { usePrefabId: true })} /><br />
 					<div class="enemy-details">
 						<div class="level">Level {waveEnemy.enemyData.level}</div>
 						{#if waveEnemy.mana}

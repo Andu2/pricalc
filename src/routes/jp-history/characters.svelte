@@ -80,7 +80,7 @@
 <DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
 	<JPContentHeader />
 
-	<p><input type="checkbox" bind:checked={hideUnlockedUnits} /> Hide characters that are already in EN</p>
+	<p><input type="checkbox" bind:checked={hideUnlockedUnits} /> Hide characters that are in current data source</p>
 
 	<DopeAssTable data={data} columns={columns} scroll={false} />
 

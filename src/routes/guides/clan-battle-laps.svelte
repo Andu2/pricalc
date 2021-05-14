@@ -5,7 +5,7 @@
 	import DataComponent from "@src/components/DataComponent.svelte";
 
 	const requiredTables = [ "clan_battle_period", "wave_group_data", "enemy_parameter", "clan_battle_boss_fix_reward",
-		"{clanBattleBossData}" ];
+		"{clanBattleBossData}", "unit_enemy_data" ];
 
 	let clanBattleOptions = [];
 	let clanBattleSelect = -1;

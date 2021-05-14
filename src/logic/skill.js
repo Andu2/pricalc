@@ -124,7 +124,7 @@ export function describeEffect(action, actor, level) {
 			description += "%" 
 		}
 		description += " for " + Math.round((action.action_value_4 + action.action_value_5 * level) * 100) / 100 + " seconds.";
-		replaceVal = Math.round(action.action_value_2 + action.action_value_3 * level);
+		replaceVal = Math.ceil(action.action_value_2 + action.action_value_3 * level);
 	}
 	else if (action.action_type === 11) {
 		// charm

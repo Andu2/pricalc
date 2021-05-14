@@ -1,5 +1,6 @@
 import { getUnitType } from "@src/logic/unit";
 import { getItemType } from "@src/logic/item";
+import { lookupRows } from "@src/data/priconnedb";
 import { dataSource } from "@src/settings";
 import { get } from "svelte/store";
 
@@ -33,8 +34,11 @@ export function getUnitImg(unitId, options = {}) {
 			return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_shadow_" + (unitId - 500000 + 10) + ".png";
 		}
 		else {
-			if (options.prefabId) {
-				return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_" + options.prefabId + ".png";
+			if (options.usePrefabId) {
+				let enemyData = lookupRows("unit_enemy_data", { unit_id: unitId })[0];
+				if (enemyData) {
+					return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_" + enemyData.prefab_id + ".png";
+				}
 			}
 			return CDN_URL + "/" + options.server + "/unit/extract/latest/icon_unit_" + unitId + ".png";
 		}

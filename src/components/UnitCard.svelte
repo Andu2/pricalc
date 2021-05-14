@@ -1,4 +1,5 @@
 <script>
+	// This code is a mess
 	export let unit;
 
 	import UnitCard_EquipSet from "@src/components/UnitCard_EquipSet.svelte";
@@ -12,27 +13,16 @@
 	import DataComponent from "@src/components/DataComponent.svelte";
 	import { STAT_NAMES, STAT_DISPLAY_NAMES, WEAPON_TYPES, lookupRows, getTable, isTableLoaded } from "@src/data";
 	import { createActor, getUnitType, getUnitIdBase, isValidUnitConfiguration, getBlankEquipmentSet,
-		getMaxRank, getMaxLevel, getPositionClass, getShardType } from "@src/logic";
+		getMaxRank, getMaxLevel, getPositionClass, getShardType, getCharaCards } from "@src/logic";
 	import { hideImpossibleRarities, includeExSkillStats, dataSource } from "@src/settings.js";
 	import { sortByAttr } from "@src/utils"
 
-	$: requiredTables = getRequiredTables($dataSource);
-
-	function getRequiredTables(dataSource) {
-		let alwaysRequiredTables = [ "unit_data", "experience_team", "chara_story_status", "unit_promotion",
-			"skill_action", "skill_data", "unit_skill_data", "unit_rarity", "unit_promotion_status",
-			"equipment_data", "equipment_enhance_rate", "story_detail", "unit_status_coefficient",
-			"unit_attack_pattern", "enemy_parameter", "wave_group_data", "unit_enemy_data", "quest_data",
-			"training_quest_data", "resist_data", "ailment_data", "fix_lineup_group_set", "quest_reward_data",
-			"experience_unit", "skill_cost" ];
-		let [ dataSourceServer, dataSourceVersion ] = dataSource.split("-");
-		if (dataSourceServer === "en") {
-			return alwaysRequiredTables.concat([ "clan_battle_boss_group" ])
-		}
-		else {
-			return alwaysRequiredTables;
-		}
-	}
+	const requiredTables = [ "unit_data", "experience_team", "chara_story_status", "unit_promotion",
+		"skill_action", "skill_data", "unit_skill_data", "unit_rarity", "unit_promotion_status",
+		"equipment_data", "equipment_enhance_rate", "story_detail", "unit_status_coefficient",
+		"unit_attack_pattern", "enemy_parameter", "wave_group_data", "unit_enemy_data", "quest_data",
+		"training_quest_data", "resist_data", "ailment_data", "fix_lineup_group_set", "quest_reward_data",
+		"experience_unit", "skill_cost", "{clanBattleBossData}" ]
 
 	let MAX_LEVEL = 1;
 	let MAX_RANK = {
@@ -40,11 +30,13 @@
 		equipment: {}
 	}
 	let dataLoaded = false;
+	let charaCards = {};
 
 	let options = {};
 	$: options.includeExSkillStats = $includeExSkillStats;
 
 	$: unitType = getUnitType(unit.id);
+	$: bondIds = getBondIds(unit.id);
 	let unitVariant;
 	$: unitVariants = getUnitVariants(unit.id);
 	$: setUnitVariant(unitVariant);
@@ -217,6 +209,47 @@
 		}
 	}
 
+	function minAll() {
+		unit.rarity = 1;
+		unit.level = 1;
+		unit.rank = 1;
+		unit.equipment = {
+			slot1: {
+				equipped: false,
+				refine: 0
+			},
+			slot2: {
+				equipped: false,
+				refine: 0
+			},
+			slot3: {
+				equipped: false,
+				refine: 0
+			},
+			slot4: {
+				equipped: false,
+				refine: 0
+			},
+			slot5: {
+				equipped: false,
+				refine: 0
+			},
+			slot6: {
+				equipped: false,
+				refine: 0
+			}
+		};
+		unit.skills = {
+			union_burst: 1,
+			main_skill_1: 1,
+			main_skill_2: 1,
+			ex_skill_1: 1
+		}
+		for (var key in unit.bond) {
+			unit.bond[key] = 0;
+		}
+	}
+
 	function recalculate(unit, validConfig) {
 		if (!dataLoaded) {
 			return;
@@ -254,6 +287,12 @@
 				else if (unit.bond[baseId] < 0) unit.bond[baseId] = 0;
 			}
 		}
+		if (typeof unit.skills === "object") {
+			for (var skillName in unit.skills) {
+				if (unit.skills[skillName] > unit.level) unit.skills[skillName] = unit.level;
+				else if (unit.skills[skillName] < 1) unit.skills[skillName] = 1;
+			}
+		}
 	}
 
 	function resetEquipment() {
@@ -261,7 +300,6 @@
 	}
 
 	function resetAll() {
-		console.log("RESETTINGGGG")
 		unit = {
 			id: -1,
 			rarity: 1,
@@ -273,7 +311,7 @@
 				main_skill_2: 1,
 				ex_skill_1: 1
 			},
-			bond: []
+			bond: {}
 		}
 		resetEquipment()
 	}
@@ -282,6 +320,37 @@
 	$: actor = recalculate(unit, validConfig, options, dataLoaded);
 	$: unitComments = getUnitComments(actor);
 	$: unitName = getName(actor);
+
+	function getBondIds(unitId) {
+		if (!dataLoaded) return false;
+		let charaGroup = charaCards[getUnitIdBase(unitId)];
+		if (!charaGroup) return {};
+
+		// If the user has the units at the same bond, attempt to carry it over when switching units
+		let carryNumber = 0;
+		Object.keys(unit.bond).forEach(function(key, i) {
+			if (i === 0) {
+				carryNumber = unit.bond[key];
+			}
+			else if (unit.bond[key] !== carryNumber) {
+				carryNumber = 0;
+			}
+		});
+
+		for (var storyGroup in unit.bond) {
+			if (charaGroup.cards.indexOf(storyGroup) === -1) {
+				delete unit.bond[storyGroup];
+			}
+		}
+		charaGroup.cards.forEach(function(storyGroup) {
+			let key = storyGroup + ""; // Need to force string keys. Number keys makes weird things happen
+			if (unit.bond[key] === undefined) {
+				unit.bond[key] = carryNumber;
+			}
+		});
+
+		return charaGroup.cards;
+	}
 
 	function getName(actor) {
 		if (actor && actor.name) {
@@ -328,6 +397,7 @@
 	function onDataReady() {
 		MAX_LEVEL = getMaxLevel();
 		MAX_RANK = getMaxRank();
+		charaCards = getCharaCards();
 		dataLoaded = true;
 		validConfig = validateConfig(unit)
 		if (!validateConfig) {
@@ -378,42 +448,45 @@
 				</div>
 			</div>
 			{#if actor}
-			<div class="card-middle-row-wrap">
-				<div class="unit-card-middlerow">
-					{#if unitType === "character"}
-					<div class="max-all-button-wrap">
-						<div class="button max-all-button" on:click={maxAll}>Max all</div>
-					</div>
-					{/if}
+			<div class="unit-card-middlerow">
+				{#if unitType === "character"}
+				<div class="card-control">
+					<div class="button card-control-button" on:click={maxAll}>Max all</div>
+					<div class="button card-control-button" on:click={minAll}>Min all</div>
+				</div>
+				{/if}
+				<div class="unit-card-general">
 					<div class="unit-card-miscstats">
-						<table>
-							{#if actor && actor.unitData && actor.unitData.rarity}
-							<tr>
-								<td class="stat-label">Base rarity</td>
-								<td class="stat-number">{actor.unitData.rarity}</td>
-							</tr>
+						{#if actor && actor.unitData}
+							{#if unitType === "character"}
+								<div class="miscstat">
+									<span class="stat-label">Base rarity:</span>
+									<span class="stat-number">{actor.unitData.rarity}</span>
+								</div>
 							{/if}
-							{#if actor && actor.unitData && actor.unitData.search_area_width}
-							<tr>
-								<td class="stat-label">Range</td>
-								<td class="stat-number">{actor.unitData.search_area_width}
+							<div class="miscstat">
+								<span class="stat-label">Range:</span>
+								<span class="stat-number">{actor.unitData.search_area_width}
 									{#if unitType === "character"}
 									({getPositionClass(actor.unitData.search_area_width)})
 									{/if}
-								</td>
-							</tr>
-							{/if}
-							{#if unitType === "character" && actor && actor.config}
-							<tr>
-								<td class="stat-label">Shard location</td>
-								<td class="stat-number">{getShardType(actor.config.id)}</td>
-							</tr>
-							{/if}
-	<!-- 						<tr>
-								<td>Weapon type:</td>
-								<td>{actor && actor.unitData ? WEAPON_TYPES[actor.unitData.se_type] : "???"}</td>
-							</tr> -->
-						</table>
+								</span>
+							</div>
+							<div class="miscstat">
+								<span class="stat-label">Movement speed:</span>
+								<span class="stat-number">{actor.unitData.move_speed}</span>
+							</div>
+						{/if}
+						{#if unitType === "character" && actor && actor.config}
+						<div class="miscstat">
+							<span class="stat-label">Shard location:</span>
+							<span class="stat-number">{getShardType(actor.config.id)}</span>
+						</div>
+						{/if}
+<!-- 						<div class="miscstat">
+							<span>Weapon type:</span>
+							<span>{actor && actor.unitData ? WEAPON_TYPES[actor.unitData.se_type] : "???"}</span>
+						</div class="miscstat"> -->
 					</div>
 					<div class="unit-card-description">
 						{@html unitComments}
@@ -460,48 +533,57 @@ div.unit-card-parameters {
 	padding-left: 10px;
 }
 
-div.card-middle-row-wrap {
-	padding-top: 5px;
-	padding-bottom: 5px;
-	border-spacing: 10px;
-	display: table;
-}
-
 div.unit-card-middlerow {
-	display: table-row;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	display: flex;
 }
 
-div.max-all-button-wrap {
-	display: table-cell;
+div.card-control {
 	min-width: 80px;
-	vertical-align: top;
+	margin-right: 20px;
 }
 
-div.max-all-button {
+div.card-control-button {
 	padding: 5px;
 }
 
-div.unit-card-description {
-	display: table-cell;
-	vertical-align: top;
+div.card-control-button + div.card-control-button {
+	margin-top: 5px;
 }
 
 div.unit-card-miscstats {
-	padding: 0 6px;
-	min-width: 300px;
-	display: table-cell;
-	vertical-align: top;
+	margin-left: -5px;
+	margin-top: -5px;
 }
 
-td.stat-label {
+div.miscstat {
+	background-color: #cfe4ff;
+	border-radius: 5px;
+	padding: 4px 6px;
+	display: inline-block;
+	margin-left: 5px;
+	margin-top: 5px;
+}
+
+div.miscstat .stat-label {
+	color: #477aca;
+	font-weight: bold;
+}
+
+div.unit-card-description {
+	margin-top: 5px;
+}
+
+.stat-label {
 	padding-right: 10px;
-	vertical-align: text-bottom;
+	/*vertical-align: text-bottom;*/
 }
 
-td.stat-number {
+.stat-number {
 	font-family: monospace;
 	font-size: 10pt;
-	vertical-align: text-bottom;
+	/*vertical-align: text-bottom;*/
 }
 
 td.bond-cell {

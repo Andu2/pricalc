@@ -506,37 +506,37 @@
 		}, {
 			"name": "Kasumi (Summer)",
 			"pool": "permanent",
-			"unitId": -1,
+			"unitId": 105701,
 			"jpDate": "2021-02-23"
 		}, {
 			"name": "Lima (Cinderella)",
 			"pool": "limited",
-			"unitId": -1,
+			"unitId": 115801,
 			"jpDate": "2021-02-28"
 		}, {
 			"name": "Karyl (Princess)",
 			"pool": "limited",
-			"unitId": -1,
+			"unitId": 180601,
 			"jpDate": "2021-02-28"
 		}, {
 			"name": "Makoto (Cinderella)",
 			"pool": "permanent",
-			"unitId": -1,
+			"unitId": 115901,
 			"jpDate": "2021-03-03"
 		}, {
 			"name": "Maho (Cinderella)",
 			"pool": "permanent",
-			"unitId": -1,
+			"unitId": 116001,
 			"jpDate": "2021-03-22"
 		}, {
 			"name": "Chieru (School Festival)",
 			"pool": "permanent",
-			"unitId": -1,
+			"unitId": 116301,
 			"jpDate": "2021-03-31"
 		}, {
 			"name": "Chloe (School Festival)",
 			"pool": "permanent",
-			"unitId": -1,
+			"unitId": 116201,
 			"jpDate": "2021-04-15"
 		}
 	],
@@ -1074,19 +1074,19 @@
 			"jpDate": "2021-02-08"
 		}, {
 			"name": "Misogi",
-			"unitId": -1,
+			"unitId": 100401,
 			"jpDate": "2021-03-05"
 		}, {
 			"name": "Mimi",
-			"unitId": -1,
+			"unitId": 102001,
 			"jpDate": "2021-03-05"
 		}, {
 			"name": "Kyoka",
-			"unitId": -1,
+			"unitId": 103601,
 			"jpDate": "2021-03-05"
 		}, {
 			"name": "Nozomi",
-			"unitId": -1,
+			"unitId": 102901,
 			"jpDate": "2021-04-07"
 		}
 	],
@@ -1625,7 +1625,7 @@
 			"jpDate": "2021-02-15"
 		}, {
 			"name": "Karyl (Princess)",
-			"unitId": -1,
+			"unitId": 180601,
 			"shop": "master",
 			"jpDate": "2021-03-16"
 		}, {

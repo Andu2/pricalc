@@ -458,7 +458,7 @@ export function getUnitIdBase(unitId) {
 
 export const getUnlockedUnits = cacheFunction(function getUnlockedUnits() {
 	return getTable("unit_data").filter(function(unitData) {
-		return unitData.cutin_1 !== 0 && unitData.unit_id < 190000;
+		return (unitData.cutin_1 !== 0 && unitData.unit_id < 190000);
 	}).sort(sortByAttr("unit_name"));
 });
 

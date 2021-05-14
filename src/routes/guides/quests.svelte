@@ -4,7 +4,7 @@
 	import DataComponent from "@src/components/DataComponent.svelte";
 
 	const requiredTables = [ "quest_data", "quest_area_data", "wave_group_data", "enemy_parameter", "enemy_reward_data",
-		"item_data", "equipment_data" ];
+		"item_data", "equipment_data", "unit_enemy_data" ];
 
 	let quests = [];
 	let areas = [];
@@ -37,7 +37,9 @@
 
 	function onDataReady() {
 		quests = getTable("quest_data");
-		areas = lookupRows("quest_area_data", { map_type: 101 });
+		areas = getTable("quest_area_data").filter(function(areaData) {
+			return (areaData.map_type > 100 && areaData.map_type < 200);
+		});
 		areaOptions = areas.filter(function(area) {
 			return (area.area_id < 12000); // normal = 11000, hard = 12000
 		});

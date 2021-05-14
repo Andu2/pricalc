@@ -1,5 +1,5 @@
 <script>
-import { lookupRows } from "@src/data/priconnedb"
+import { getTable } from "@src/data/priconnedb"
 import { getUnitIdBase, getUnitType, getUnlockedUnits, getSummonUnits } from "@src/logic/unit";
 import { getUnitImg } from "@src/logic/ui"
 import { sortByAttr } from "@src/utils"
@@ -12,7 +12,7 @@ let SUMMON_UNITS = getSummonUnits();
 
 let bossBaseIds = [];
 let enemyBaseIds = []
-let bosses = lookupRows("enemy_parameter", {}).filter(function(enemy) {
+let bosses = getTable("enemy_parameter").filter(function(enemy) {
 	if (getUnitType(enemy.unit_id) === "boss") {
 		if (enemy.unit_id === 390100) return false; // "Omniscient Kaiser", weird data
 		if (bossBaseIds.indexOf(getUnitIdBase(enemy.unit_id)) === -1) {
@@ -22,7 +22,7 @@ let bosses = lookupRows("enemy_parameter", {}).filter(function(enemy) {
 	}
 	return false;
 }).sort(sortByAttr("name"));
-let enemies = lookupRows("enemy_parameter", {}).filter(function(enemy) {
+let enemies = getTable("enemy_parameter").filter(function(enemy) {
 	if (getUnitType(enemy.unit_id) === "enemy" || getUnitType(enemy.unit_id) === "shadow") {
 		if (enemyBaseIds.indexOf(getUnitIdBase(enemy.unit_id)) === -1) {
 			enemyBaseIds.push(getUnitIdBase(enemy.unit_id));
@@ -108,7 +108,7 @@ function createSelectHandler(id) {
 		<tr>
 			{#each selectRow as unit}
 			<td class="select-unit" class:large-icon={selectTab==="bosses"} on:click={createSelectHandler(unit.id)}>
-				<img class="select-icon" class:large-icon={selectTab==="bosses"} src={getUnitImg(unit.id)} /><br />
+				<img class="select-icon" class:large-icon={selectTab==="bosses"} src={getUnitImg(unit.id, { usePrefabId: true })} /><br />
 				<span class="select-unit-name">{unit.name}</span>
 			</td>
 			{/each}
