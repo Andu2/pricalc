@@ -23,10 +23,10 @@
 
 /* This is to basically ignore these elements for styling. Everything will be handled in the app-wrap div */
 html, body, div#sapper {
-	position: absolute;
+/*	position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    overflow: auto;
+    overflow: auto;*/
 }
