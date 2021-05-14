@@ -326,28 +326,30 @@
 		let charaGroup = charaCards[getUnitIdBase(unitId)];
 		if (!charaGroup) return {};
 
-		// If the user has the units at the same bond, attempt to carry it over when switching units
-		let carryNumber = 0;
-		Object.keys(unit.bond).forEach(function(key, i) {
-			if (i === 0) {
-				carryNumber = unit.bond[key];
-			}
-			else if (unit.bond[key] !== carryNumber) {
-				carryNumber = 0;
-			}
-		});
+		if (bondIds !== charaGroup.cards) {
+			// If the user has the units at the same bond, attempt to carry it over when switching units
+			let carryNumber = 0;
+			Object.keys(unit.bond).forEach(function(key, i) {
+				if (i === 0) {
+					carryNumber = unit.bond[key];
+				}
+				else if (unit.bond[key] !== carryNumber) {
+					carryNumber = 0;
+				}
+			});
 
-		for (var storyGroup in unit.bond) {
-			if (charaGroup.cards.indexOf(storyGroup) === -1) {
-				delete unit.bond[storyGroup];
+			for (var storyGroup in unit.bond) {
+				if (charaGroup.cards.indexOf(storyGroup) === -1) {
+					delete unit.bond[storyGroup];
+				}
 			}
+			charaGroup.cards.forEach(function(storyGroup) {
+				let key = storyGroup + ""; // Need to force string keys. Number keys makes weird things happen
+				if (unit.bond[key] === undefined) {
+					unit.bond[key] = carryNumber;
+				}
+			});
 		}
-		charaGroup.cards.forEach(function(storyGroup) {
-			let key = storyGroup + ""; // Need to force string keys. Number keys makes weird things happen
-			if (unit.bond[key] === undefined) {
-				unit.bond[key] = carryNumber;
-			}
-		});
 
 		return charaGroup.cards;
 	}
