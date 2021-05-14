@@ -1,13 +1,5 @@
 <style global>
 	/* Moved global style here in order to hit the postcss variable replacement */
-	body {
-		margin: 0;
-		box-sizing: border-box;
-		font-family: "Segoe UI", sans-serif;
-		font-size: 12pt;
-		min-width: 1000px;
-	}
-
 	div#app-wrap {
 		background-color: var(--marginBackground);
 	}
