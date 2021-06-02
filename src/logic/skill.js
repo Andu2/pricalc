@@ -158,7 +158,13 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 17) {
 		// HP activation
-		description = "Activates when below " + action.action_value_3 + "% HP.";
+		if (action.action_detail_1 === 3) {
+			description = "Activates when below {0}% HP.";
+		}
+		else if (action.action_detail_1 === 7) {
+			description = "Activates when less than {0} seconds left in battle.";
+		}
+	replaceVal = action.action_value_3;
 	}
 	else if (action.action_type === 18) {
 		if (action.action_detail_2 === 100300302) {
@@ -178,16 +184,7 @@ export function describeEffect(action, actor, level) {
 		}
 	}
 	else if (action.action_type === 22) {
-		// Some kind of percentage damage buff on a skill?
-		for (var skillName in actor.skills) {
-			if (actor.skills[skillName].data && actor.skills[skillName].data.skill_id === action.action_detail_2) {
-				let buffSkillName = actor.skills[skillName].data.name;
-				if (!buffSkillName) {
-					buffSkillName = skillName;
-				}
-				description = "Some sort of buff to skill " + buffSkillName + "?"
-			}
-		}
+		description = "Switch skill loop."
 	}
 	else if (action.action_type === 23) {
 		if (action.action_detail_1 === 999) {
