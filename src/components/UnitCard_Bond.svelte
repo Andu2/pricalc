@@ -15,7 +15,7 @@ let bondTooltip = "Bond stories boost stats for every version of that character.
 	<div class="bond-row">
 		{#each Object.keys(bond) as storyGroup}
 		<div class="bond-cell">
-			<img src={getUnitImg(storyGroup + "11")} /><br />
+			<img src={getUnitImg(storyGroup + "11", { rarity: 3 })} /><br />
 			<input type="number" min=0 max=8 bind:value={bond[storyGroup]} />
 		</div>
 		{/each}
