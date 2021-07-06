@@ -306,7 +306,7 @@ function getExSkillStats(skillData, config) {
 			var exSkill = skillData.ex_skill_1;
 		}
 		if (!exSkill.data) {
-			console.warn("Unable to find ex skill for unit " + unitData.unit_name);
+			console.warn("Unable to find ex skill for unit " + config.id);
 		}
 		else {
 			exSkill.actions.forEach(function(action) {
