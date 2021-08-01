@@ -28,7 +28,7 @@
 			slot5: false,
 			slot6: true
 		},
-		numSlots: 3
+		numSlots: 5
 	}
 
 	let UNLOCKED_UNITS = [];
