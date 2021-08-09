@@ -49,22 +49,20 @@
 			sort: "default"
 		}
 	];
-	const featureData = (() => {
-		return jpContentHistory.features.map(feature => {
-			const jpDaysAfterLaunch = Math.round((new Date(feature.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
-			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
+	const featureData = jpContentHistory.features.map(feature => {
+		const jpDaysAfterLaunch = Math.round((new Date(feature.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
-			return {
-				feature: feature.description,
-				jpDate: formatDate(new Date(feature.jpDate)),
-				jpDaysAfterLaunch,
-				enDaysToRelease,
-				enReleaseDate: formatDate(enReleaseDate),
-			};
-		});
-	})();
+		return {
+			feature: feature.description,
+			jpDate: formatDate(new Date(feature.jpDate)),
+			jpDaysAfterLaunch,
+			enDaysToRelease,
+			enReleaseDate: formatDate(enReleaseDate),
+		};
+	});
 
 	// Dungeon
 	const dungeonColumns = [
@@ -93,22 +91,20 @@
 			sort: "default"
 		}
 	];
-	const dungeonData = (() => {
-		return jpContentHistory.dungeon.map(dungeon => {
-			const jpDaysAfterLaunch = Math.round((new Date(dungeon.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
-			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
+	const dungeonData = jpContentHistory.dungeon.map(dungeon => {
+		const jpDaysAfterLaunch = Math.round((new Date(dungeon.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
-			return {
-				dungeon: dungeon.level,
-				jpDate: formatDate(new Date(dungeon.jpDate)),
-				jpDaysAfterLaunch,
-				enDaysToRelease,
-				enReleaseDate: formatDate(enReleaseDate),
-			};
-		});
-	})();
+		return {
+			dungeon: dungeon.level,
+			jpDate: formatDate(new Date(dungeon.jpDate)),
+			jpDaysAfterLaunch,
+			enDaysToRelease,
+			enReleaseDate: formatDate(enReleaseDate),
+		};
+	});
 
  	// Grotto
 	const grottoColumns = [
@@ -137,22 +133,20 @@
 			sort: "default"
 		}
 	];
-	const grottoData = (() => {
-		return jpContentHistory.grotto.map(grotto => {
-			const jpDaysAfterLaunch = Math.round((new Date(grotto.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
-			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
+	const grottoData = jpContentHistory.grotto.map(grotto => {
+		const jpDaysAfterLaunch = Math.round((new Date(grotto.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
-			return {
-				grotto: grotto.level,
-				jpDate: formatDate(new Date(grotto.jpDate)),
-				jpDaysAfterLaunch,
-				enDaysToRelease,
-				enReleaseDate: formatDate(enReleaseDate),
-			};
-		});
-	})();
+		return {
+			grotto: grotto.level,
+			jpDate: formatDate(new Date(grotto.jpDate)),
+			jpDaysAfterLaunch,
+			enDaysToRelease,
+			enReleaseDate: formatDate(enReleaseDate),
+		};
+	});
 
 	// Shards in Shop
 	const shardColumns = [
@@ -185,23 +179,21 @@
 			sort: "default"
 		}
 	];
-	const shardData = (() => {
-		return jpContentHistory.shardsInShop.map(shard => {
-			const jpDaysAfterLaunch = Math.round((new Date(shard.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
-			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
+	const shardData = jpContentHistory.shardsInShop.map(shard => {
+		const jpDaysAfterLaunch = Math.round((new Date(shard.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
-			return {
-				character: shard.name,
-				shop: shopDisplayNames[shard.shop],
-				jpDate: formatDate(new Date(shard.jpDate)),
-				jpDaysAfterLaunch,
-				enDaysToRelease,
-				enReleaseDate: formatDate(enReleaseDate),
-			};
-		});
-	})();
+		return {
+			character: shard.name,
+			shop: shopDisplayNames[shard.shop],
+			jpDate: formatDate(new Date(shard.jpDate)),
+			jpDaysAfterLaunch,
+			enDaysToRelease,
+			enReleaseDate: formatDate(enReleaseDate),
+		};
+	});
 
 	// Arena Shuffles
 	const arenaShuffleColumns = [
@@ -230,22 +222,20 @@
 			sort: "default"
 		}
 	];
-	const arenaShuffleData = (() => {
-		return jpContentHistory.arenaShuffle.map(arenaShuffle => {
-			const jpDaysAfterLaunch = Math.round((new Date(arenaShuffle.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
-			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
+	const arenaShuffleData = jpContentHistory.arenaShuffle.map(arenaShuffle => {
+		const jpDaysAfterLaunch = Math.round((new Date(arenaShuffle.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
-			return {
-				name: getArenaName(arenaShuffle.type),
-				jpDate: formatDate(new Date(arenaShuffle.jpDate)),
-				jpDaysAfterLaunch,
-				enDaysToRelease,
-				enReleaseDate: formatDate(enReleaseDate),
-			};
-		});
-	})();
+		return {
+			name: getArenaName(arenaShuffle.type),
+			jpDate: formatDate(new Date(arenaShuffle.jpDate)),
+			jpDaysAfterLaunch,
+			enDaysToRelease,
+			enReleaseDate: formatDate(enReleaseDate),
+		};
+	});
 
 
 	// Furniture
@@ -275,22 +265,20 @@
 			sort: "default"
 		}
 	];
-	const furnitureLevelData = (() => {
-		return jpContentHistory.furnitureLevelCap.map(furnitureLevel => {
-			const jpDaysAfterLaunch = Math.round((new Date(furnitureLevel.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
-			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
+	const furnitureLevelData = jpContentHistory.furnitureLevelCap.map(furnitureLevel => {
+		const jpDaysAfterLaunch = Math.round((new Date(furnitureLevel.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
-			return {
-				furnitureLevelCap: furnitureLevel.level,
-				jpDate: formatDate(new Date(furnitureLevel.jpDate)),
-				jpDaysAfterLaunch,
-				enDaysToRelease,
-				enReleaseDate: formatDate(enReleaseDate),
-			};
-		});
-	})();
+		return {
+			furnitureLevelCap: furnitureLevel.level,
+			jpDate: formatDate(new Date(furnitureLevel.jpDate)),
+			jpDaysAfterLaunch,
+			enDaysToRelease,
+			enReleaseDate: formatDate(enReleaseDate),
+		};
+	});
 
 
 </script>
