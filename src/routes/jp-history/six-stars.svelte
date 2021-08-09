@@ -1,7 +1,8 @@
 <script>
 	import { jpContentHistory } from "@src/data";
 	import { getUnitImg } from "@src/logic";
-	import { escAttr, formatDate } from "@src/utils";
+	import { enScheduleOffset } from "@src/settings.js";
+	import { escAttr, formatDate, determineOffsetWord } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
 	import JPContentFooter from "@src/components/JPContentFooter.svelte";
@@ -9,7 +10,7 @@
 	const jpLaunchDate = new Date(jpContentHistory.jpLaunchDate);
 	const enLaunchDate = new Date(jpContentHistory.enLaunchDate);
 
-	$: data = getData();
+	$: data = getData($enScheduleOffset.sixStars);
 
 	let columns = [
 		{
@@ -43,7 +44,7 @@
 		}
 	];
 
-	function getData() {
+	function getData(offset = $enScheduleOffset.sixStars) {
 		let unitsAdded = jpContentHistory.sixStar;
 		return unitsAdded.map(function(unitAdded) {
 			let iconHtml = "";
@@ -53,7 +54,7 @@
 
 			const jpDaysAfterLaunch = Math.round((new Date(unitAdded.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + offset;
 			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
 			return {
@@ -71,6 +72,7 @@
 <h2>JP Six Star Upgrade Timeline</h2>
 
 <JPContentHeader />
+<p>This page assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.sixStars)}</strong> by <strong>{Math.abs($enScheduleOffset.sixStars)}</strong> days.</p>
 
 <DopeAssTable data={data} columns={columns} scroll={false} />
 
