@@ -1,6 +1,7 @@
 <script>
 	import { jpContentHistory } from "@src/data/priconnedb";
-	import { formatDate } from "@src/utils";
+	import { enScheduleOffset } from "@src/settings.js";
+	import { formatDate, determineOffsetWord } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
 	import JPContentFooter from "@src/components/JPContentFooter.svelte";
@@ -49,10 +50,10 @@
 			sort: "default"
 		}
 	];
-	const featureData = jpContentHistory.features.map(feature => {
+	$: featureData = jpContentHistory.features.map(feature => {
 		const jpDaysAfterLaunch = Math.round((new Date(feature.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + $enScheduleOffset.feature;
 		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
 		return {
@@ -91,10 +92,10 @@
 			sort: "default"
 		}
 	];
-	const dungeonData = jpContentHistory.dungeon.map(dungeon => {
+	$: dungeonData = jpContentHistory.dungeon.map(dungeon => {
 		const jpDaysAfterLaunch = Math.round((new Date(dungeon.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + $enScheduleOffset.dungeon;
 		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
 		return {
@@ -133,10 +134,10 @@
 			sort: "default"
 		}
 	];
-	const grottoData = jpContentHistory.grotto.map(grotto => {
+	$: grottoData = jpContentHistory.grotto.map(grotto => {
 		const jpDaysAfterLaunch = Math.round((new Date(grotto.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + $enScheduleOffset.grotto;
 		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
 		return {
@@ -179,10 +180,10 @@
 			sort: "default"
 		}
 	];
-	const shardData = jpContentHistory.shardsInShop.map(shard => {
+	$: shardData = jpContentHistory.shardsInShop.map(shard => {
 		const jpDaysAfterLaunch = Math.round((new Date(shard.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + $enScheduleOffset.shards;
 		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
 		return {
@@ -222,10 +223,10 @@
 			sort: "default"
 		}
 	];
-	const arenaShuffleData = jpContentHistory.arenaShuffle.map(arenaShuffle => {
+	$: arenaShuffleData = jpContentHistory.arenaShuffle.map(arenaShuffle => {
 		const jpDaysAfterLaunch = Math.round((new Date(arenaShuffle.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + $enScheduleOffset.arenaShuffle;
 		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
 		return {
@@ -236,7 +237,6 @@
 			enReleaseDate: formatDate(enReleaseDate),
 		};
 	});
-
 
 	// Furniture
 	const furnitureLevelColumns = [
@@ -265,10 +265,10 @@
 			sort: "default"
 		}
 	];
-	const furnitureLevelData = jpContentHistory.furnitureLevelCap.map(furnitureLevel => {
+	$: furnitureLevelData = jpContentHistory.furnitureLevelCap.map(furnitureLevel => {
 		const jpDaysAfterLaunch = Math.round((new Date(furnitureLevel.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 		const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+		const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + $enScheduleOffset.furnitureLevelCap;
 		const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
 		return {
@@ -288,21 +288,27 @@
 <JPContentHeader />
 
 <h3>Features</h3>
+<p>The following table assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.feature)}</strong> by <strong>{Math.abs($enScheduleOffset.feature)}</strong> days.</p>
 <DopeAssTable data={featureData} columns={featureColumns} scroll={false} />
 
 <h3>Dungeons</h3>
+<p>The following table assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.dungeon)}</strong> by <strong>{Math.abs($enScheduleOffset.dungeon)}</strong> days.</p>
 <DopeAssTable data={dungeonData} columns={dungeonColumns} scroll={false} />
 
 <h3>Grotto Quests</h3>
+<p>The following table assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.grotto)}</strong> by <strong>{Math.abs($enScheduleOffset.grotto)}</strong> days.</p>
 <DopeAssTable data={grottoData} columns={grottoColumns} scroll={false} />
 
 <h3>Shards in Shop</h3>
+<p>The following table assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.shards)}</strong> by <strong>{Math.abs($enScheduleOffset.shards)}</strong> days.</p>
 <DopeAssTable data={shardData} columns={shardColumns} scroll={false} />
 
 <h3>Arena Shuffles</h3>
+<p>The following table assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.arenaShuffle)}</strong> by <strong>{Math.abs($enScheduleOffset.arenaShuffle)}</strong> days.</p>
 <DopeAssTable data={arenaShuffleData} columns={arenaShuffleColumns} scroll={false} />
 
 <h3>Furniture Levels</h3>
+<p>The following table assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.furnitureLevelCap)}</strong> by <strong>{Math.abs($enScheduleOffset.furnitureLevelCap)}</strong> days.</p>
 <DopeAssTable data={furnitureLevelData} columns={furnitureLevelColumns} scroll={false} />
 
 <JPContentFooter />
