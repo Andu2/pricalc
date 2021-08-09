@@ -1,6 +1,7 @@
 <script>
 	import { jpContentHistory } from "@src/data/priconnedb";
-	import { formatDate } from "@src/utils";
+	import { enScheduleOffset } from "@src/settings.js";
+	import { formatDate, determineOffsetWord } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
 	import JPContentFooter from "@src/components/JPContentFooter.svelte";
@@ -8,7 +9,7 @@
 	const jpLaunchDate = new Date(jpContentHistory.jpLaunchDate);
 	const enLaunchDate = new Date(jpContentHistory.enLaunchDate);
 
-	$: data = getData();
+	$: data = getData($enScheduleOffset.quest);
 
 	let columns = [
 		{
@@ -48,7 +49,7 @@
 		}
 	];
 
-	function getData() {
+	function getData(offset = $enScheduleOffset.quest) {
 		let contentDates = {};
 		jpContentHistory.levelCap.forEach(function(cap) {
 			contentDates[cap.jpDate] = { level: cap.level };
@@ -61,13 +62,11 @@
 			contentDates[rank.jpDate].questArea = rank.questArea;
 		});
 
-
-
 		let rows = [];
 		for (let date in contentDates) {
 			const jpDaysAfterLaunch = Math.round((new Date(date) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + offset;
 			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 			rows.push({
 				maxLevel: contentDates[date].level || "–",
@@ -86,6 +85,7 @@
 <h2>JP Player Level, Equipment Rank, and Quest Area Timeline</h2>
 
 <JPContentHeader />
+<p>This page assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.quest)}</strong> by <strong>{Math.abs($enScheduleOffset.quest)}</strong> days.</p>
 
 <DopeAssTable data={data} columns={columns} scroll={false} />
 
