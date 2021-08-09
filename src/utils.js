@@ -28,7 +28,7 @@ export function shortNumber(number) {
 		shortenedNumber /= 1000;
 		index++;
 	}
-	// We're rounding to three decimals; 
+	// We're rounding to three decimals;
 	// if the abbreviation is k, it doesn't make any sense to abbreviate unless there are no decimals
 	if (index === 1 && Math.round(shortenedNumber) !== shortenedNumber) {
 		return number + "";
@@ -43,4 +43,13 @@ export function round(number, decimalPlaces) {
 
 export function escAttr(attrValue) {
 	return attrValue.replace(/'/g, "&#x27;").replace(/"/g, "&#x22;")
+}
+
+export function formatDate(dateObj) {
+	const locale = "en-gb";
+	const options = {
+		dateStyle: "long",
+	};
+	return new Intl.DateTimeFormat(locale, options).format(dateObj)
+	// return dateObj.toISOString().split('T')[0];
 }
