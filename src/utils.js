@@ -53,3 +53,7 @@ export function formatDate(dateObj) {
 	return new Intl.DateTimeFormat(locale, options).format(dateObj)
 	// return dateObj.toISOString().split('T')[0];
 }
+
+export function determineOffsetWord(offset) {
+	return (offset < 0) ? "ahead" : "behind";
+}
