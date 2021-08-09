@@ -1,7 +1,8 @@
 <script>
 	import { jpContentHistory } from "@src/data";
 	import { getUnlockedUnits, getUnitImg } from "@src/logic";
-	import { escAttr, formatDate } from "@src/utils";
+	import { enScheduleOffset } from "@src/settings.js";
+	import { escAttr, formatDate, determineOffsetWord } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import DataComponent from "@src/components/DataComponent.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
@@ -15,7 +16,7 @@
 	const jpLaunchDate = new Date(jpContentHistory.jpLaunchDate);
 	const enLaunchDate = new Date(jpContentHistory.enLaunchDate);
 
-	$: data = getData(hideUnlockedUnits);
+	$: data = getData(hideUnlockedUnits, $enScheduleOffset.banner);
 
 	let columns = [
 		{
@@ -53,7 +54,7 @@
 		}
 	];
 
-	function getData(hideUnlockedUnits) {
+	function getData(hideUnlockedUnits, offset = $enScheduleOffset.banner) {
 		let unitsAdded = jpContentHistory.units;
 		if (hideUnlockedUnits) {
 			unitsAdded = jpContentHistory.units.filter(function(unitAdded) {
@@ -68,7 +69,7 @@
 
 			const jpDaysAfterLaunch = Math.round((new Date(unitAdded.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
 			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
-			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + offset;
 			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
 
 			return {
@@ -97,7 +98,8 @@
 
 <h2>JP Characters Added Timeline</h2>
 <DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
-	<JPContentHeader />
+	<JPContentHeader/>
+	<p>This page assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.banner)}</strong> by <strong>{Math.abs($enScheduleOffset.banner)}</strong> days.</p>
 
 	<p><input type="checkbox" bind:checked={hideUnlockedUnits} /> Hide characters that are in current data source</p>
 
