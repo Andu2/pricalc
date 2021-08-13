@@ -9,7 +9,7 @@ export const theme = localStorageStore("theme", "light");
 export const enScheduleOffset = localStorageStore("enScheduleOffset", {
 	banner: 15,
 	quest: -12,
-	feature: 0,
+	feature: 28,
 	dungeon: 1,
 	grotto: 0,
 	shards: -9,
