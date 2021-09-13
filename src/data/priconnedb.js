@@ -7,7 +7,7 @@ import { sortByAttr } from "@src/utils";
 import { dataSource } from "@src/settings";
 import { get } from "svelte/store";
 
-const CDN_URL = "https://pricalc.b-cdn.net";
+const CDN_URL = "https://pricalc-1a3ef.kxcdn.com";
 export const SERVER_OPTIONS = [ "en", "jp" ];
 
 let loadedTables = {}
