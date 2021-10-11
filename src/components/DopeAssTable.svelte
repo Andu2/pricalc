@@ -99,7 +99,11 @@
 		<tr>
 		{#each columns as column}
 			<th class="heading" class:top={!!column.helpText} on:click={changeSort(column)}>
-				{column.displayName}
+				{#if column.html}
+					{@html column.displayName}
+				{:else}
+					{column.displayName}
+				{/if}
 				{#if sort.attr === column.attr}
 					{#if sort.ascending}
 					▲
@@ -174,10 +178,10 @@ div.table-wrap {
 /*	background:
 		linear-gradient(white 30%, rgba(255,255,255,0)),
 		linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
-		
+
 		linear-gradient(rgba(22,59,90,0.25) 0%, rgba(22,59,90,0)),
 		linear-gradient(rgba(22,59,90,0), rgba(22,59,90,0.25) 100%) 0 100%;
-	
+
 	background-repeat: no-repeat;
 	background-size: 100% 50px, 100% 50px, 100% 15px, 100% 15px;
 	background-attachment: local, local, scroll, scroll;

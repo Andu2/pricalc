@@ -1,5 +1,5 @@
 <script>
-	import { includeExSkillStats, hideImpossibleRarities, dataSource, theme } from "@src/settings.js";
+	import { includeExSkillStats, hideImpossibleRarities, enScheduleOffset, dataSource, theme } from "@src/settings.js";
 	import { getAssetVersions, SERVER_OPTIONS } from "@src/data";
 	import { onMount, onDestroy } from "svelte";
 	import { closeModal } from "@src/components/Modal.svelte";
@@ -146,6 +146,21 @@
 			</select>
 		</td></tr>
 	</table>
+
+	<h3>EN Schedule Offsets</h3>
+	<table>
+		<tr><td>Banner:</td><td><input bind:value={$enScheduleOffset.banner} type="number" size="2"> days</td></tr>
+		<tr><td>Quest:</td><td><input bind:value={$enScheduleOffset.quest} type="number" size="2"> days</td></tr>
+		<tr><td>Feature:</td><td><input bind:value={$enScheduleOffset.feature} type="number" size="2"> days</td></tr>
+		<tr><td>Dungeon:</td><td><input bind:value={$enScheduleOffset.dungeon} type="number" size="2"> days</td></tr>
+		<tr><td>Grotto:</td><td><input bind:value={$enScheduleOffset.grotto} type="number" size="2"> days</td></tr>
+		<tr><td>Shards:</td><td><input bind:value={$enScheduleOffset.shards} type="number" size="2"> days</td></tr>
+		<tr><td>Arena Shuffle:</td><td><input bind:value={$enScheduleOffset.arenaShuffle} type="number" size="2"> days</td></tr>
+		<tr><td>Furniture Level Cap:</td><td><input bind:value={$enScheduleOffset.furnitureLevelCap} type="number" size="2"> days</td></tr>
+		<tr><td>Six Stars:</td><td><input bind:value={$enScheduleOffset.sixStars} type="number" size="2"> days</td></tr>
+		<tr><td>Unique Equipment:</td><td><input bind:value={$enScheduleOffset.uniqueEquipment} type="number" size="2"> days</td></tr>
+	</table>
+
 	<div class="button" on:click={closeModal}>OK</div>
 </div>
 

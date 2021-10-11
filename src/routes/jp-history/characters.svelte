@@ -1,7 +1,8 @@
 <script>
 	import { jpContentHistory } from "@src/data";
 	import { getUnlockedUnits, getUnitImg } from "@src/logic";
-	import { escAttr } from "@src/utils";
+	import { enScheduleOffset } from "@src/settings.js";
+	import { escAttr, formatDate, determineOffsetWord } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import DataComponent from "@src/components/DataComponent.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
@@ -13,8 +14,9 @@
 	let unlockedIds = [];
 
 	const jpLaunchDate = new Date(jpContentHistory.jpLaunchDate);
+	const enLaunchDate = new Date(jpContentHistory.enLaunchDate);
 
-	$: data = getData(hideUnlockedUnits);
+	$: data = getData(hideUnlockedUnits, $enScheduleOffset.banner);
 
 	let columns = [
 		{
@@ -32,16 +34,27 @@
 			sort: "default"
 		}, {
 			attr: "jpDate",
-			displayName: "JP Release Date",
+			displayName: "JP Release Date‎",
 			sort: "default"
 		}, {
+			html: true,
 			attr: "jpDaysAfterLaunch",
-			displayName: "Days After JP Launch",
+			displayName: "Days since<br/>JP Launch",
 			sort: "numeric"
+		}, {
+			html: true,
+			attr: "enDaysToRelease",
+			displayName: "Days to<br/>EN Release",
+			sort: "numeric"
+		}, {
+			html: true,
+			attr: "enReleaseDate",
+			displayName: "Expected EN<br/>Release Date",
+			sort: "default"
 		}
 	];
 
-	function getData(hideUnlockedUnits) {
+	function getData(hideUnlockedUnits, offset = $enScheduleOffset.banner) {
 		let unitsAdded = jpContentHistory.units;
 		if (hideUnlockedUnits) {
 			unitsAdded = jpContentHistory.units.filter(function(unitAdded) {
@@ -53,13 +66,20 @@
 			if (unitAdded.unitId > -1) {
 				iconHtml = "<img class=\"table-icon\" src=\"" + escAttr(getUnitImg(unitAdded.unitId, { rarity: 3, server: "jp" })) + "\" />";
 			}
-			
+
+			const jpDaysAfterLaunch = Math.round((new Date(unitAdded.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
+			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
+			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch + offset;
+			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
+
 			return {
 				icon: iconHtml,
 				name: unitAdded.name,
 				pool: capitalize(unitAdded.pool),
-				jpDate: unitAdded.jpDate,
-				jpDaysAfterLaunch: Math.round((new Date(unitAdded.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24)
+				jpDate: formatDate(new Date(unitAdded.jpDate)),
+				jpDaysAfterLaunch,
+				enDaysToRelease,
+				enReleaseDate: formatDate(enReleaseDate),
 			}
 		});
 	}
@@ -78,7 +98,8 @@
 
 <h2>JP Characters Added Timeline</h2>
 <DataComponent requiredTables={requiredTables} onDataReady={onDataReady} >
-	<JPContentHeader />
+	<JPContentHeader/>
+	<p>This page assumes EN schedule is <strong>{determineOffsetWord($enScheduleOffset.banner)}</strong> by <strong>{Math.abs($enScheduleOffset.banner)}</strong> days.</p>
 
 	<p><input type="checkbox" bind:checked={hideUnlockedUnits} /> Hide characters that are in current data source</p>
 

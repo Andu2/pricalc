@@ -6,6 +6,19 @@ export const hideImpossibleRarities = localStorageStore("hideImpossibleRarities"
 export const dataSource = localStorageStore("dataSource", "en-latest");
 export const theme = localStorageStore("theme", "light");
 
+export const enScheduleOffset = localStorageStore("enScheduleOffset", {
+	banner: 15,
+	quest: -12,
+	feature: 28,
+	dungeon: 1,
+	grotto: 0,
+	shards: -9,
+	arenaShuffle: 25,
+	furnitureLevelCap: 0,
+	sixStars: 0,
+	uniqueEquipment: 0,
+});
+
 // remember which analysis the user was looking at when switching back
 // export const lastAnalysis = localStorageStore("lastAnalysis", "");
 // export const lastGuide = localStorageStore("lastGuide", "");
