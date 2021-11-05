@@ -1,7 +1,7 @@
 <script>
 	import { jpContentHistory } from "@src/data";
 	import { getUnlockedUnits, getUnitImg } from "@src/logic";
-	import { escAttr } from "@src/utils";
+	import { escAttr, formatDate } from "@src/utils";
 	import DopeAssTable from "@src/components/DopeAssTable.svelte";
 	import DataComponent from "@src/components/DataComponent.svelte";
 	import JPContentHeader from "@src/components/JPContentHeader.svelte";
@@ -13,6 +13,7 @@
 	let unlockedIds = [];
 
 	const jpLaunchDate = new Date(jpContentHistory.jpLaunchDate);
+	const enLaunchDate = new Date(jpContentHistory.enLaunchDate);
 
 	$: data = getData(hideUnlockedUnits);
 
@@ -32,12 +33,23 @@
 			sort: "default"
 		}, {
 			attr: "jpDate",
-			displayName: "JP Release Date",
+			displayName: "JP Release Date‎",
 			sort: "default"
 		}, {
+			html: true,
 			attr: "jpDaysAfterLaunch",
-			displayName: "Days After JP Launch",
+			displayName: "Days since<br/>JP Launch",
 			sort: "numeric"
+		}, {
+			html: true,
+			attr: "enDaysToRelease",
+			displayName: "Days to<br/>EN Release",
+			sort: "numeric"
+		}, {
+			html: true,
+			attr: "enReleaseDate",
+			displayName: "Expected EN<br/>Release Date",
+			sort: "default"
 		}
 	];
 
@@ -53,13 +65,20 @@
 			if (unitAdded.unitId > -1) {
 				iconHtml = "<img class=\"table-icon\" src=\"" + escAttr(getUnitImg(unitAdded.unitId, { rarity: 3, server: "jp" })) + "\" />";
 			}
-			
+
+			const jpDaysAfterLaunch = Math.round((new Date(unitAdded.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24);
+			const enDaysAfterLaunch = Math.round((Date.now() - enLaunchDate) / 1000 / 60 / 60 / 24);
+			const enDaysToRelease = jpDaysAfterLaunch - enDaysAfterLaunch;
+			const enReleaseDate = new Date((Date.now() + (enDaysToRelease * 1000 * 60 * 60 * 24)));
+
 			return {
 				icon: iconHtml,
 				name: unitAdded.name,
 				pool: capitalize(unitAdded.pool),
-				jpDate: unitAdded.jpDate,
-				jpDaysAfterLaunch: Math.round((new Date(unitAdded.jpDate) - jpLaunchDate) / 1000 / 60 / 60 / 24)
+				jpDate: formatDate(new Date(unitAdded.jpDate)),
+				jpDaysAfterLaunch,
+				enDaysToRelease,
+				enReleaseDate: formatDate(enReleaseDate),
 			}
 		});
 	}
