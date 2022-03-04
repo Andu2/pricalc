@@ -49,7 +49,7 @@ export function describeEffect(action, actor, level) {
 			describeStat = "magic";
 		}
 		description = "{0} " + describeStat + " damage.";
-		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level) + (action.action_value_3 + action.action_value_4 * level) * actor[actionStat]);
+		replaceVal = Math.round((action.action_value_1 + action.action_value_2 * level) + (action.action_value_3 + action.action_value_4 * level) * actor[actionStat]);
 	}
 	else if (action.action_type === 2) {
 		// detail 1 = move to range of target
