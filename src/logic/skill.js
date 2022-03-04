@@ -11,13 +11,17 @@ const action8Detail = {
 	6: "Sleep",
 	7: "Stun",
 	8: "Petrify",
-	9: "Confine"
+	9: "Confine",
+	10: "Faint",
+	11: "Time Stop" //ZA WARUDO
 }
 const action9Detail = {
 	0: "Confine Damage",
 	1: "Poison",
 	2: "Burn",
-	3: "Curse"
+	3: "Curse",
+	4: "Toxic",
+	5: "Hex"
 }
 
 function getActionAtkType(action) {
@@ -45,7 +49,7 @@ export function describeEffect(action, actor, level) {
 			describeStat = "magic";
 		}
 		description = "{0} " + describeStat + " damage.";
-		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level + action.action_value_3 * actor[actionStat]);
+		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level) + (action.action_value_3 + action.action_value_4 * level) * actor[actionStat]);
 	}
 	else if (action.action_type === 2) {
 		// detail 1 = move to range of target
@@ -62,10 +66,19 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 3) {
 		// knockback
-		if (action.action_detail_1 === 3) {
-			if (action.action_value_3 > 250) { // I have no idea why this is. But Lima's UB does NOT have knockback despite having this action
-				description = "Knockback " + action.action_value_1 + "."
-			}
+		description = "";
+		switch (action.action_detail_1) {
+			case 1:
+				return description = "Knocks target up " + action.action_value_1 + "units.";
+			case 3:
+			case 6:
+				if (action.action_value_1 >= 0) {
+					return description = "Knocks target back " + action.action_value_1 + "units.";
+				} else {
+					return description = "Drags target forward " + Math.abs(action.action_value_1) + "units.";
+				}
+			case 8:
+				return description = "Drags target to " + action.action_value_1 + "units in front of the caster."
 		}
 	}
 	else if (action.action_type === 4) {
@@ -82,17 +95,37 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 6) {
 		// barrier
-		let describeStat = "physical"
-		let mechanism = "blocks";
-		if (action.action_detail_1 === 2 || action.action_detail_1 === 4) {
-			describeStat = "magic";
+		let describeStat = "";
+		let mechanism = "";
+		switch (action.action_detail_1) {
+			case 1:
+				describeStat = "physical";
+				mechanism = "blocks";
+			case 2:
+				describeStat = "magic";
+				mechanism = "blocks";
+			case 3:
+				describeStat = "physical";
+				mechanism = "absorbs;
+			case 4:
+				describeStat = "magic";
+				mechanism = "absorbs";
+			case 5:
+				describeStat = "physical and magic";
+				mechanism = "blocks";
+			case 6:
+				describeStat = "physical and magic";
+				mechanism = "absorbs";
 		}
-		else if (action.action_detail_1 === 6) {
-			describeStat = "physical and magic";
-		}
-		if (action.action_detail_1 === 3 || action.action_detail_1 === 4 || action.action_detail_1 === 6) {
-			mechanism = "absorbs"
-		}
+//		if (action.action_detail_1 === 2 || action.action_detail_1 === 4) {
+//			describeStat = "magic";
+//		}
+//		else if (action.action_detail_1 === 6) {
+//			describeStat = "physical and magic";
+//		}
+//		if (action.action_detail_1 === 3 || action.action_detail_1 === 4 || action.action_detail_1 === 6) {
+//			mechanism = "absorbs"
+//		}
 		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level);
 		description = "Deploy barrier that " + mechanism + " up to {0} " + describeStat + " damage for " + action.action_value_3 + " seconds.";
 	}
@@ -117,18 +150,28 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 10) {
 		// buff. val 2 = base, val 3 = per level, val 4 = time
-		let isDebuff = (action.action_detail_1 % 2 === 1);
-		let stat = BUFF_NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10) + 1];
+		let isDebuff = (action.action_detail_1 % 10 === 1);
+		let stat = BUFF_NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10)];
 		description = (isDebuff ? "Lowers " : "Raises ") + STAT_DISPLAY_NAMES[stat] + " by {0}"
+		if (stat === 14 || stat === 15 || stat === 16 || stat === 17) {
+			description += "%"
+		}
+		
 		if (action.action_value_1 === 2) {
 			description += "%" 
 		}
+		
 		description += " for " + Math.round((action.action_value_4 + action.action_value_5 * level) * 100) / 100 + " seconds.";
 		replaceVal = Math.ceil(action.action_value_2 + action.action_value_3 * level);
 	}
 	else if (action.action_type === 11) {
 		// charm
-		description = "Charm for " + action.action_value_1 + " seconds.";
+		switch (action.action_detail_1) {
+			case 0:
+				return description = "Charms target for " + action.action_value_1 + " seconds.";
+			case 1:
+				return description = "Confuses target for " + action.action_value_1 + " seconds.";
+		}
 	}
 	else if (action.action_type === 12) {
 		//blind
