@@ -118,7 +118,7 @@ export function describeEffect(action, actor, level) {
 	else if (action.action_type === 10) {
 		// buff. val 2 = base, val 3 = per level, val 4 = time
 		let isDebuff = (action.action_detail_1 % 2 === 1);
-		let stat = BUFF_NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10) + 1];
+		let stat = BUFF_NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10)];
 		description = (isDebuff ? "Lowers " : "Raises ") + STAT_DISPLAY_NAMES[stat] + " by {0}"
 		if (action.action_value_1 === 2) {
 			description += "%" 
