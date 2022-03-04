@@ -66,19 +66,18 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 3) {
 		// knockback
-		description = "";
 		switch (action.action_detail_1) {
 			case 1:
-				return description = "Knocks target up " + action.action_value_1 + "units.";
+				description = "Knocks target up " + action.action_value_1 + "units.";
 			case 3:
 			case 6:
 				if (action.action_value_1 >= 0) {
-					return description = "Knocks target back " + action.action_value_1 + "units.";
+					description = "Knocks target back " + action.action_value_1 + "units.";
 				} else {
-					return description = "Drags target forward " + Math.abs(action.action_value_1) + "units.";
+					description = "Drags target forward " + Math.abs(action.action_value_1) + "units.";
 				}
 			case 8:
-				return description = "Drags target to " + action.action_value_1 + "units in front of the caster."
+				description = "Drags target to " + action.action_value_1 + "units in front of the caster."
 		}
 	}
 	else if (action.action_type === 4) {
@@ -153,9 +152,9 @@ export function describeEffect(action, actor, level) {
 		let isDebuff = (action.action_detail_1 % 10 === 1);
 		let stat = BUFF_NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10)];
 		description = (isDebuff ? "Lowers " : "Raises ") + STAT_DISPLAY_NAMES[stat] + " by {0}"
-		if (stat === 14 || stat === 15 || stat === 16 || stat === 17) {
-			description += "%"
-		}
+//		if (stat === 14 || stat === 15 || stat === 16 || stat === 17) {
+//			description += "%"
+//		}
 		
 		if (action.action_value_1 === 2) {
 			description += "%" 
@@ -168,9 +167,9 @@ export function describeEffect(action, actor, level) {
 		// charm
 		switch (action.action_detail_1) {
 			case 0:
-				return description = "Charms target for " + action.action_value_1 + " seconds.";
+				description = "Charms target for " + action.action_value_1 + " seconds.";
 			case 1:
-				return description = "Confuses target for " + action.action_value_1 + " seconds.";
+				description = "Confuses target for " + action.action_value_1 + " seconds.";
 		}
 	}
 	else if (action.action_type === 12) {
