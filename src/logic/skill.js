@@ -87,7 +87,7 @@ export function describeEffect(action, actor, level) {
 	}
 	else if (action.action_type === 6) {
 		// barrier
-		let describeStat = "physical"
+		let describeStat = "physical";
 		let mechanism = "blocks";
 		if (action.action_detail_1 === 2 || action.action_detail_1 === 4) {
 			describeStat = "magic";
@@ -96,7 +96,7 @@ export function describeEffect(action, actor, level) {
 			describeStat = "physical and magic";
 		}
 		if (action.action_detail_1 === 3 || action.action_detail_1 === 4 || action.action_detail_1 === 6) {
-			mechanism = "absorbs"
+			mechanism = "absorbs";
 		}
 		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level);
 		description = "Deploy barrier that " + mechanism + " up to {0} " + describeStat + " damage for " + action.action_value_3 + " seconds.";
@@ -125,8 +125,12 @@ export function describeEffect(action, actor, level) {
 		let isDebuff = (action.action_detail_1 % 2 === 1);
 		let stat = BUFF_NUMBER_TO_STAT[Math.floor(action.action_detail_1 / 10)];
 		description = (isDebuff ? "Lowers " : "Raises ") + STAT_DISPLAY_NAMES[stat] + " by {0}"
+		if (action.action_detail_1 === 14 || action.action_detail_1 === 15 || 
+			action.action_detail_1 === 16 || action.aaction_detail_1 === 17) {
+			description += "%";
+		}		
 		if (action.action_value_1 === 2) {
-			description += "%" 
+			description += "%";
 		}
 		description += " for " + Math.round((action.action_value_4 + action.action_value_5 * level) * 100) / 100 + " seconds.";
 		replaceVal = Math.ceil(action.action_value_2 + action.action_value_3 * level);
