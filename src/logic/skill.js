@@ -11,13 +11,17 @@ const action8Detail = {
 	6: "Sleep",
 	7: "Stun",
 	8: "Petrify",
-	9: "Confine"
+	9: "Confine",
+	10: "Faint",
+	11: "Timestop"
 }
 const action9Detail = {
 	0: "Confine Damage",
 	1: "Poison",
 	2: "Burn",
-	3: "Curse"
+	3: "Curse",
+	4: "Toxic",
+	5: "Hex"
 }
 
 function getActionAtkType(action) {
@@ -45,7 +49,8 @@ export function describeEffect(action, actor, level) {
 			describeStat = "magic";
 		}
 		description = "{0} " + describeStat + " damage.";
-		replaceVal = Math.round(action.action_value_1 + action.action_value_2 * level + action.action_value_3 * actor[actionStat]);
+		replaceVal = Math.round((action.action_value_1 + action.action_value_2 * level)
+		 + (action.action_value_3 + action.action_value_4 * level ) * actor[actionStat]);
 	}
 	else if (action.action_type === 2) {
 		// detail 1 = move to range of target
