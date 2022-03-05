@@ -20,7 +20,7 @@ const action9Detail = {
 	1: "Poison",
 	2: "Burn",
 	3: "Curse",
-	4: "Toxic",
+	4: "Venom",
 	5: "Hex"
 }
 
