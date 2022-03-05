@@ -251,24 +251,32 @@ export const NUMBER_TO_STAT = {
 	9: "life_steal",
 	10: "wave_hp_recovery", // Thank you Loppolutte for pointing out what this stat is
 	11: "wave_energy_recovery",
-	14: "don't know", // TODO. Christina has it.
-	15: "hp_recovery_rate"
+	14: "energy_recovery_rate",
+	15: "hp_recovery_rate",
+	16: "energy_reduce_rate",
+	17: "accuracy"
 }
 
 // Slightly different numbers for skills because why not
 export const BUFF_NUMBER_TO_STAT = {
-	1: "hp",
-	2: "atk",
-	3: "def",
-	4: "magic_str",
-	5: "magic_def",
-	6: "magic_critical",
-	7: "physical_critical",
-	8: "dodge",
+	1: "atk",
+	2: "def",
+	3: "magic_str",
+	4: "magic_def",
+	5: "dodge",
+	6: "physical_critical",
+	7: "magic_critical",
+	8: "energy_recovery_rate",
 	9: "life_steal",
-	10: "wave_hp_recovery",
-	11: "movementSpeed",
-	14: "don't know"
+	10: "movementSpeed",
+	11: "physical_crit_damage",
+	12: "magic_crit_damage",
+	13: "accuracy",
+	14: "received_crit_damage",
+	15: "received_damage",
+	16: "received_physical_damage",
+	17: "received_magic_damage",
+	100: "maxHP"
 }
 
 export const WEAPON_TYPES = {
